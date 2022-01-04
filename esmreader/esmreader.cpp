@@ -975,6 +975,201 @@ int readSubRecordData(const std::string &name) {
 		}
 	}
 
+	//Container
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "CONT")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Container ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Container name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "CNDT")
+		{
+			float weight;
+			file.read((char*)&weight, sizeof(weight));
+			std::cout << "Container data read" << std::endl;
+			bytesRead += sizeof(weight);
+		}
+
+		if (name == "FLAG")
+		{
+			long int containerFlags;
+			//0x0001 = organic
+			//0x0002 = respawns, organic only
+			//0x0008 = default, unknown
+			file.read((char*)&containerFlags, sizeof(containerFlags));
+			std::cout << "Container flags: " << containerFlags << std::endl;
+			bytesRead += sizeof(containerFlags);
+		}
+
+		if (name == "NPCO")
+		{
+			struct Item {
+				long int count;
+				char name[32]; //id of the item
+			}item;
+			file.read((char*)&item, 32+4);
+			std::cout << "Item: " << std::string(item.name, item.name + 32) << " quantity: " << item.count << std::endl;
+			bytesRead += 32+4;
+		}
+	}
+
+	//Spell
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "SPEL")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Spell ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Spell name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SPDT")
+		{
+			struct SpellData {
+				long int type; /*0 = Spell
+								1 = Ability
+								2 = Blight
+								3 = Disease
+								4 = Curse
+								5 = Power*/
+				long int spellCost;
+				long int flags; /*0x0001 = AutoCalc
+								0x0002 = PC Start
+								0x0004 = Always Succeeds*/
+			}spellData;
+			file.read((char*)&spellData, sizeof(spellData));
+			std::cout << "Spell data read" << std::endl;
+			bytesRead += sizeof(spellData);
+		}
+
+		if (name == "ENAM")
+		{
+			struct EnchantmentsData {
+				uint16_t effectIndex;
+				int8_t skillAffected; //-1 if not applicable
+				int8_t attributeAffected; //-1 if not applicable
+				uint32_t range; //0=self, 1=touch, 2=target
+				uint32_t area;
+				uint32_t duration;
+				uint32_t magnitudeMin;
+				uint32_t magnitudeMax;
+			}enchantmentsData;
+
+			file.read((char*)&enchantmentsData, sizeof(enchantmentsData));
+			std::cout << "Enchantments read" << std::endl;
+			bytesRead += sizeof(enchantmentsData);
+		}
+	}
+
+	//Creatures
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "CREA")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Creature ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Creature name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "NPDT")
+		{
+			struct CreatureData {
+				long int type; //creature, daedra, undead, humanoid
+				long int level;
+				long int strength;
+				long int intelligence;
+				long int willpower;
+				long int agility;
+				long int speed;
+				long int endurance;
+				long int personality;
+				long int luck;
+				long int health;
+				long int spellPts;
+				long int fatigue;
+				long int soul;
+				long int combat;
+				long int magic;
+				long int stealth;
+				long int attackMin1;
+				long int attackMax1;
+				long int attackMin2;
+				long int attackMax2;
+				long int attackMin3;
+				long int attackMax3;
+				long int gold;
+			}creatureData;
+			file.read((char*)&creatureData, sizeof(creatureData));
+			std::cout << "Creature data read" << std::endl;
+			bytesRead += sizeof(creatureData);
+		}
+
+		if (name == "FLAG")
+		{
+			long int creatureFlags;
+			/*0x0001 = Biped
+			0x0002 = Respawn
+			0x0004 = Weapon and shield
+			0x0008 = None
+			0x0010 = Swims
+			0x0020 = Flies
+			0x0040 = Walks
+			0x0048 = Default flags
+			0x0080 = Essential
+			0x0400 = Skeleton Blood
+			0x0800 = Metal Blood*/
+			file.read((char*)&creatureFlags, sizeof(creatureFlags));
+			std::cout << "Creature flags read" << std::endl;
+			bytesRead += sizeof(creatureFlags);
+		}
+	}
+
 	return bytesRead;
 }
 
@@ -996,6 +1191,8 @@ bool isValid(std::string name) {
 	if (name == "DOOR") return true;
 	if (name == "MISC") return true;
 	if (name == "WEAP") return true;
+	if (name == "CONT") return true;
+	if (name == "SPEL") return true;
 	return false;
 }
 

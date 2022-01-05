@@ -1364,6 +1364,1007 @@ int readSubRecordData(const std::string &name) {
 		}
 	}
 
+	//Body parts
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "BODY")
+	{
+		if(name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Body part ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Race: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "BYDT")
+		{
+			struct BodyPartData{
+				uint8_t part; 			/*0 = Head
+										1 = Hair
+										2 = Neck
+										3 = Chest
+										4 = Groin
+										5 = Hand
+										6 = Wrist
+										7 = Forearm
+										8 = Upperarm
+										9 = Foot
+										10 = Ankle
+										11 = Knee
+										12 = Upperleg
+										13 = Clavicle
+										14 = Tail*/
+				uint8_t vampire;
+				uint8_t flags; //1 = female, 2 = playable
+				uint8_t partType; //0 = skin, 1 = clothing, 2 = armor
+			}bodyPartData;
+
+			file.read((char*)&bodyPartData, sizeof(bodyPartData));
+			std::cout << "Body part data read" << std::endl;
+			bytesRead += sizeof(bodyPartData);
+		}
+	}
+
+	//lights
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "LIGH")
+	{
+		if(name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Light ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Light name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "SNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Sound name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "SCRI" || "SCPT")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Script name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "LHDT")
+		{
+			struct LightData{
+				float weight;
+				uint32_t value;
+				uint32_t time;
+				uint32_t radius;
+				uint8_t red;
+				uint8_t green;
+				uint8_t blue;
+				uint8_t null;
+				uint32_t flags;  /*0x0001 = Dynamic
+								0x0002 = Can Carry
+								0x0004 = Negative
+								0x0008 = Flicker
+								0x0010 = Fire
+								0x0020 = Off Default
+								0x0040 = Flicker Slow
+								0x0080 = Pulse
+								0x0100 = Pulse Slow*/
+			}lightData;
+
+			file.read((char*)&lightData, sizeof(lightData));
+			std::cout << "Light data read" << std::endl;
+			bytesRead += sizeof(lightData);
+		}
+	}
+
+	//Enchanting effects
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "ENCH")
+	{
+		if(name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Enchant ID string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "ENDT")
+		{
+			struct EnchantData{
+				uint32_t type; //0 = cast once, 1 = cast strikes, 2 = cast when used
+								//3 = constant effect
+				uint32_t enchantmentCost;
+				uint32_t charge;
+				uint32_t flags; //0x1 = autocalc
+			}enchantData;
+
+			file.read((char*)&enchantData, sizeof(enchantData));
+			std::cout << "Enchant data read" << std::endl;
+			bytesRead += sizeof(enchantData);
+		}
+
+		if(name == "ENAM")
+		{
+			struct Enchantments{
+				uint16_t effectIndex;
+				int8_t skillAffected; //-1 if not applicable
+				int8_t attributeAffected; //-1 if not applicable
+				uint32_t range; //0 = self, 1 = touch, 2 = target
+				uint32_t area;
+				uint32_t duration;
+				uint32_t magnitudeMin;
+				uint32_t magnitudeMax;
+			}enchantments;
+
+			file.read((char*)&enchantments, sizeof(enchantments));
+			std::cout << "Enchantments data read" << std::endl;
+			bytesRead += sizeof(enchantments);
+		}
+	}
+
+	//NPCs
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "NPC_")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "NPC ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "NPC name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "RNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Race name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ANAM")
+		{
+			char buffer[300];  //32 bytes
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Faction name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "BNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Head model: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "CNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Class name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "KNAM")
+		{
+			char buffer[300];  //32 bytes
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Hair model: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		int autocalc = 0;
+		if (name == "FLAG")
+		{
+			uint32_t npcFlags;
+			    /*0x0001 = Female
+				0x0002 = Essential
+				0x0004 = Respawn
+				0x0008 = Unknown (always set)
+				0x0010 = Autocalc
+				0x0400 = Blood Texture: Skeleton
+				0x0800 = Blood Texture: Metal Sparks */
+			file.read((char*)&npcFlags, sizeof(npcFlags));
+			std::cout << "NPC flags read" << std::endl;
+			bytesRead += sizeof(npcFlags);
+
+			std::cout << "Flags: " << npcFlags << std::endl;
+			if( npcFlags && 0x0010 ) std::cout << "autocalc set" << std::endl;
+			exit(0);
+		}
+
+		if (name == "NPDT-")
+		{
+			struct CreatureData {
+				long int type; //creature, daedra, undead, humanoid
+				long int level;
+				long int strength;
+				long int intelligence;
+				long int willpower;
+				long int agility;
+				long int speed;
+				long int endurance;
+				long int personality;
+				long int luck;
+				long int health;
+				long int spellPts;
+				long int fatigue;
+				long int soul;
+				long int combat;
+				long int magic;
+				long int stealth;
+				long int attackMin1;
+				long int attackMax1;
+				long int attackMin2;
+				long int attackMax2;
+				long int attackMin3;
+				long int attackMax3;
+				long int gold;
+			}creatureData;
+			file.read((char*)&creatureData, sizeof(creatureData));
+			std::cout << "Creature data read" << std::endl;
+			bytesRead += sizeof(creatureData);
+		}
+
+		
+
+		if(name == "SCRI-")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "NPCO-")
+		{
+			struct ItemRecord{
+				long int count; //quantity of the item
+				char name[32]; //the ID of the item
+			}itemRecord;
+
+			file.read((char*)&itemRecord, sizeof(itemRecord));
+			std::cout << "Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
+			bytesRead += 36;
+		}
+
+		if(name == "AIDT-")
+		{
+			struct AiData{
+				uint8_t hello;
+				uint8_t unknown1;
+				uint8_t fight;
+				uint8_t flee;
+				uint8_t alarm;
+				uint8_t unknown2;
+				uint8_t unknown3;
+				uint8_t unknown4;
+				uint32_t flags;
+						/*0x00001 = Weapon
+						0x00002 = Armor
+						0x00004 = Clothing
+						0x00008 = Books
+						0x00010 = Ingredient
+						0x00020 = Picks
+						0x00040 = Probes
+						0x00080 = Lights
+						0x00100 = Apparatus
+						0x00200 = Repair Items
+						0x00400 = Misc
+						0x00800 = Spells
+						0x01000 = Magic Items
+						0x02000 = Potions
+						0x04000 = Training
+						0x08000 = Spellmaking
+						0x10000 = Enchanting
+						0x20000 = Repair
+						Remaining bits appear to be filled with junk data */
+			}aiData;
+
+			file.read((char*)&aiData, sizeof(aiData));
+			std::cout << "AI data read" << std::endl;
+			bytesRead += sizeof(aiData);
+		}
+
+		if(name == "DODT-")
+		{
+			struct CellTravelDestination{
+				float posx,posy,posz;
+				float rotx,roty,rotz;
+			}cellTravelDestination;
+
+			file.read((char*)&cellTravelDestination, sizeof(cellTravelDestination));
+			std::cout << "Cell travel destination read" << std::endl;
+			bytesRead += sizeof(cellTravelDestination);
+		}
+
+		if(name == "DNAM-")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "AI_W-")
+		{
+			struct WanderPackage{
+				uint16_t distance;
+				uint16_t duration;
+				uint8_t timeOfDay;
+				uint8_t idles[8];
+				uint8_t unknown; //always 1
+			}wanderPackage;
+
+			file.read((char*)&wanderPackage, sizeof(wanderPackage));
+			std::cout << "AI wander package read" << std::endl;
+			bytesRead += sizeof(wanderPackage);
+		}
+
+		/*AI Packages - the following fields can appear in any order, one per AI package, 
+		with the order defining the package priority.
+		Note: duration parameters in all packages are in hours. 
+		Any value greater than 24 should be divided by 100, and set to 24 if 
+		still greater than 24. The unknown value for each package seems to be 
+		an end-of-data marker; it is always a byte value set to 1 with any remaining 
+		data in the structure undefined and ignored.*/
+
+		if(name == "AI_T-")
+		{
+			struct TravelPackage{
+				float x;
+				float y;
+				float z;
+				uint8_t unknown; //always 1
+				uint8_t unused[3];
+			}travelPackage;
+
+			file.read((char*)&travelPackage, sizeof(travelPackage));
+			std::cout << "AI travel package read" << std::endl;
+			bytesRead += sizeof(travelPackage);
+		}
+
+		if(name == "AI_F-")
+		{
+			struct FollowPackage{
+				float x;
+				float y;
+				float z;
+				uint16_t duration;
+				char ID[32];
+				uint8_t unknown; //always 1
+				uint8_t unused;
+			}followPackage;
+
+			file.read((char*)&followPackage, sizeof(followPackage));
+			std::cout << "AI follow package read" << std::endl;
+			bytesRead += sizeof(followPackage);
+		}
+
+		if(name == "AI_E-")
+		{
+			struct EscortPackage{
+				float x;
+				float y;
+				float z;
+				uint16_t duration;
+				char ID[32];
+				uint8_t unknown; //always 1
+				uint8_t unused;
+			}escortPackage;
+
+			file.read((char*)&escortPackage, sizeof(escortPackage));
+			std::cout << "AI escort package read" << std::endl;
+			bytesRead += sizeof(escortPackage);
+		}
+
+		if(name == "CNDT-")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "AI_A-")
+		{
+			struct ActivatePackage{
+				char name[32];
+				uint8_t unknown; //always 1
+			}activatePackage;
+
+			file.read((char*)&activatePackage, sizeof(activatePackage));
+			std::cout << "AI activate package read" << std::endl;
+			bytesRead += sizeof(activatePackage);
+		}
+
+		if(name == "XSCL-")
+		{
+			float scale; //1.0 default
+			file.read((char*)&scale, sizeof(scale));
+			std::cout << "Scale: " << scale << std::endl;
+			bytesRead += sizeof(scale);
+		}
+	}
+	/*
+23: NPC_ =  2675 (   233,    619.12,   6236)
+	NPCs
+	NAME = NPC ID string
+	FNAM = NPC name
+	MODL = Animation file
+	RNAM = Race Name	}
+	ANAM = Faction name	} Required, even if empty
+	BNAM = Head model	}
+	CNAM = Class name
+	KNAM = Hair model	}
+	NPDT = NPC Data (12 bytes or 52 bytes?)
+		short Level
+		byte  Strength
+		byte  Intelligence
+		byte  Willpower
+		byte  Agility
+		byte  Speed
+		byte  Endurance
+		byte  Personality
+		byte  Luck
+		byte  Skills[27]  } According to the skillID (0-26)
+		byte  Reputation
+		short Health
+		short SpellPts
+		short Fatigue
+		byte  Disposition
+		byte  FactionID
+		byte  Rank
+		byte  Unknown1
+		long  Gold
+
+		12 byte Version
+		short Level
+		byte  Disposition
+		byte  FactionID?
+		byte  Rank
+		byte  Unknown1
+		byte  Unknown2
+		byte  Unknown3
+		long  Gold?
+	FLAG = NPC Flags (4 bytes, long)
+		0x0001 = Female
+		0x0002 = Essential
+		0x0004 = Respawn
+		0x0008 = None?
+		0x0010 = Autocalc
+		0x0400 = Blood Skel
+		0x0800 = Blood Metal
+	NPCO = NPC item (36 bytes, occurs 0+ times)
+		long	Count	  Number of the item
+		char	Name[32]  The ID of the item
+	NPCS = NPC spell (32 bytes, occurs 0+ times)
+		char	Name[32]  The ID of the item
+	AIDT = AI data (12 bytes)
+		byte Hello
+		byte Unknown1
+		byte Fight
+		byte Flee
+		byte Alarm
+		byte Unknown2
+		byte Unknown3
+		byte Unknown4
+		long Flags
+			0x00001 = Weapon
+			0x00002 = Armor
+			0x00004 = Clothing
+			0x00008 = Books
+			0x00010 = Ingrediant
+			0x00020 = Picks
+			0x00040 = Probes
+			0x00080 = Lights
+			0x00100 = Apparatus
+			0x00200 = Repair
+			0x00400 = Misc
+			0x00800 = Spells
+			0x01000 = Magic Items
+			0x02000 = Potions
+			0x04000 = Training
+			0x08000 = Spellmaking
+			0x10000 = Enchanting
+			0x20000 = Repair Item
+	AI_W = AI bytes (14 bytes)
+		short Distance
+		short Duration
+		byte  TimeOfDay
+		byte  Idle[8]
+		byte  Unknown (1?)
+	AI_T = AI Travel (16 bytes)
+		float X
+		float Y
+		float Z
+		long  Unknown (1?)
+	AI_F = AI Follow (48 bytes)
+		float X
+		float Y
+		float Z
+		short Duration
+		char  ID[32]
+		short Unknown (0100?)
+	AI_E = AI Escort (48 bytes)
+		float X
+		float Y
+		float Z
+		short Duration
+		char  ID[32]
+		short Unknown (0100?)
+	CNDT = Cell escort/follow to string (optional)
+	AI_A = AI Activate (33 bytes)
+		char Name[32]
+		byte Unknown (1?)
+	DODT = Cell Travel Destination
+		float XPos
+		float YPos
+		float ZPos
+		float XRot
+		float YRot
+		float ZRot
+	DNAM = Cell name for previous DODT, if interior
+	XSCL = Scale (4 bytes, float, optional)
+		Only present if the scale is not 1.0
+
+24: ARMO =   280 (   155,    217.10,    346)
+	Armour
+	NAME = Item ID, required
+	MODL = Model Filename, required
+	FNAM = Item Name, required
+	AODT = Armour Data, required (24 bytes)
+		long  Type
+			0 = Helmet
+			1 = Cuirass
+			2 = L. Pauldron
+			3 = R. Pauldron
+			4 = Greaves
+			5 = Boots
+			6 = L. Gauntlet
+			7 = R. Gauntlet
+			8 = Shield
+			9 = L. Bracer
+			10 = R. Bracer
+		float Weight
+		long  Value
+		long  Health
+		long  EnchantPts
+		long  Armour
+	ITEX = Icon Filename, required
+	INDX = Body Part Index (1 byte)
+		0 = Head
+		1 = Hair
+		2 = Neck
+		3 = Cuirass
+		4 = Groin
+		5 = Skirt
+		6 = Right Hand
+		7 = Left Hand
+		8 = Right Wrist
+		9 = Left Wrist
+		10 = Shield
+		11 = Right Forearm
+		12 = Left Forearm
+		13 = Right Upper Arm
+		14 = Left Upper Arm
+		15 = Right Foot
+		16 = Left Foot
+		17 = Right Ankle
+		18 = Left Ankle
+		19 = Right Knee
+		20 = Left Knee
+		21 = Right Upper Leg
+		22 = Left Upper Leg
+		23 = Right Pauldron
+		24 = Left Pauldron
+		25 = Weapon
+		26 = Tail
+	BNAM = Male Part Name
+	CNAM = Female Body Part Name (0 occurences)
+		     INDX and BNAM/CNAM are grouped together.
+         INDX first followed by an optional BNAM
+         (no BNAM indicates a NULL field for that index).
+		     Up to 7 pairs allowed.
+	SCRI = Script Name
+	ENAM = Enchantment Name
+
+
+25: CLOT =   510 (   123,    203.98,    658)
+	Clothing
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	CTDT = Clothing Data (12 bytes), required
+		long  Type
+			0 = Pants
+		float Weight
+		short Value
+		short EnchantPts
+
+	ITEX = Inventory Icon
+	INDX = Body Part Index (1 byte)
+	BNAM = Male Body Part Name
+	CNAM = Female Body Part Name
+         INDX and BNAM/CNAM are grouped together.
+         INDX first followed by an optional BNAM
+         (no BNAM indicates a NULL field for that index).
+	ENAM = Enchantment Name
+	SCRI = Script Name
+
+26: REPA =     6 (   124,    145.67,    158)
+	Repair Items
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	RIDT = Repair Data (16 bytes), required
+		float	Weight
+		long	Value
+		long	Uses
+		float	Quality
+	ITEX = Inventory Icon
+	SCRI = Script Name
+
+27: ACTI =   697 (    52,     93.60,    138)
+	Activator
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	SCRI = Script Name
+
+28: APPA =    22 (   139,    152.59,    167)
+	Alchemy Apparatus
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	AADT = Alchemy Data (16 bytes), required
+		long    Type
+			0 = Mortar and Pestle
+			1 = Albemic
+			2 = Calcinator
+			3 = Retort
+		float	Quality
+		float	Weight
+		long	Value
+	ITEX = Inventory Icon
+	SCRI = Script Name
+
+29: LOCK =     6 (   126,    136.17,    145)
+	Lockpicking Items
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	LKDT = Lock Data (16 bytes), required
+		float	Weight
+		long	Value
+		float	Quality
+		long 	Uses
+	ITEX = Inventory Icon
+	SCRI = Script Name
+
+30: PROB =     6 (   124,    136.33,    145)
+	Probe Items
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	PBDT = Probe Data (16 bytes), required
+		float	Weight
+		long	Value
+		float	Quality
+		long 	Uses
+	ITEX = Inventory Icon
+	SCRI = Script Name
+
+31: INGR =    95 (   151,    181.66,    227)
+	Ingrediants
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	IRDT = Ingrediant Data (56 bytes), required
+		float  Weight
+		long   Value
+		long   EffectID[4]	0 or -1 means no effect
+		long   SkillID[4]	only for Skill related effects, 0
+           or -1 otherwise
+		long   AttributeID[4]  only for Attribute related effects,
+           0 or -1 otherwise
+	ITEX = Inventory Icon
+	SCRI = Script Name
+
+32: BOOK =   574 (   131,   3306.91,  42120)
+	Books
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	BKDT = Book Data (20 bytes), required
+		float  Weight
+		long   Value
+		long   Scroll	(1 is scroll, 0 not)
+		long   SkillID	(-1 is no skill)
+		long   EnchantPts
+	ITEX = Inventory Icon
+	SCRI = Script Name
+	TEXT = Book text
+
+33: ALCH =   258 (   163,    188.15,    334)
+	Alchemy?
+	NAME = Item ID, required
+	MODL = Model Name, required
+	FNAM = Item Name, required
+	ALDT = Alchemy Data (12 bytes), required
+		float  Weight
+		long   Value
+		long   AutoCalc
+	ENAM = Enchantment (24 bytes) 1 to 8 per record
+		short EffectID
+		byte  SkillID (for skill related effects, -1/0 otherwise)
+		byte  AttributeID (for attribute related effects, -1/0 otherwise)
+		long  Unknown1
+		long  Unknown2
+		long  Duration
+		long  Magnitude
+		long  Unknown4
+	TEXT = Inventory Icon
+	SCRI = Script Name
+
+34: LEVI =   227 (    80,    486.23,   9201)
+	Levelled Items
+	Levelled Creatures
+	NAME = ID of levelled list
+	DATA = List data (4 bytes, long)
+		1 = Calc from all levels >= PC level
+		2 = Calc for each item
+	NNAM = Chance None? (1 byte)
+	INDX = Number of items in list (4 bytes, long)
+	INAM = ID string of list item
+	INTV = PC level for previous CNAM (2 bytes, short)
+		The INAM/INTV can occur many times in pairs
+
+35: LEVC =   116 (    97,    326.54,   1105)
+	Levelled Creatures
+	NAME = ID of levelled list
+	DATA = List data (4 bytes, long)
+    1 = Calc from all levels >= PC level
+	NNAM = Chance None? (1 byte)
+	INDX = Number of items in list (4 bytes, long)
+	CNAM = ID string of list item
+	INTV = PC level for previous CNAM (2 bytes, short)
+		The CNAM/INTV can occur many times in pairs
+
+36: CELL =  2538 (    29,  10151.12, 104488)
+	Cell Definitions
+	NAME = Cell ID string. Can be an empty string for exterior cells
+	in which case the region name is used instead.
+	DATA = Cell Data
+		long Flags
+			0x01 = Interior?
+			0x02 = Has Water
+			0x04 = Illegal to Sleep here
+			0x80 = Behave like exterior (Tribunal)
+		long GridX
+		long GridY
+	RGNN = Region name string
+	NAM0 = Number of objects in cell in current file?
+	       (4 byte, long), Optional
+
+	Exterior Cell Sub-Records
+		NAM5 = Map Color (4 bytes, long, COLORREF)
+
+	Interior Cell Sub-Records
+		WHGT = Water Height (4 bytes, float)
+		AMBI = Ambient Light Level (16 bytes)
+			long AmbientColor
+			long SunlightColor
+			long FogColor
+			float FogDensity
+
+	Referenced Object Data Grouping
+		FRMR = Object Index (starts at 1) (4 bytes, long)
+			This is used to uniquely identify objects in the cell.
+			For new files the index starts at 1 and is incremented
+			for each new object added.  For modified objects the
+			index is kept the same.
+		NAME = Object ID string
+		XSCL = Scale (4 bytes, float) Static
+		DODT = XYZ Pos, XYZ Rotation of exit (24 bytes, Door objects)
+			float XPos
+			float YPos
+			float ZPos
+			float XRotate
+			float YRotate
+			float ZRotate
+		DNAM = Door exit name (Door objects)
+		FLTV = Follows the DNAM optionally, lock level
+		KNAM = Door key
+		TNAM = Trap name
+		UNAM = Reference Blocked (1 byte, 00?), only occurs once in
+		       MORROWIND.ESM
+		ANAM = Owner ID string
+		BNAM = Global variable/rank ID string
+		INTV = Number of uses ( 4 bytes, long, 1 default), occurs
+		       even for objects that don't use it
+		NAM9 = ? (4 bytes, long, 0x00000001)
+		XSOL = Soul Extra Data (ID string of creature)
+		DATA = Ref Position Data (24 bytes)
+			float XPos
+			float YPos
+			float ZPos
+			float XRotate
+			float YRotate
+			float ZRotate
+
+37: LAND =  1390 (    28,  27374.14,  30243)
+	Landscape
+	INTV ()
+	DATA (4 byte long?)
+	VNML (byte data?)
+	VHGT (byte data?)
+	WNAM (byte data?)
+	VCLR (byte data?)
+	VTEX (byte data?)
+
+38: PGRD =  1194 (   101,    996.60,   8261)
+	Path Grid
+
+39: SNDG =   168 (    50,     75.86,     94)
+	Sound Generator
+	NAME = Name? (DEFAULT0001, ALIT0001, etc...)
+	DATA = Sound Type Data (4 bytes, long)
+		0 = Left Foot
+		1 = Right Foot
+		2 = Swim Left
+		3 = Swim Right
+		4 = Moan
+		5 = Roar
+		6 = Scream
+		7 = Land
+	SNAM = Sound ID string
+	CNAM = Creature name (optional)
+
+40: DIAL =   772 (    24,     33.54,     54)
+	Dialogue topic (including journals)
+	NAME = Dialogue ID string
+	DATA = Dialogue Type? (1 byte, 4 bytes for deleted?)
+		0 = Regular Topic
+		1 = Voice?
+		2 = Greeting?
+		3 = Persuasion?
+		4 = Journal
+	What follows in the ESP/ESM are all the INFO records that belong to the
+	DIAL record (one of the few cases where order is important).
+
+41: INFO =  3408 (   107,    299.86,   1063)
+	Dialogue response record that belongs to previous DIAL record.
+	INAM = Info name string (unique sequence of #'s), ID
+	PNAM = Previous info ID
+	NNAM = Next info ID (form a linked list of INFOs for the DIAL). First
+		INFO has an empty PNAM, last has an empty NNAM.
+	DATA = Info data (12 bytes)
+		long Unknown1
+		long Disposition
+		byte Rank (0-10)
+		byte Gender
+			0xFF = None
+			0x00 = Male
+			0x01 = Female
+		byte PCRank (0-10)
+		byte Unknown2
+	ONAM = Actor string
+	RNAM = Race string
+	CNAM = Class string
+	FNAM = Faction string
+	ANAM = Cell string
+	DNAM = PC Faction string
+	NAME = The info response string (512 max)
+	SNAM = Sound filename
+	QSTN = Journal Name (1 byte, 0x01)
+	QSTF = Journal Finished (1 byte, 0x01)
+	QSTR = Journal Restart (1 byte, 0x01)
+	SCVR = String for the function/variable choice (5+ bytes)
+		byte  Index
+			'0' to '5'
+		byte  Type
+			'0' = Nothing?
+			'1' = Function
+			'2' = Global
+			'3' = Local
+			'4' = Journal
+			'5' = Item
+			'6' = Dead
+			'7' = Not ID
+			'8' = Not Faction
+			'9' = Not Class
+			'A' = Not Race
+			'B' = Not Cell
+			'C' = Not Local
+		short Function (2-byte string, '00' to '71')
+			'sX' = Global/Local/Not Local types
+			'JX' = Journal type
+			'IX' = Item Type
+			'DX' = Dead Type
+			'XX' = Not ID Type
+			'FX' = Not Faction
+			'CX' = Not Class
+			'RX' = Not Race
+			'LX' = Not Cell
+		byte CompareOp
+			'0' = '='
+			'1' = '!='
+      '2' = '<'
+      '3' = '<='
+      '4' = '>'
+      '5' = '>='
+		byte Name[]
+			Except for the function type, this is the ID for
+			the global/local/etc... Is not nessecarily NULL
+			terminated. The function type SCVR sub-record
+			has no name string.
+
+	INTV =
+	FLTV = The function/variable result for the previous SCVR
+	BNAM = Result text (not compiled)
+	Size of master in bytes (64 bits)
+
+	*/
+
 	return bytesRead;
 }
 
@@ -1388,6 +2389,10 @@ bool isValid(std::string name) {
 	if (name == "CONT") return true;
 	if (name == "SPEL") return true;
 	if (name == "CREA") return true;
+	if (name == "BODY") return true;
+	if (name == "LIGH") return true;
+	if (name == "ENCH") return true;
+	if (name == "NPC_") return true;
 	return false;
 }
 

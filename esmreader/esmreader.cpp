@@ -580,7 +580,7 @@ int readSubRecordData(const std::string &name) {
 
 			file.read((char*)&scriptHeader, sizeof(scriptHeader));
 			std::cout << " Nombre del script: " << std::string(scriptHeader.name, scriptHeader.name + 32) << std::endl;
-			std::cout << " Tamaño script: " << scriptHeader.scriptDataSize << std::endl;
+			std::cout << " Tamaï¿½o script: " << scriptHeader.scriptDataSize << std::endl;
 			std::cout << " Local var size: " << scriptHeader.localVarSize << std::endl;
 			bytesRead += sizeof(scriptHeader);
 		}
@@ -1117,6 +1117,22 @@ int readSubRecordData(const std::string &name) {
 			bytesRead += subRecordHeader.size;
 		}
 
+		if (name == "CNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Sound Gen name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "NPCS")
+		{
+			char buffer[300];  //32 bytes
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Spells: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
 		if (name == "NPDT")
 		{
 			struct CreatureData {
@@ -1168,6 +1184,184 @@ int readSubRecordData(const std::string &name) {
 			std::cout << "Creature flags read" << std::endl;
 			bytesRead += sizeof(creatureFlags);
 		}
+
+		if(name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "NPCO")
+		{
+			struct ItemRecord{
+				long int count; //quantity of the item
+				char name[32]; //the ID of the item
+			}itemRecord;
+
+			file.read((char*)&itemRecord, sizeof(itemRecord));
+			std::cout << "Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
+			bytesRead += 36;
+		}
+
+		if(name == "AIDT")
+		{
+			struct AiData{
+				uint8_t hello;
+				uint8_t unknown1;
+				uint8_t fight;
+				uint8_t flee;
+				uint8_t alarm;
+				uint8_t unknown2;
+				uint8_t unknown3;
+				uint8_t unknown4;
+				uint32_t flags;
+						/*0x00001 = Weapon
+						0x00002 = Armor
+						0x00004 = Clothing
+						0x00008 = Books
+						0x00010 = Ingredient
+						0x00020 = Picks
+						0x00040 = Probes
+						0x00080 = Lights
+						0x00100 = Apparatus
+						0x00200 = Repair Items
+						0x00400 = Misc
+						0x00800 = Spells
+						0x01000 = Magic Items
+						0x02000 = Potions
+						0x04000 = Training
+						0x08000 = Spellmaking
+						0x10000 = Enchanting
+						0x20000 = Repair
+						Remaining bits appear to be filled with junk data */
+			}aiData;
+
+			file.read((char*)&aiData, sizeof(aiData));
+			std::cout << "AI data read" << std::endl;
+			bytesRead += sizeof(aiData);
+		}
+
+		if(name == "DODT")
+		{
+			struct CellTravelDestination{
+				float posx,posy,posz;
+				float rotx,roty,rotz;
+			}cellTravelDestination;
+
+			file.read((char*)&cellTravelDestination, sizeof(cellTravelDestination));
+			std::cout << "Cell travel destination read" << std::endl;
+			bytesRead += sizeof(cellTravelDestination);
+		}
+
+		if(name == "DNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "AI_W")
+		{
+			struct WanderPackage{
+				uint16_t distance;
+				uint16_t duration;
+				uint8_t timeOfDay;
+				uint8_t idles[8];
+				uint8_t unknown; //always 1
+			}wanderPackage;
+
+			file.read((char*)&wanderPackage, sizeof(wanderPackage));
+			std::cout << "AI wander package read" << std::endl;
+			bytesRead += sizeof(wanderPackage);
+		}
+
+		/*AI Packages - the following fields can appear in any order, one per AI package, 
+		with the order defining the package priority.
+		Note: duration parameters in all packages are in hours. 
+		Any value greater than 24 should be divided by 100, and set to 24 if 
+		still greater than 24. The unknown value for each package seems to be 
+		an end-of-data marker; it is always a byte value set to 1 with any remaining 
+		data in the structure undefined and ignored.*/
+
+		if(name == "AI_T")
+		{
+			struct TravelPackage{
+				float x;
+				float y;
+				float z;
+				uint8_t unknown; //always 1
+				uint8_t unused[3];
+			}travelPackage;
+
+			file.read((char*)&travelPackage, sizeof(travelPackage));
+			std::cout << "AI travel package read" << std::endl;
+			bytesRead += sizeof(travelPackage);
+		}
+
+		if(name == "AI_F")
+		{
+			struct FollowPackage{
+				float x;
+				float y;
+				float z;
+				uint16_t duration;
+				char ID[32];
+				uint8_t unknown; //always 1
+				uint8_t unused;
+			}followPackage;
+
+			file.read((char*)&followPackage, sizeof(followPackage));
+			std::cout << "AI follow package read" << std::endl;
+			bytesRead += sizeof(followPackage);
+		}
+
+		if(name == "AI_E")
+		{
+			struct EscortPackage{
+				float x;
+				float y;
+				float z;
+				uint16_t duration;
+				char ID[32];
+				uint8_t unknown; //always 1
+				uint8_t unused;
+			}escortPackage;
+
+			file.read((char*)&escortPackage, sizeof(escortPackage));
+			std::cout << "AI escort package read" << std::endl;
+			bytesRead += sizeof(escortPackage);
+		}
+
+		if(name == "CNDT")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += sizeof(subRecordHeader.size);
+		}
+
+		if(name == "AI_A")
+		{
+			struct ActivatePackage{
+				char name[32];
+				uint8_t unknown; //always 1
+			}activatePackage;
+
+			file.read((char*)&activatePackage, sizeof(activatePackage));
+			std::cout << "AI activate package read" << std::endl;
+			bytesRead += sizeof(activatePackage);
+		}
+
+		if(name == "XSCL")
+		{
+			float scale; //1.0 default
+			file.read((char*)&scale, sizeof(scale));
+			std::cout << "Scale: " << scale << std::endl;
+			bytesRead += sizeof(scale);
+		}
 	}
 
 	return bytesRead;
@@ -1193,6 +1387,7 @@ bool isValid(std::string name) {
 	if (name == "WEAP") return true;
 	if (name == "CONT") return true;
 	if (name == "SPEL") return true;
+	if (name == "CREA") return true;
 	return false;
 }
 

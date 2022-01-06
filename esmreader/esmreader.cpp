@@ -33,7 +33,7 @@ struct SubRecordHeader {
 	long int size;   //not included the 8 bytes of header data.
 
 	std::ostream& serialize(std::ostream &out) const {
-		out << "Sub-Record name: " << std::string(name, name + 4) << " | Size: " << size;
+		out << " Sub-Record name: " << std::string(name, name + 4) << " | Size: " << size;
 		return out;
 	}
 }subRecordHeader;
@@ -50,8 +50,8 @@ void readRecordHeader() {
 
 int readSubRecordHeader() {
 	file.read((char*)&subRecordHeader, sizeof(subRecordHeader));
-	std::cout << "Sub-Record header bytes read: " << sizeof(subRecordHeader) << std::endl;
-	std::cout << subRecordHeader;
+	//std::cout << "Sub-Record header bytes read: " << sizeof(subRecordHeader) << std::endl;
+	std::cout << subRecordHeader << std::endl;
 	return sizeof(subRecordHeader);
 }
 
@@ -72,14 +72,12 @@ int readSubRecordData(const std::string &name) {
 			}hedr;
 
 			file.read((char*)&hedr, sizeof(hedr));
-			std::cout << " Version: " << hedr.version << std::endl;
-			std::cout << " File Type: " << hedr.fileType << std::endl;
-			std::string str2(hedr.companyName, hedr.companyName + 32);
-			std::cout << " Company Name: " << str2 << std::endl;
-			std::string str3(hedr.description, hedr.description + 256);
-			std::cout << " Description: " << str3 << std::endl;
-			std::cout << " Number of records: " << hedr.numRecords << std::endl;
-			std::cout << " Sub-Record data bytes read: " << sizeof(hedr) << std::endl;
+			std::cout << "  Version: " << hedr.version << std::endl;
+			std::cout << "  File Type: " << hedr.fileType << std::endl;
+			std::cout << "  Company Name: " << std::string(hedr.companyName, hedr.companyName + 32) << std::endl;
+			std::cout << "  Description: " << std::string(hedr.description, hedr.description + 256) << std::endl;
+			std::cout << "  Number of records: " << hedr.numRecords << std::endl;
+			std::cout << "  Sub-Record data bytes read: " << sizeof(hedr) << std::endl;
 			bytesRead += sizeof(hedr);
 		}
 
@@ -87,7 +85,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Required master file: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Required master file: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -95,7 +93,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			long long int aux = 0;
 			file.read((char*)&aux, sizeof(aux));
-			std::cout << " Size of the required master file: " << aux << std::endl;
+			std::cout << "  Size of the required master file: " << aux << std::endl;
 			bytesRead += sizeof(aux);
 		}
 	}
@@ -107,7 +105,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -115,7 +113,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " String: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  String: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -123,7 +121,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			long int aux = 0;
 			file.read((char*)&aux, sizeof(aux));
-			std::cout << " Integer Value: " << aux << std::endl;
+			std::cout << "  Integer Value: " << aux << std::endl;
 			bytesRead += sizeof(aux);
 		}
 
@@ -131,7 +129,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			float aux = 0;
 			file.read((char*)&aux, sizeof(aux));
-			std::cout << " Float Value: " << aux << std::endl;
+			std::cout << "  Float Value: " << aux << std::endl;
 			bytesRead += sizeof(aux);
 		}
 	}
@@ -143,7 +141,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Global ID: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Global ID: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -151,7 +149,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Type of global (short,long,float): " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Type of global (short,long,float): " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -159,7 +157,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			float aux = 0;
 			file.read((char*)&aux, sizeof(aux));
-			std::cout << " Float Value: " << aux << std::endl;
+			std::cout << "  Float Value: " << aux << std::endl;
 			bytesRead += sizeof(aux);
 		}
 	}
@@ -171,7 +169,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Class ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Class ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -179,7 +177,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Class name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Class name string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -224,7 +222,7 @@ int readSubRecordData(const std::string &name) {
 			file.read((char*)&classData, sizeof(classData));
 
 			bytesRead += sizeof(classData);
-			std::cout << "Class Data: " << classData.attributeID1 << " " << classData.attributeID2 << " "
+			std::cout << "  Class Data: " << classData.attributeID1 << " " << classData.attributeID2 << " "
 				<< classData.specialization << " " << classData.minorID1 << " " << classData.majorID1 << " " << classData.minorID2 << " " << classData.majorID2
 				<< " " << classData.minorID3 << " " << classData.majorID3 << " " << classData.minorID4 << " " << classData.majorID4 << " "
 				<< classData.minorID5 << " " << classData.majorID5 << " " << classData.flags << " " << classData.autoCalcFlags << std::endl;
@@ -234,7 +232,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Class description: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Class description: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -246,7 +244,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Faction ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Faction ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -254,7 +252,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Faction name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Faction name string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -262,7 +260,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Rank name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Rank name string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -288,7 +286,7 @@ int readSubRecordData(const std::string &name) {
 			file.read((char*)&factionData, sizeof(factionData));
 
 			bytesRead += sizeof(factionData);
-			std::cout << "Faction Data: " << factionData.attributeID1 << " " << factionData.attributeID2 << " "
+			std::cout << "  Faction Data: " << factionData.attributeID1 << " " << factionData.attributeID2 << " "
 				<< factionData.rd[0].attribute1 << " " << factionData.skillId[0] << " " << factionData.unknown1 << " "
 				<< factionData.flags << std::endl;
 		}
@@ -297,7 +295,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Faction name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Faction name string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -305,7 +303,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			long int aux = 0;
 			file.read((char*)&aux, sizeof(aux));
-			std::cout << " Faction reaction value: " << aux;
+			std::cout << "  Faction reaction value: " << aux;
 			bytesRead += sizeof(aux);
 		}
 	}
@@ -317,7 +315,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Race ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Race ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -325,7 +323,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Race name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Race name string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -352,7 +350,7 @@ int readSubRecordData(const std::string &name) {
 			}raceData;
 
 			file.read((char*)&raceData, sizeof(raceData));
-			std::cout << " Race data read " << std::endl;
+			std::cout << "  Race data read " << std::endl;
 			bytesRead += sizeof(raceData);
 		}
 
@@ -360,7 +358,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Special power/ability: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Special power/ability: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -368,7 +366,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[1000];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Race description: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Race description: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -380,7 +378,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Sound ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Sound ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -388,7 +386,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Sound filename relative to Sounds/ : " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Sound filename relative to Sounds/ : " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -401,7 +399,7 @@ int readSubRecordData(const std::string &name) {
 			}soundData;
 
 			file.read((char*)&soundData, sizeof(soundData));
-			std::cout << " Sound data: " << " vol: " << std::to_string(soundData.volume) << " minRange: " << std::to_string(soundData.minRange) <<
+			std::cout << "  Sound data: " << " vol: " << std::to_string(soundData.volume) << " minRange: " << std::to_string(soundData.minRange) <<
 				" maxRange: " << std::to_string(soundData.maxRange) << std::endl;
 			bytesRead += sizeof(soundData);
 		}
@@ -414,7 +412,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			long int aux; //0 to 26 hard-coded in the game
 			file.read((char*)&aux, sizeof(aux));
-			std::cout << " Skill: " << aux << std::endl;
+			std::cout << "  Skill: " << aux << std::endl;
 			bytesRead += sizeof(aux);
 		}
 
@@ -427,7 +425,7 @@ int readSubRecordData(const std::string &name) {
 			}skillData;
 
 			file.read((char*)&skillData, sizeof(skillData));
-			std::cout << " Skill data read " << std::endl;
+			std::cout << "  Skill data read " << std::endl;
 			bytesRead += sizeof(skillData);
 		}
 
@@ -435,7 +433,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Skill description string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Skill description string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -447,7 +445,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			long int aux; //0 to 137
 			file.read((char*)&aux, sizeof(aux));
-			std::cout << " Magic effect: " << aux << std::endl;
+			std::cout << "  Magic effect: " << aux << std::endl;
 			bytesRead += sizeof(aux);
 		}
 
@@ -471,7 +469,7 @@ int readSubRecordData(const std::string &name) {
 			}magicEffectData;
 
 			file.read((char*)&magicEffectData, sizeof(magicEffectData));
-			std::cout << " Magic effect data read " << std::endl;
+			std::cout << "  Magic effect data read " << std::endl;
 			bytesRead += sizeof(magicEffectData);
 		}
 
@@ -479,7 +477,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Effect icon string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Effect icon string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -487,7 +485,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Particle texture string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Particle texture string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -495,7 +493,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Casting visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Casting visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -503,7 +501,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Bolt visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Bolt visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -511,7 +509,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Hit visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Hit visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -519,7 +517,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Area visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Area visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -527,7 +525,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[500];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Description text string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Description text string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -535,7 +533,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Cast Sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Cast Sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -543,7 +541,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Bolt sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Bolt sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -551,7 +549,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Hit sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Hit sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -559,7 +557,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Area sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Area sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -579,9 +577,9 @@ int readSubRecordData(const std::string &name) {
 			}scriptHeader;
 
 			file.read((char*)&scriptHeader, sizeof(scriptHeader));
-			std::cout << " Nombre del script: " << std::string(scriptHeader.name, scriptHeader.name + 32) << std::endl;
-			std::cout << " Tama�o script: " << scriptHeader.scriptDataSize << std::endl;
-			std::cout << " Local var size: " << scriptHeader.localVarSize << std::endl;
+			std::cout << "  Nombre del script: " << std::string(scriptHeader.name, scriptHeader.name + 32) << std::endl;
+			std::cout << "  Tama�o script: " << scriptHeader.scriptDataSize << std::endl;
+			std::cout << "  Local var size: " << scriptHeader.localVarSize << std::endl;
 			bytesRead += sizeof(scriptHeader);
 		}
 
@@ -589,7 +587,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[10000];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " List of all the local variables: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  List of all the local variables: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -599,7 +597,7 @@ int readSubRecordData(const std::string &name) {
 			file.read((char*)&buffer, subRecordHeader.size);
 			/*std::streamsize bytes = file.gcount();
 			std::cout << "bytes read: " << bytes << std::endl;*/
-			std::cout << " Compiled script data read " << subRecordHeader.size << " bytes" << std::endl;
+			std::cout << "  Compiled script data read " << subRecordHeader.size << " bytes" << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -607,7 +605,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[10000];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Script : " << std::endl << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Script : " << std::endl << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -619,7 +617,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Region ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Region ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -627,7 +625,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Region name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Region name string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -638,7 +636,7 @@ int readSubRecordData(const std::string &name) {
 			}weatherData;
 
 			file.read((char*)&weatherData, sizeof(weatherData));
-			std::cout << " Weather data read " << std::endl;
+			std::cout << "  Weather data read " << std::endl;
 			bytesRead += sizeof(weatherData);
 		}
 
@@ -646,7 +644,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << " Sleep creature string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			std::cout << "  Sleep creature string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -657,7 +655,7 @@ int readSubRecordData(const std::string &name) {
 			}mapColor;
 
 			file.read((char*)&mapColor, sizeof(mapColor));
-			std::cout << " map color read " << std::endl;
+			std::cout << "  map color read " << std::endl;
 			bytesRead += sizeof(mapColor);
 		}
 
@@ -669,7 +667,7 @@ int readSubRecordData(const std::string &name) {
 			}soundRecord;
 
 			file.read((char*)&soundRecord, sizeof(soundRecord));
-			std::cout << "Sound record: " << std::string(soundRecord.soundName, 32) << std::endl;
+			std::cout << "  Sound record: " << std::string(soundRecord.soundName, 32) << std::endl;
 			bytesRead += sizeof(soundRecord);
 		}
 	}
@@ -681,7 +679,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Sign ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Sign ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -689,7 +687,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Sign name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Sign name string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -697,7 +695,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Texture filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Texture filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -705,7 +703,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[500];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Description string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Description string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -713,7 +711,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char spell_ability[32];
 			file.read((char*)&spell_ability, 32);
-			std::cout << "Spell/ability read" << std::endl;
+			std::cout << "  Spell/ability read" << std::endl;
 			bytesRead += 32;
 		}
 	}
@@ -725,7 +723,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -734,7 +732,7 @@ int readSubRecordData(const std::string &name) {
 			//uint32 but uint16 are used as indices in LAND records so are restricted to uint16
 			long int index;
 			file.read((char*)&index, sizeof(index));
-			std::cout << "Index: " << index << std::endl;
+			std::cout << "  Index: " << index << std::endl;
 			bytesRead += sizeof(index);
 		}
 
@@ -742,7 +740,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -754,7 +752,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -762,7 +760,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NIF model: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -774,7 +772,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Door ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Door ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -782,7 +780,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Door name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Door name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -790,15 +788,15 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
-		if (name == "SCIP")
+		if (name == "SCIP" || name == "SCRI")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -806,7 +804,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Sound name open: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Sound name open: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -814,7 +812,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Sound name close: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Sound name close: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -826,7 +824,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Misc item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Misc item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -834,7 +832,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Misc item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Misc item name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -842,7 +840,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -855,7 +853,7 @@ int readSubRecordData(const std::string &name) {
 			}miscItemData;
 
 			file.read((char*)&miscItemData, sizeof(miscItemData));
-			std::cout << "Misc item data read" << std::endl;
+			std::cout << "  Misc item data read" << std::endl;
 			bytesRead += sizeof(miscItemData);
 		}
 
@@ -863,7 +861,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Inventory icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Inventory icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -871,7 +869,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Enchantment ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Enchantment ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -879,7 +877,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Script ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Script ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -891,7 +889,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Weapon ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Weapon ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -899,7 +897,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Weapon name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Weapon name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -907,7 +905,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -946,7 +944,7 @@ int readSubRecordData(const std::string &name) {
 			}weaponData;
 
 			file.read((char*)&weaponData, sizeof(weaponData));
-			std::cout << "Weapon data read" << std::endl;
+			std::cout << "  Weapon data read" << std::endl;
 			bytesRead += sizeof(weaponData);
 		}
 
@@ -954,7 +952,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Inventory icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Inventory icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -962,7 +960,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Enchantment ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Enchantment ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -970,7 +968,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Script ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Script ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 	}
@@ -982,7 +980,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Container ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Container ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -990,7 +988,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Container name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Container name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -998,7 +996,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1006,7 +1004,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			float weight;
 			file.read((char*)&weight, sizeof(weight));
-			std::cout << "Container data read" << std::endl;
+			std::cout << "  Container weight: " << weight << std::endl;
 			bytesRead += sizeof(weight);
 		}
 
@@ -1017,7 +1015,7 @@ int readSubRecordData(const std::string &name) {
 			//0x0002 = respawns, organic only
 			//0x0008 = default, unknown
 			file.read((char*)&containerFlags, sizeof(containerFlags));
-			std::cout << "Container flags: " << containerFlags << std::endl;
+			std::cout << "  Container flags: " << containerFlags << std::endl;
 			bytesRead += sizeof(containerFlags);
 		}
 
@@ -1028,8 +1026,16 @@ int readSubRecordData(const std::string &name) {
 				char name[32]; //id of the item
 			}item;
 			file.read((char*)&item, 32+4);
-			std::cout << "Item: " << std::string(item.name, item.name + 32) << " quantity: " << item.count << std::endl;
+			std::cout << "  Item: " << std::string(item.name, item.name + 32) << " quantity: " << item.count << std::endl;
 			bytesRead += 32+4;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
 		}
 	}
 
@@ -1040,7 +1046,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Spell ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Spell ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1048,7 +1054,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Spell name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Spell name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1067,7 +1073,7 @@ int readSubRecordData(const std::string &name) {
 								0x0004 = Always Succeeds*/
 			}spellData;
 			file.read((char*)&spellData, sizeof(spellData));
-			std::cout << "Spell data read" << std::endl;
+			std::cout << "  Spell data read" << std::endl;
 			bytesRead += sizeof(spellData);
 		}
 
@@ -1085,7 +1091,7 @@ int readSubRecordData(const std::string &name) {
 			}enchantmentsData;
 
 			file.read((char*)&enchantmentsData, sizeof(enchantmentsData));
-			std::cout << "Enchantments read" << std::endl;
+			std::cout << "  Enchantments read" << std::endl;
 			bytesRead += sizeof(enchantmentsData);
 		}
 	}
@@ -1097,7 +1103,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Creature ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Creature ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1105,7 +1111,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Creature name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Creature name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1113,7 +1119,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1121,7 +1127,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Sound Gen name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Sound Gen name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1129,7 +1135,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];  //32 bytes
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Spells: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Spells: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1162,7 +1168,7 @@ int readSubRecordData(const std::string &name) {
 				long int gold;
 			}creatureData;
 			file.read((char*)&creatureData, sizeof(creatureData));
-			std::cout << "Creature data read" << std::endl;
+			std::cout << "  Creature data read" << std::endl;
 			bytesRead += sizeof(creatureData);
 		}
 
@@ -1181,7 +1187,7 @@ int readSubRecordData(const std::string &name) {
 			0x0400 = Skeleton Blood
 			0x0800 = Metal Blood*/
 			file.read((char*)&creatureFlags, sizeof(creatureFlags));
-			std::cout << "Creature flags read" << std::endl;
+			std::cout << "  Creature flags read" << std::endl;
 			bytesRead += sizeof(creatureFlags);
 		}
 
@@ -1189,8 +1195,8 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "NPCO")
@@ -1201,7 +1207,7 @@ int readSubRecordData(const std::string &name) {
 			}itemRecord;
 
 			file.read((char*)&itemRecord, sizeof(itemRecord));
-			std::cout << "Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
+			std::cout << "  Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
 			bytesRead += 36;
 		}
 
@@ -1239,7 +1245,7 @@ int readSubRecordData(const std::string &name) {
 			}aiData;
 
 			file.read((char*)&aiData, sizeof(aiData));
-			std::cout << "AI data read" << std::endl;
+			std::cout << "  AI data read" << std::endl;
 			bytesRead += sizeof(aiData);
 		}
 
@@ -1251,7 +1257,7 @@ int readSubRecordData(const std::string &name) {
 			}cellTravelDestination;
 
 			file.read((char*)&cellTravelDestination, sizeof(cellTravelDestination));
-			std::cout << "Cell travel destination read" << std::endl;
+			std::cout << "  Cell travel destination read" << std::endl;
 			bytesRead += sizeof(cellTravelDestination);
 		}
 
@@ -1259,8 +1265,8 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "AI_W")
@@ -1274,7 +1280,7 @@ int readSubRecordData(const std::string &name) {
 			}wanderPackage;
 
 			file.read((char*)&wanderPackage, sizeof(wanderPackage));
-			std::cout << "AI wander package read" << std::endl;
+			std::cout << "  AI wander package read" << std::endl;
 			bytesRead += sizeof(wanderPackage);
 		}
 
@@ -1297,7 +1303,7 @@ int readSubRecordData(const std::string &name) {
 			}travelPackage;
 
 			file.read((char*)&travelPackage, sizeof(travelPackage));
-			std::cout << "AI travel package read" << std::endl;
+			std::cout << "  AI travel package read" << std::endl;
 			bytesRead += sizeof(travelPackage);
 		}
 
@@ -1314,7 +1320,7 @@ int readSubRecordData(const std::string &name) {
 			}followPackage;
 
 			file.read((char*)&followPackage, sizeof(followPackage));
-			std::cout << "AI follow package read" << std::endl;
+			std::cout << "  AI follow package read" << std::endl;
 			bytesRead += sizeof(followPackage);
 		}
 
@@ -1331,7 +1337,7 @@ int readSubRecordData(const std::string &name) {
 			}escortPackage;
 
 			file.read((char*)&escortPackage, sizeof(escortPackage));
-			std::cout << "AI escort package read" << std::endl;
+			std::cout << "  AI escort package read" << std::endl;
 			bytesRead += sizeof(escortPackage);
 		}
 
@@ -1339,8 +1345,8 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "AI_A")
@@ -1351,7 +1357,7 @@ int readSubRecordData(const std::string &name) {
 			}activatePackage;
 
 			file.read((char*)&activatePackage, sizeof(activatePackage));
-			std::cout << "AI activate package read" << std::endl;
+			std::cout << "  AI activate package read" << std::endl;
 			bytesRead += sizeof(activatePackage);
 		}
 
@@ -1359,7 +1365,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			float scale; //1.0 default
 			file.read((char*)&scale, sizeof(scale));
-			std::cout << "Scale: " << scale << std::endl;
+			std::cout << "  Scale: " << scale << std::endl;
 			bytesRead += sizeof(scale);
 		}
 	}
@@ -1371,24 +1377,24 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Body part ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Body part ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "MODL")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "FNAM")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Race: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Race: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "BYDT")
@@ -1415,7 +1421,7 @@ int readSubRecordData(const std::string &name) {
 			}bodyPartData;
 
 			file.read((char*)&bodyPartData, sizeof(bodyPartData));
-			std::cout << "Body part data read" << std::endl;
+			std::cout << "  Body part data read" << std::endl;
 			bytesRead += sizeof(bodyPartData);
 		}
 	}
@@ -1427,48 +1433,48 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Light ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Light ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "MODL")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "FNAM")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Light name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Light name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "ITEX")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "SNAM")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Sound name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Sound name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
-		if(name == "SCRI" || "SCPT")
+		if(name == "SCRI" || name == "SCPT")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Script name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Script name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "LHDT")
@@ -1494,7 +1500,7 @@ int readSubRecordData(const std::string &name) {
 			}lightData;
 
 			file.read((char*)&lightData, sizeof(lightData));
-			std::cout << "Light data read" << std::endl;
+			std::cout << "  Light data read" << std::endl;
 			bytesRead += sizeof(lightData);
 		}
 	}
@@ -1506,8 +1512,8 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Enchant ID string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Enchant ID string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
 		if(name == "ENDT")
@@ -1521,7 +1527,7 @@ int readSubRecordData(const std::string &name) {
 			}enchantData;
 
 			file.read((char*)&enchantData, sizeof(enchantData));
-			std::cout << "Enchant data read" << std::endl;
+			std::cout << "  Enchant data read" << std::endl;
 			bytesRead += sizeof(enchantData);
 		}
 
@@ -1539,7 +1545,7 @@ int readSubRecordData(const std::string &name) {
 			}enchantments;
 
 			file.read((char*)&enchantments, sizeof(enchantments));
-			std::cout << "Enchantments data read" << std::endl;
+			std::cout << "  Enchantments data read" << std::endl;
 			bytesRead += sizeof(enchantments);
 		}
 	}
@@ -1551,7 +1557,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NPC ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NPC ID string: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1559,7 +1565,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NPC name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NPC name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1567,7 +1573,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1575,7 +1581,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Race name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Race name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1583,7 +1589,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];  //32 bytes
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Faction name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Faction name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1591,7 +1597,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Head model: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Head model: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1599,7 +1605,7 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Class name: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Class name: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
@@ -1607,11 +1613,10 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];  //32 bytes
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Hair model: " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Hair model: " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
-		int autocalc = 0;
 		if (name == "FLAG")
 		{
 			uint32_t npcFlags;
@@ -1623,58 +1628,61 @@ int readSubRecordData(const std::string &name) {
 				0x0400 = Blood Texture: Skeleton
 				0x0800 = Blood Texture: Metal Sparks */
 			file.read((char*)&npcFlags, sizeof(npcFlags));
-			std::cout << "NPC flags read" << std::endl;
+			std::cout << "  NPC flags read" << std::endl;
 			bytesRead += sizeof(npcFlags);
-
-			std::cout << "Flags: " << npcFlags << std::endl;
-			if( npcFlags && 0x0010 ) std::cout << "autocalc set" << std::endl;
-			exit(0);
 		}
 
-		if (name == "NPDT-")
+		if (name == "NPDT")
 		{
-			struct CreatureData {
-				long int type; //creature, daedra, undead, humanoid
-				long int level;
-				long int strength;
-				long int intelligence;
-				long int willpower;
-				long int agility;
-				long int speed;
-				long int endurance;
-				long int personality;
-				long int luck;
-				long int health;
-				long int spellPts;
-				long int fatigue;
-				long int soul;
-				long int combat;
-				long int magic;
-				long int stealth;
-				long int attackMin1;
-				long int attackMax1;
-				long int attackMin2;
-				long int attackMax2;
-				long int attackMin3;
-				long int attackMax3;
-				long int gold;
-			}creatureData;
-			file.read((char*)&creatureData, sizeof(creatureData));
-			std::cout << "Creature data read" << std::endl;
-			bytesRead += sizeof(creatureData);
+			if (subRecordHeader.size == 12)
+			{
+				//12 bytes version , autocalc flag set
+				struct NpcData {
+					uint16_t level;
+					uint8_t disposition;
+					uint8_t reputation;
+					uint8_t rank;
+					uint8_t unknown[3]; //junk data
+					uint32_t gold;
+				}npcData;
+				file.read((char*)&npcData, sizeof(npcData));
+				std::cout << "  NPC data read (12 bytes)" << std::endl;
+				bytesRead += sizeof(npcData);
+			}
+			else
+			{
+				//52 bytes version, autocalc flag clear
+				struct NpcData {
+					uint16_t level;
+					uint8_t attributes[8]; //in order of attribute ID
+					uint8_t skills[27]; //in order of skill ID
+					uint8_t unknown; //always 0
+					uint16_t health;
+					uint16_t spellPoints;
+					uint16_t fatigue;
+					uint8_t disposition;
+					uint8_t reputation;
+					uint8_t rank;
+					uint8_t unknown2; //junk data
+					uint32_t gold;
+				}npcData;
+				file.read((char*)&npcData, sizeof(npcData));
+				std::cout << "  NPC data read (52 bytes)" << std::endl;
+				bytesRead += sizeof(npcData);
+			}
 		}
 
 		
 
-		if(name == "SCRI-")
+		if(name == "SCRI")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
-		if(name == "NPCO-")
+		if(name == "NPCO")
 		{
 			struct ItemRecord{
 				long int count; //quantity of the item
@@ -1682,11 +1690,11 @@ int readSubRecordData(const std::string &name) {
 			}itemRecord;
 
 			file.read((char*)&itemRecord, sizeof(itemRecord));
-			std::cout << "Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
+			std::cout << "  Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
 			bytesRead += 36;
 		}
 
-		if(name == "AIDT-")
+		if(name == "AIDT")
 		{
 			struct AiData{
 				uint8_t hello;
@@ -1720,11 +1728,11 @@ int readSubRecordData(const std::string &name) {
 			}aiData;
 
 			file.read((char*)&aiData, sizeof(aiData));
-			std::cout << "AI data read" << std::endl;
+			std::cout << "  AI data read" << std::endl;
 			bytesRead += sizeof(aiData);
 		}
 
-		if(name == "DODT-")
+		if(name == "DODT")
 		{
 			struct CellTravelDestination{
 				float posx,posy,posz;
@@ -1732,19 +1740,19 @@ int readSubRecordData(const std::string &name) {
 			}cellTravelDestination;
 
 			file.read((char*)&cellTravelDestination, sizeof(cellTravelDestination));
-			std::cout << "Cell travel destination read" << std::endl;
+			std::cout << "  Cell travel destination read" << std::endl;
 			bytesRead += sizeof(cellTravelDestination);
 		}
 
-		if(name == "DNAM-")
+		if(name == "DNAM")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
-		if(name == "AI_W-")
+		if(name == "AI_W")
 		{
 			struct WanderPackage{
 				uint16_t distance;
@@ -1755,7 +1763,7 @@ int readSubRecordData(const std::string &name) {
 			}wanderPackage;
 
 			file.read((char*)&wanderPackage, sizeof(wanderPackage));
-			std::cout << "AI wander package read" << std::endl;
+			std::cout << "  AI wander package read" << std::endl;
 			bytesRead += sizeof(wanderPackage);
 		}
 
@@ -1767,7 +1775,7 @@ int readSubRecordData(const std::string &name) {
 		an end-of-data marker; it is always a byte value set to 1 with any remaining 
 		data in the structure undefined and ignored.*/
 
-		if(name == "AI_T-")
+		if(name == "AI_T")
 		{
 			struct TravelPackage{
 				float x;
@@ -1778,11 +1786,11 @@ int readSubRecordData(const std::string &name) {
 			}travelPackage;
 
 			file.read((char*)&travelPackage, sizeof(travelPackage));
-			std::cout << "AI travel package read" << std::endl;
+			std::cout << "  AI travel package read" << std::endl;
 			bytesRead += sizeof(travelPackage);
 		}
 
-		if(name == "AI_F-")
+		if(name == "AI_F")
 		{
 			struct FollowPackage{
 				float x;
@@ -1795,11 +1803,11 @@ int readSubRecordData(const std::string &name) {
 			}followPackage;
 
 			file.read((char*)&followPackage, sizeof(followPackage));
-			std::cout << "AI follow package read" << std::endl;
+			std::cout << "  AI follow package read" << std::endl;
 			bytesRead += sizeof(followPackage);
 		}
 
-		if(name == "AI_E-")
+		if(name == "AI_E")
 		{
 			struct EscortPackage{
 				float x;
@@ -1812,19 +1820,19 @@ int readSubRecordData(const std::string &name) {
 			}escortPackage;
 
 			file.read((char*)&escortPackage, sizeof(escortPackage));
-			std::cout << "AI escort package read" << std::endl;
+			std::cout << "  AI escort package read" << std::endl;
 			bytesRead += sizeof(escortPackage);
 		}
 
-		if(name == "CNDT-")
+		if(name == "CNDT")
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-			bytesRead += sizeof(subRecordHeader.size);
+			std::cout << "  Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
 		}
 
-		if(name == "AI_A-")
+		if(name == "AI_A")
 		{
 			struct ActivatePackage{
 				char name[32];
@@ -1832,363 +1840,873 @@ int readSubRecordData(const std::string &name) {
 			}activatePackage;
 
 			file.read((char*)&activatePackage, sizeof(activatePackage));
-			std::cout << "AI activate package read" << std::endl;
+			std::cout << "  AI activate package read" << std::endl;
 			bytesRead += sizeof(activatePackage);
 		}
 
-		if(name == "XSCL-")
+		if(name == "XSCL")
 		{
 			float scale; //1.0 default
 			file.read((char*)&scale, sizeof(scale));
-			std::cout << "Scale: " << scale << std::endl;
+			std::cout << "  Scale: " << scale << std::endl;
 			bytesRead += sizeof(scale);
 		}
 	}
+
+	//armour
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "ARMO")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Armour ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Armour name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "AODT")
+		{
+			struct ArmourData {
+				long int type; /*0 = Helmet
+								1 = Cuirass
+								2 = L. Pauldron
+								3 = R. Pauldron
+								4 = Greaves
+								5 = Boots
+								6 = L. Gauntlet
+								7 = R. Gauntlet
+								8 = Shield
+								9 = L. Bracer
+								10 = R. Bracer*/
+				float weight;
+				long int value;
+				long int health;
+				long int enchantPts;
+				long int armour;
+			}armourData;
+
+			file.read((char*)&armourData, sizeof(armourData));
+			std::cout << "  Armour data read" << std::endl;
+			bytesRead += sizeof(armourData);
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "INDX")
+		{
+			uint8_t bodyPartIndex;
+				//0 = Head
+				//1 = Hair
+				//2 = Neck
+				//3 = Cuirass
+				//4 = Groin
+				//5 = Skirt
+				//6 = Right Hand
+				//7 = Left Hand
+				//8 = Right Wrist
+				//9 = Left Wrist
+				//10 = Shield
+				//11 = Right Forearm
+				//12 = Left Forearm
+				//13 = Right Upper Arm
+				//14 = Left Upper Arm
+				//15 = Right Foot
+				//16 = Left Foot
+				//17 = Right Ankle
+				//18 = Left Ankle
+				//19 = Right Knee
+				//20 = Left Knee
+				//21 = Right Upper Leg
+				//22 = Left Upper Leg
+				//23 = Right Pauldron
+				//24 = Left Pauldron
+				//25 = Weapon
+				//26 = Tail
+
+
+			file.read((char*)&bodyPartIndex, sizeof(bodyPartIndex));
+			std::cout << "  Body part index: " << bodyPartIndex << std::endl;
+			bytesRead += sizeof(bodyPartIndex);
+		}
+
+		if (name == "BNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Male armor name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "CNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Female armor name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ENAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Enchantment name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+	}
+
+	//Clothing
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "CLOT")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Clothing ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Clothing name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "CTDT")
+		{
+			struct ClothingData {
+				long int type; /*0 = Pants
+								1 = Shoes
+								2 = Shirt
+								3 = Belt
+								4 = Robe
+								5 = Right Glove
+								6 = Left Glove
+								7 = Skirt
+								8 = Ring
+								9 = Amulet*/
+				float weight;
+				uint16_t value;
+				uint16_t enchantmentPts;
+			}clothingData;
+
+
+			file.read((char*)&clothingData, sizeof(clothingData));
+			std::cout << "  Clothing data read: " << std::endl;
+			bytesRead += sizeof(clothingData);
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "INDX")
+		{
+			uint8_t bodyPartIndex; /*0 = Head
+									1 = Hair
+									2 = Neck
+									3 = Cuirass
+									4 = Groin
+									5 = Skirt
+									6 = Right Hand
+									7 = Left Hand
+									8 = Right Wrist
+									9 = Left Wrist
+									10 = Shield
+									11 = Right Forearm
+									12 = Left Forearm
+									13 = Right Upper Arm
+									14 = Left Upper Arm
+									15 = Right Foot
+									16 = Left Foot
+									17 = Right Ankle
+									18 = Left Ankle
+									19 = Right Knee
+									20 = Left Knee
+									21 = Right Upper Leg
+									22 = Left Upper Leg
+									23 = Right Pauldron
+									24 = Left Pauldron
+									25 = Weapon
+									26 = Tail*/
+			file.read((char*)&bodyPartIndex, sizeof(bodyPartIndex));
+			std::cout << "  Body part index: " << bodyPartIndex << std::endl;
+			bytesRead += sizeof(bodyPartIndex);
+		}
+
+		if (name == "BNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Male body part name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "CNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Female body part name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		/*INDX and BNAM/CNAM are grouped together.
+         INDX first followed by an optional BNAM
+         (no BNAM indicates a NULL field for that index).*/
+
+		if (name == "ENAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Enchantment name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+	}
+
+	//Repair items
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "REPA")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "RIDT")
+		{
+			struct RepairData {
+				float weight;
+				long int value;
+				long int uses;
+				float quality;
+			}repairData;
+
+			file.read((char*)&repairData, sizeof(repairData));
+			std::cout << "  Repair data read" << std::endl;
+			bytesRead += sizeof(repairData);
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+	}
+
+	//Activator
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "ACTI")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+	}
+
+	//Alchemy apparatus
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "APPA")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "AADT")
+		{
+			struct AlchemyData {
+				long int type; //0 = mortar and pestle, 1 = alembic, 2 = calcinator, 3 = retort
+				float quality;
+				float weight;
+				long int value;
+			}alchemyData;
+
+			file.read((char*)&alchemyData, sizeof(alchemyData));
+			std::cout << "  Alchemy data read" << std::endl;
+			bytesRead += sizeof(alchemyData);
+		}
+	}
+
+	//Lockpicking items
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "LOCK")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "LKDT")
+		{
+			struct LockpickingData {
+				float weight;
+				long int value;
+				float quality;
+				long int uses;
+			}lockpickingData;
+
+			file.read((char*)&lockpickingData, sizeof(lockpickingData));
+			std::cout << "  Lockpicking data read" << std::endl;
+			bytesRead += sizeof(lockpickingData);
+		}
+	}
+
+	//Probe items
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "PROB")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "PBDT")
+		{
+			struct ProbeData {
+				float weight;
+				long int value;
+				float quality;
+				long int uses;
+			}probeData;
+
+			file.read((char*)&probeData, sizeof(probeData));
+			std::cout << "  Probe data read" << std::endl;
+			bytesRead += sizeof(probeData);
+		}
+	}
+
+	//Ingredients
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "INGR")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "IRDT")
+		{
+			struct IngredientData {
+				float weight;
+				long int value;
+				long int effectID[4]; //0 or -1 means no effect
+				long int skillID[4]; //only for skill related effects, 0 or -1 otherwise
+				long int attributeID[4]; //only for attribute related effects, 0 or -1 otherwise
+			}ingredientData;
+
+			file.read((char*)&ingredientData, sizeof(ingredientData));
+			std::cout << "  Ingredient data read" << std::endl;
+			bytesRead += sizeof(ingredientData);
+		}
+	}
+
+	//Books
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "BOOK")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ITEX")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "TEXT")
+		{
+			char buffer[50000];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Text of the book: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ENAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Enchantment name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "BKDT")
+		{
+			struct BookData {
+				float weight;
+				long int value;
+				long int scroll; //0 = not scroll, 1 = scroll
+				long int skillID; //-1 = not skill
+				long int enchantPts;
+			}bookData;
+
+			file.read((char*)&bookData, sizeof(bookData));
+			std::cout << "  Book data read" << std::endl;
+			bytesRead += sizeof(bookData);
+		}
+	}
+
+	//Potions
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "ALCH")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "MODL")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "SCRI")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "TEXT")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ALDT")
+		{
+			struct AlchemyData {
+				float weight;
+				long int value;
+				long int flags; //0x1 = autocalc
+			}alchemyData;
+
+			file.read((char*)&alchemyData, sizeof(alchemyData));
+			std::cout << "  Alchemy data read" << std::endl;
+			bytesRead += sizeof(alchemyData);
+		}
+
+		if (name == "ENAM")
+		{
+			struct Enchantments {
+				uint16_t effectID;
+				int8_t sillAffected; //-1 if not applicable
+				int8_t attributeAffected; //-1 if not applicable
+				long int range; //0 = self, 1 = touch, 2 = target
+				long int area;
+				long int duration;
+				long int magnitudeMin;
+				long int magnitudeMax;
+			}enchantments;
+			file.read((char*)&enchantments, sizeof(enchantments));
+			std::cout << "  Enchantment data read" << std::endl;
+			bytesRead += sizeof(enchantments);
+		}
+	}
+
+	//Leveled items
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "LEVI")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Leveled list ID: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "DATA")
+		{
+			long int listData; //0x1 = calculate from all levels <= pc's level
+								//0x2 = calculate for each item in count
+
+			file.read((char*)&listData, sizeof(listData));
+			std::cout << "  Leveled item data read" << std::endl;
+			bytesRead += sizeof(listData);
+		}
+
+		if (name == "NNAM")
+		{
+			uint8_t chanceNone;
+
+			file.read((char*)&chanceNone, sizeof(chanceNone));
+			std::cout << "  Chance none : " << chanceNone << std::endl;
+			bytesRead += sizeof(chanceNone);
+		}
+
+		if (name == "INDX")
+		{
+			long int count; //count of following items
+
+			file.read((char*)&count, sizeof(count));
+			std::cout << "  Count : " << count << std::endl;
+			bytesRead += sizeof(count);
+		}
+
+		if (name == "INAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Item name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "INTV")
+		{
+			uint16_t pcLevel; //pc level for previous CNAM
+
+			file.read((char*)&pcLevel, sizeof(pcLevel));
+			std::cout << "  PC level: " << pcLevel << std::endl;
+			bytesRead += sizeof(pcLevel);
+		}
+		//The INAM/INTV can occur many times in pairs
+	}
+
+	//Leveled creatures
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "LEVC")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Leveled list ID: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "DATA")
+		{
+			long int listData; //0x1 = calculate from all levels <= pc's level
+								//0x2 = calculate for each item in count
+
+			file.read((char*)&listData, sizeof(listData));
+			std::cout << "  Leveled creature data read" << std::endl;
+			bytesRead += sizeof(listData);
+		}
+
+		if (name == "NNAM")
+		{
+			uint8_t chanceNone;
+
+			file.read((char*)&chanceNone, sizeof(chanceNone));
+			std::cout << "  Chance none : " << chanceNone << std::endl;
+			bytesRead += sizeof(chanceNone);
+		}
+
+		if (name == "INDX")
+		{
+			long int count; //count of following items
+
+			file.read((char*)&count, sizeof(count));
+			std::cout << "  Count : " << count << std::endl;
+			bytesRead += sizeof(count);
+		}
+
+		if (name == "CNAM")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Creature name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "INTV")
+		{
+			uint16_t pcLevel; //pc level for previous CNAM
+
+			file.read((char*)&pcLevel, sizeof(pcLevel));
+			std::cout << "  PC level: " << pcLevel << std::endl;
+			bytesRead += sizeof(pcLevel);
+		}
+		//The CNAM/INTV can occur many times in pairs
+	}
+
 	/*
-23: NPC_ =  2675 (   233,    619.12,   6236)
-	NPCs
-	NAME = NPC ID string
-	FNAM = NPC name
-	MODL = Animation file
-	RNAM = Race Name	}
-	ANAM = Faction name	} Required, even if empty
-	BNAM = Head model	}
-	CNAM = Class name
-	KNAM = Hair model	}
-	NPDT = NPC Data (12 bytes or 52 bytes?)
-		short Level
-		byte  Strength
-		byte  Intelligence
-		byte  Willpower
-		byte  Agility
-		byte  Speed
-		byte  Endurance
-		byte  Personality
-		byte  Luck
-		byte  Skills[27]  } According to the skillID (0-26)
-		byte  Reputation
-		short Health
-		short SpellPts
-		short Fatigue
-		byte  Disposition
-		byte  FactionID
-		byte  Rank
-		byte  Unknown1
-		long  Gold
-
-		12 byte Version
-		short Level
-		byte  Disposition
-		byte  FactionID?
-		byte  Rank
-		byte  Unknown1
-		byte  Unknown2
-		byte  Unknown3
-		long  Gold?
-	FLAG = NPC Flags (4 bytes, long)
-		0x0001 = Female
-		0x0002 = Essential
-		0x0004 = Respawn
-		0x0008 = None?
-		0x0010 = Autocalc
-		0x0400 = Blood Skel
-		0x0800 = Blood Metal
-	NPCO = NPC item (36 bytes, occurs 0+ times)
-		long	Count	  Number of the item
-		char	Name[32]  The ID of the item
-	NPCS = NPC spell (32 bytes, occurs 0+ times)
-		char	Name[32]  The ID of the item
-	AIDT = AI data (12 bytes)
-		byte Hello
-		byte Unknown1
-		byte Fight
-		byte Flee
-		byte Alarm
-		byte Unknown2
-		byte Unknown3
-		byte Unknown4
-		long Flags
-			0x00001 = Weapon
-			0x00002 = Armor
-			0x00004 = Clothing
-			0x00008 = Books
-			0x00010 = Ingrediant
-			0x00020 = Picks
-			0x00040 = Probes
-			0x00080 = Lights
-			0x00100 = Apparatus
-			0x00200 = Repair
-			0x00400 = Misc
-			0x00800 = Spells
-			0x01000 = Magic Items
-			0x02000 = Potions
-			0x04000 = Training
-			0x08000 = Spellmaking
-			0x10000 = Enchanting
-			0x20000 = Repair Item
-	AI_W = AI bytes (14 bytes)
-		short Distance
-		short Duration
-		byte  TimeOfDay
-		byte  Idle[8]
-		byte  Unknown (1?)
-	AI_T = AI Travel (16 bytes)
-		float X
-		float Y
-		float Z
-		long  Unknown (1?)
-	AI_F = AI Follow (48 bytes)
-		float X
-		float Y
-		float Z
-		short Duration
-		char  ID[32]
-		short Unknown (0100?)
-	AI_E = AI Escort (48 bytes)
-		float X
-		float Y
-		float Z
-		short Duration
-		char  ID[32]
-		short Unknown (0100?)
-	CNDT = Cell escort/follow to string (optional)
-	AI_A = AI Activate (33 bytes)
-		char Name[32]
-		byte Unknown (1?)
-	DODT = Cell Travel Destination
-		float XPos
-		float YPos
-		float ZPos
-		float XRot
-		float YRot
-		float ZRot
-	DNAM = Cell name for previous DODT, if interior
-	XSCL = Scale (4 bytes, float, optional)
-		Only present if the scale is not 1.0
-
-24: ARMO =   280 (   155,    217.10,    346)
-	Armour
-	NAME = Item ID, required
-	MODL = Model Filename, required
-	FNAM = Item Name, required
-	AODT = Armour Data, required (24 bytes)
-		long  Type
-			0 = Helmet
-			1 = Cuirass
-			2 = L. Pauldron
-			3 = R. Pauldron
-			4 = Greaves
-			5 = Boots
-			6 = L. Gauntlet
-			7 = R. Gauntlet
-			8 = Shield
-			9 = L. Bracer
-			10 = R. Bracer
-		float Weight
-		long  Value
-		long  Health
-		long  EnchantPts
-		long  Armour
-	ITEX = Icon Filename, required
-	INDX = Body Part Index (1 byte)
-		0 = Head
-		1 = Hair
-		2 = Neck
-		3 = Cuirass
-		4 = Groin
-		5 = Skirt
-		6 = Right Hand
-		7 = Left Hand
-		8 = Right Wrist
-		9 = Left Wrist
-		10 = Shield
-		11 = Right Forearm
-		12 = Left Forearm
-		13 = Right Upper Arm
-		14 = Left Upper Arm
-		15 = Right Foot
-		16 = Left Foot
-		17 = Right Ankle
-		18 = Left Ankle
-		19 = Right Knee
-		20 = Left Knee
-		21 = Right Upper Leg
-		22 = Left Upper Leg
-		23 = Right Pauldron
-		24 = Left Pauldron
-		25 = Weapon
-		26 = Tail
-	BNAM = Male Part Name
-	CNAM = Female Body Part Name (0 occurences)
-		     INDX and BNAM/CNAM are grouped together.
-         INDX first followed by an optional BNAM
-         (no BNAM indicates a NULL field for that index).
-		     Up to 7 pairs allowed.
-	SCRI = Script Name
-	ENAM = Enchantment Name
-
-
-25: CLOT =   510 (   123,    203.98,    658)
-	Clothing
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	CTDT = Clothing Data (12 bytes), required
-		long  Type
-			0 = Pants
-		float Weight
-		short Value
-		short EnchantPts
-
-	ITEX = Inventory Icon
-	INDX = Body Part Index (1 byte)
-	BNAM = Male Body Part Name
-	CNAM = Female Body Part Name
-         INDX and BNAM/CNAM are grouped together.
-         INDX first followed by an optional BNAM
-         (no BNAM indicates a NULL field for that index).
-	ENAM = Enchantment Name
-	SCRI = Script Name
-
-26: REPA =     6 (   124,    145.67,    158)
-	Repair Items
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	RIDT = Repair Data (16 bytes), required
-		float	Weight
-		long	Value
-		long	Uses
-		float	Quality
-	ITEX = Inventory Icon
-	SCRI = Script Name
-
-27: ACTI =   697 (    52,     93.60,    138)
-	Activator
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	SCRI = Script Name
-
-28: APPA =    22 (   139,    152.59,    167)
-	Alchemy Apparatus
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	AADT = Alchemy Data (16 bytes), required
-		long    Type
-			0 = Mortar and Pestle
-			1 = Albemic
-			2 = Calcinator
-			3 = Retort
-		float	Quality
-		float	Weight
-		long	Value
-	ITEX = Inventory Icon
-	SCRI = Script Name
-
-29: LOCK =     6 (   126,    136.17,    145)
-	Lockpicking Items
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	LKDT = Lock Data (16 bytes), required
-		float	Weight
-		long	Value
-		float	Quality
-		long 	Uses
-	ITEX = Inventory Icon
-	SCRI = Script Name
-
-30: PROB =     6 (   124,    136.33,    145)
-	Probe Items
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	PBDT = Probe Data (16 bytes), required
-		float	Weight
-		long	Value
-		float	Quality
-		long 	Uses
-	ITEX = Inventory Icon
-	SCRI = Script Name
-
-31: INGR =    95 (   151,    181.66,    227)
-	Ingrediants
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	IRDT = Ingrediant Data (56 bytes), required
-		float  Weight
-		long   Value
-		long   EffectID[4]	0 or -1 means no effect
-		long   SkillID[4]	only for Skill related effects, 0
-           or -1 otherwise
-		long   AttributeID[4]  only for Attribute related effects,
-           0 or -1 otherwise
-	ITEX = Inventory Icon
-	SCRI = Script Name
-
-32: BOOK =   574 (   131,   3306.91,  42120)
-	Books
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	BKDT = Book Data (20 bytes), required
-		float  Weight
-		long   Value
-		long   Scroll	(1 is scroll, 0 not)
-		long   SkillID	(-1 is no skill)
-		long   EnchantPts
-	ITEX = Inventory Icon
-	SCRI = Script Name
-	TEXT = Book text
-
-33: ALCH =   258 (   163,    188.15,    334)
-	Alchemy?
-	NAME = Item ID, required
-	MODL = Model Name, required
-	FNAM = Item Name, required
-	ALDT = Alchemy Data (12 bytes), required
-		float  Weight
-		long   Value
-		long   AutoCalc
-	ENAM = Enchantment (24 bytes) 1 to 8 per record
-		short EffectID
-		byte  SkillID (for skill related effects, -1/0 otherwise)
-		byte  AttributeID (for attribute related effects, -1/0 otherwise)
-		long  Unknown1
-		long  Unknown2
-		long  Duration
-		long  Magnitude
-		long  Unknown4
-	TEXT = Inventory Icon
-	SCRI = Script Name
-
-34: LEVI =   227 (    80,    486.23,   9201)
-	Levelled Items
-	Levelled Creatures
-	NAME = ID of levelled list
-	DATA = List data (4 bytes, long)
-		1 = Calc from all levels >= PC level
-		2 = Calc for each item
-	NNAM = Chance None? (1 byte)
-	INDX = Number of items in list (4 bytes, long)
-	INAM = ID string of list item
-	INTV = PC level for previous CNAM (2 bytes, short)
-		The INAM/INTV can occur many times in pairs
-
-35: LEVC =   116 (    97,    326.54,   1105)
-	Levelled Creatures
-	NAME = ID of levelled list
-	DATA = List data (4 bytes, long)
-    1 = Calc from all levels >= PC level
-	NNAM = Chance None? (1 byte)
-	INDX = Number of items in list (4 bytes, long)
-	CNAM = ID string of list item
-	INTV = PC level for previous CNAM (2 bytes, short)
-		The CNAM/INTV can occur many times in pairs
-
 36: CELL =  2538 (    29,  10151.12, 104488)
 	Cell Definitions
 	NAME = Cell ID string. Can be an empty string for exterior cells
@@ -2393,6 +2911,18 @@ bool isValid(std::string name) {
 	if (name == "LIGH") return true;
 	if (name == "ENCH") return true;
 	if (name == "NPC_") return true;
+	if (name == "ARMO") return true;
+	if (name == "CLOT") return true;
+	if (name == "REPA") return true;
+	if (name == "ACTI") return true;
+	if (name == "APPA") return true;
+	if (name == "LOCK") return true;
+	if (name == "PROB") return true;
+	if (name == "INGR") return true;
+	if (name == "BOOK") return true;
+	if (name == "ALCH") return true;
+	if (name == "LEVI") return true;
+	if (name == "LEVC") return true;
 	return false;
 }
 
@@ -2412,11 +2942,13 @@ void readESM(const std::string &filename) {
 		//read the sub-records
 		int bytesRead = 0;
 		while (bytesRead < recordHeader.size) {
-			bytesRead = bytesRead + readSubRecordHeader();
+			bytesRead += readSubRecordHeader(); //always 8 bytes
 			bytesRead = bytesRead + readSubRecordData(std::string(subRecordHeader.name, subRecordHeader.name + 4));
 			std::cout << " Total bytes read: " << bytesRead << std::endl;
 		}
-		std::cout << "Sub-Records read finished" << std::endl;
+		std::cout << " Sub-Records read finished" << std::endl;
+		std::cout << "*************************************************************************" << std::endl;
+		std::cout << std::endl;
 	}
 
 	file.close();

@@ -2706,6 +2706,88 @@ int readSubRecordData(const std::string &name) {
 		//The CNAM/INTV can occur many times in pairs
 	}
 
+	//Cell definitions
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "CELL")
+	{
+		if (name == "NAME")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Cell list ID: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+			//Can be an empty string for exterior cells in which case the region name is used instead.
+		}
+
+		if (name == "DATA")
+		{
+			struct CellData{
+				long int flags; /*0x01 = interior?
+								0x02 = has water
+								0x04 = illegal to sleep here
+								0x80 = behave like exterior (Tribunal)*/
+				long int gridX;
+				long int gridY;
+			}cellData;
+
+			file.read((char*)&cellData, sizeof(cellData));
+			std::cout << "  Cell data read" << std::endl;
+			bytesRead += sizeof(cellData);
+		}
+
+		if (name == "RGNN")
+		{
+			char buffer[300];
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Region name string: " << std::string(buffer, buffer + subRecordHeader.size);
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "NAM0")
+		{
+			long int numnberOfObjectsInTheCell;
+
+			file.read((char*)&numnberOfObjectsInTheCell, sizeof(numnberOfObjectsInTheCell));
+			std::cout << "  Number of objects in the cell: " << numnberOfObjectsInTheCell << std::endl;
+			bytesRead += sizeof(numnberOfObjectsInTheCell);
+		}
+
+		//exterior cell sub-records (NAM5)
+		if(name == "NAM5")
+		{
+			long int mapColor;
+
+			file.read((char*)&mapColor, sizeof(mapColor));
+			std::cout << "  Map color: " << mapColor << std::endl;
+			bytesRead += sizeof(mapColor);
+		}
+
+		//interior cell sub-records (WHGT and AMBI)
+		if(name == "WHGT")
+		{
+			float waterHeight;
+
+			file.read((char*)&waterHeight, sizeof(waterHeight));
+			std::cout << "  Water height: " << waterHeight << std::endl;
+			bytesRead += sizeof(waterHeight);
+		}
+
+		if(name == "AMBI")
+		{
+			struct AmbientLightLevel{
+				long int ambientColor;
+				long int sunlightColor;
+				long int fogColor;
+				float fogDensity;
+			}ambientLightLevel;
+
+			file.read((char*)&ambientLightLevel, sizeof(ambientLightLevel));
+			std::cout << "  Ambient light level read" << std::endl;
+			bytesRead += sizeof(ambientLightLevel);
+		}
+
+		//Referenced object data grouping (until end)
+	}
+
 	/*
 36: CELL =  2538 (    29,  10151.12, 104488)
 	Cell Definitions

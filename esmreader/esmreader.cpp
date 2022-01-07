@@ -2786,36 +2786,22 @@ int readSubRecordData(const std::string &name) {
 		}
 
 		//Referenced object data grouping (until end)
+		if(name == "FRMR")
+		{
+			long int objectIndex; /*(starts at 1) (4 bytes, long)
+			This is used to uniquely identify objects in the cell.
+			For new files the index starts at 1 and is incremented
+			for each new object added.  For modified objects the
+			index is kept the same.*/
+
+			file.read((char*)&objectIndex, sizeof(objectIndex));
+			std::cout << "  Object Index : " << objectIndex << std::endl;
+			bytesRead += sizeof(objectIndex);
+		}
 	}
 
 	/*
 36: CELL =  2538 (    29,  10151.12, 104488)
-	Cell Definitions
-	NAME = Cell ID string. Can be an empty string for exterior cells
-	in which case the region name is used instead.
-	DATA = Cell Data
-		long Flags
-			0x01 = Interior?
-			0x02 = Has Water
-			0x04 = Illegal to Sleep here
-			0x80 = Behave like exterior (Tribunal)
-		long GridX
-		long GridY
-	RGNN = Region name string
-	NAM0 = Number of objects in cell in current file?
-	       (4 byte, long), Optional
-
-	Exterior Cell Sub-Records
-		NAM5 = Map Color (4 bytes, long, COLORREF)
-
-	Interior Cell Sub-Records
-		WHGT = Water Height (4 bytes, float)
-		AMBI = Ambient Light Level (16 bytes)
-			long AmbientColor
-			long SunlightColor
-			long FogColor
-			float FogDensity
-
 	Referenced Object Data Grouping
 		FRMR = Object Index (starts at 1) (4 bytes, long)
 			This is used to uniquely identify objects in the cell.

@@ -2718,7 +2718,7 @@ int readSubRecordData(const std::string &name) {
 			//Can be an empty string for exterior cells in which case the region name is used instead.
 		}
 
-		if (name == "DATA")
+		if (name == "DATA" && subRecordHeader.size == 12)
 		{
 			struct CellData{
 				long int flags; /*0x01 = interior?
@@ -2798,55 +2798,277 @@ int readSubRecordData(const std::string &name) {
 			std::cout << "  Object Index : " << objectIndex << std::endl;
 			bytesRead += sizeof(objectIndex);
 		}
+
+		//repeated tag into CELL record, but this one belongs to FRMR
+		/*if (name == "NAME")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}*/
+
+		if (name == "UNAM")
+		{
+			uint8_t referenceBlocked; //always 0, present if Blocked is set in the reference's record header,
+										//otherwise absent.
+
+			file.read((char*)&referenceBlocked, sizeof(referenceBlocked));
+			std::cout << "  Reference blocked: " << referenceBlocked << std::endl;
+			bytesRead += sizeof(referenceBlocked);
+		}
+
+		if (name == "XSCL")
+		{
+			float referenceScale; //if applicable.
+
+			file.read((char*)&referenceScale, sizeof(referenceScale));
+			std::cout << "  Reference Scale: " << referenceScale << std::endl;
+			bytesRead += sizeof(referenceScale);
+		}
+
+		if (name == "ANAM")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  NPC ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "BNAM")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Global variable name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "CNAM")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Faction ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "INDX")
+		{
+			long int factionRank;
+
+			file.read((char*)&factionRank, sizeof(factionRank));
+			std::cout << "  Faction rank: " << factionRank << std::endl;
+			bytesRead += sizeof(factionRank);
+		}
+
+		if (name == "XSOL")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Soul gem ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "XCHG")
+		{
+			float enchantmentCharge;
+
+			file.read((char*)&enchantmentCharge, sizeof(enchantmentCharge));
+			std::cout << "  Enchantment charge: " << enchantmentCharge << std::endl;
+			bytesRead += sizeof(enchantmentCharge);
+		}
+
+		if (name == "INTV")
+		{
+			//it can be long int or float depending of type of object
+			long int remainingUsage; //health(weapons and armor)
+									//uses(locks, probes, repair items)
+			float remUs;			//time remaining(lights)
+
+			file.read((char*)&remUs, sizeof(remUs));
+			std::cout << "  Remaining usage: " << remUs << std::endl;
+			bytesRead += sizeof(remUs);
+		}
+
+		if (name == "NAM9")
+		{
+			long int value;
+
+			file.read((char*)&value, sizeof(value));
+			std::cout << "  Value: " << value << std::endl;
+			bytesRead += sizeof(value);
+		}
+
+		if (name == "DODT")
+		{
+			struct CellTravelDestination {
+				float posx, posy, posz;
+				float rotx, roty, rotz; //in radians
+			}cellTD;
+
+			file.read((char*)&cellTD, sizeof(cellTD));
+			std::cout << "  Cell travel destination read" << std::endl;
+			bytesRead += sizeof(cellTD);
+		}
+
+		if (name == "DNAM")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "FLTV")
+		{
+			long int lockDifficulty;
+
+			file.read((char*)&lockDifficulty, sizeof(lockDifficulty));
+			std::cout << "  Lock difficulty: " << lockDifficulty << std::endl;
+			bytesRead += sizeof(lockDifficulty);
+		}
+
+		if (name == "KNAM")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Key name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "TNAM")
+		{
+			char buffer[300];
+
+			file.read((char*)&buffer, subRecordHeader.size);
+			std::cout << "  Trap name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+			bytesRead += subRecordHeader.size;
+		}
+
+		if (name == "ZNAM")
+		{
+			uint8_t referenceDisabled; /*Reference is disabled (always 0). Like UNAM, this will be emitted 
+									   if the relevant flag is set in the reference's record header. This 
+									   may only be possible via scripting. Also, even if present in the 
+									   file, the field appears to be ignored on loading.*/
+
+			file.read((char*)&referenceDisabled, sizeof(referenceDisabled));
+			std::cout << "  Ref disabled: " << referenceDisabled << std::endl;
+			bytesRead += sizeof(referenceDisabled);
+		}
+
+		if (name == "DATA" && subRecordHeader.size == 24)
+		{
+			struct ReferencePosition {
+				float posx, posy, posz;
+				float rotx, roty, rotz; //in radians
+			}refPos;
+
+			file.read((char*)&refPos, sizeof(refPos));
+			std::cout << "  Reference position read" << std::endl;
+			bytesRead += sizeof(refPos);
+		}
+
+		if (bytesRead == 0)
+		{
+			std::cout << "<<<<<<<<<<<<<<<  UNKNOWN TAG >>>>>>>>>>>>>>>>>  " << name << std::endl;
+		}
+	}
+
+	//landscape
+	if (std::string(recordHeader.name, recordHeader.name + 4) == "LAND")
+	{
+		if (name == "INTV")
+		{
+			struct Coord {
+				long int x, y;
+			}coord;
+
+			file.read((char*)&coord, sizeof(coord));
+			std::cout << "  Coords: " << coord.x << "," << coord.y << std::endl;
+			bytesRead += sizeof(coord);
+		}
+
+		if (name == "DATA")
+		{
+			long int data; //data types included. If the relevant bit isn't set, the related fields
+							//will not be loaded, even if present.
+							//0x01 = includes VNML, VHGT and WNAM
+							//0x02 = includes VCLR
+							//0x03 = includes VTEX
+
+			file.read((char*)&data, sizeof(data));
+			std::cout << "  Data: " << data << std::endl;
+			bytesRead += sizeof(data);
+		}
+
+		if (name == "VNML")
+		{
+			struct Point {
+				int8_t x, y, z; //y direction of the data is from the bottom up.
+			};
+
+			Point vertexNormals[65][65];
+
+			file.read((char*)&vertexNormals, sizeof(vertexNormals));
+			std::cout << "  Vertex Normals array loaded. Size: " << sizeof(vertexNormals) << std::endl;
+			bytesRead += sizeof(vertexNormals);
+		}
+
+		if (name == "VHGT")
+		{
+			struct HeightData {
+				float heightOffset; //Decreasing this value will shift the entire cell land down (by 8 units).
+				int8_t hData[65][65]; //Contains the height data for the cell in the form of a 65×65 pixel array.
+									//The height data is not absolute values but uses differences between 
+									//adjacent pixels. Thus a pixel value of 0 means it has the same height 
+									//as the last pixel. Note that the Y-direction of the data is from the bottom up.
+				uint8_t junkData[3]; //ignored.
+			}heightData;
+
+			file.read((char*)&heightData, sizeof(heightData));
+			std::cout << "  Height data read" << std::endl;
+			bytesRead += sizeof(heightData);
+		}
+
+		if (name == "WNAM")
+		{
+			uint8_t heights[9][9]; //heights for world map. Derived from VHGT data.
+
+			file.read((char*)&heights, sizeof(heights));
+			std::cout << "  Read heights for world map" << std::endl;
+			bytesRead += sizeof(heights);
+		}
+
+		if (name == "VCLR")
+		{
+			struct RGB {
+				int8_t r, g, b; //Vertex Colors.RGB triples repeated for each vertex(1 byte per color per vertex, or 3 bytes per vertex).
+			};
+
+			RGB vertexColors[65][65];
+			file.read((char*)&vertexColors, sizeof(vertexColors));
+			std::cout << "  Array of vertex colors loaded. Size: " << sizeof(vertexColors) << std::endl;
+			bytesRead += sizeof(vertexColors);
+		}
+
+		if (name == "VTEX")
+		{
+			uint16_t textureIndices[16][16]; //each value corresponds to the index INTV value from a LTEX record.
+
+			file.read((char*)&textureIndices, sizeof(textureIndices));
+			std::cout << "  Texture Indices read. Size: " << sizeof(textureIndices) << std::endl;
+			bytesRead += sizeof(textureIndices);
+		}
 	}
 
 	/*
-36: CELL =  2538 (    29,  10151.12, 104488)
-	Referenced Object Data Grouping
-		FRMR = Object Index (starts at 1) (4 bytes, long)
-			This is used to uniquely identify objects in the cell.
-			For new files the index starts at 1 and is incremented
-			for each new object added.  For modified objects the
-			index is kept the same.
-		NAME = Object ID string
-		XSCL = Scale (4 bytes, float) Static
-		DODT = XYZ Pos, XYZ Rotation of exit (24 bytes, Door objects)
-			float XPos
-			float YPos
-			float ZPos
-			float XRotate
-			float YRotate
-			float ZRotate
-		DNAM = Door exit name (Door objects)
-		FLTV = Follows the DNAM optionally, lock level
-		KNAM = Door key
-		TNAM = Trap name
-		UNAM = Reference Blocked (1 byte, 00?), only occurs once in
-		       MORROWIND.ESM
-		ANAM = Owner ID string
-		BNAM = Global variable/rank ID string
-		INTV = Number of uses ( 4 bytes, long, 1 default), occurs
-		       even for objects that don't use it
-		NAM9 = ? (4 bytes, long, 0x00000001)
-		XSOL = Soul Extra Data (ID string of creature)
-		DATA = Ref Position Data (24 bytes)
-			float XPos
-			float YPos
-			float ZPos
-			float XRotate
-			float YRotate
-			float ZRotate
-
-37: LAND =  1390 (    28,  27374.14,  30243)
-	Landscape
-	INTV ()
-	DATA (4 byte long?)
-	VNML (byte data?)
-	VHGT (byte data?)
-	WNAM (byte data?)
-	VCLR (byte data?)
-	VTEX (byte data?)
-
 38: PGRD =  1194 (   101,    996.60,   8261)
 	Path Grid
 
@@ -2991,6 +3213,8 @@ bool isValid(std::string name) {
 	if (name == "ALCH") return true;
 	if (name == "LEVI") return true;
 	if (name == "LEVC") return true;
+	if (name == "CELL") return true;
+	if (name == "LAND") return true;
 	return false;
 }
 
@@ -3010,7 +3234,9 @@ void readESM(const std::string &filename) {
 		//read the sub-records
 		int bytesRead = 0;
 		while (bytesRead < recordHeader.size) {
-			bytesRead += readSubRecordHeader(); //always 8 bytes
+			int read = readSubRecordHeader(); //always 8 bytes
+			if (read == 0) break;
+			bytesRead += read;
 			bytesRead = bytesRead + readSubRecordData(std::string(subRecordHeader.name, subRecordHeader.name + 4));
 			std::cout << " Total bytes read: " << bytesRead << std::endl;
 		}

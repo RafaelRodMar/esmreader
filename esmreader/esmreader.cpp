@@ -7,6 +7,7 @@
 
 std::ifstream file;
 std::map<std::string,int> elements;
+std::map<std::string, int> originals;
 
 struct RecordHeader {
 	char name[4];     //not null-terminated.
@@ -3522,10 +3523,56 @@ void readESM(const std::string &filename) {
 
 	file.close();
 
+	//Morrowind original number of records:
+	originals["TES3"] = 1;
+	originals["GMST"] = 1428;
+	originals["GLOB"] = 73;
+	originals["CLAS"] = 77;
+	originals["FACT"] = 22;
+	originals["RACE"] = 10;
+	originals["SOUN"] = 430;
+	originals["SKIL"] = 27;
+	originals["MGEF"] = 137;
+	originals["SCPT"] = 631;
+	originals["REGN"] = 9;
+	originals["BSGN"] = 13;
+	originals["LTEX"] = 107;
+	originals["STAT"] = 2788;
+	originals["DOOR"] = 140;
+	originals["MISC"] = 536;
+	originals["WEAP"] = 485;
+	originals["CONT"] = 890;
+	originals["SPEL"] = 982;
+	originals["CREA"] = 260;
+	originals["BODY"] = 1125;
+	originals["LIGH"] = 574;
+	originals["ENCH"] = 708;
+	originals["NPC_"] = 2675;
+	originals["ARMO"] = 280;
+	originals["CLOT"] = 510;
+	originals["REPA"] = 6;
+	originals["ACTI"] = 697;
+	originals["APPA"] = 22;
+	originals["LOCK"] = 6;
+	originals["PROB"] = 6;
+	originals["INGR"] = 95;
+	originals["BOOK"] = 574;
+	originals["ALCH"] = 258;
+	originals["LEVI"] = 227;
+	originals["LEVC"] = 116;
+	originals["CELL"] = 2538;
+	originals["LAND"] = 1390;
+	originals["PGRD"] = 1194;
+	originals["SNDG"] = 168;
+	originals["DIAL"] = 772;
+	originals["INFO"] = 3408;
+
 	std::map<std::string, int>::iterator it;
 	for (it = elements.begin(); it != elements.end(); it++) {
-		std::cout << it->first << " : " << it->second << std::endl;
+		std::cout << it->first << " : " << it->second << " (" << originals[it->first] << ")" << std::endl;
 	}
+
+	
 }
 
 

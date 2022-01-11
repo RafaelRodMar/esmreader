@@ -82,6 +82,7 @@ int readSubRecordData(const std::string &name) {
 			bytesRead += sizeof(hedr);
 		}
 
+		//the next two one can be repeated for every required master file.
 		if (name == "MAST")
 		{
 			char buffer[300];
@@ -102,6 +103,7 @@ int readSubRecordData(const std::string &name) {
 	//Game setting record
 	if (std::string(recordHeader.name, recordHeader.name + 4) == "GMST")
 	{
+		//the type can be infered by the first letter of the name, ie.:sKeyName == string
 		if (name == "NAME")
 		{
 			char buffer[300];
@@ -150,10 +152,11 @@ int readSubRecordData(const std::string &name) {
 		{
 			char buffer[300];
 			file.read((char*)&buffer, subRecordHeader.size);
-			std::cout << "  Type of global (short,long,float): " << std::string(buffer, buffer + subRecordHeader.size);
+			std::cout << "  Type of global (short(s),long(l),float(f)): " << std::string(buffer, buffer + subRecordHeader.size);
 			bytesRead += subRecordHeader.size;
 		}
 
+		//all values are stored as float. They have to be converted to their real types before using them.
 		if (name == "FLTV")
 		{
 			float aux = 0;
@@ -185,10 +188,19 @@ int readSubRecordData(const std::string &name) {
 		if (name == "CLDT")
 		{
 			struct ClassData {
-				long int attributeID1 = 0;
+				long int attributeID1 = 0;  //can be uint32[2] 
 				long int attributeID2 = 0;
+										/* 0 = strength
+										1 = intelligence
+										2 = willpower
+										3 = agility
+										4 = speed
+										5 = endurance
+										6 = personality
+										7 = luck
+										*/
 				long int specialization; //0 = combat, 1 = magic, 2 = stealth
-				long int minorID1 = 0;
+				long int minorID1 = 0;  //can be uint32[5][2]
 				long int majorID1 = 0;
 				long int minorID2 = 0;
 				long int majorID2 = 0;

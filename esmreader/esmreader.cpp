@@ -56,7 +56,26 @@ int readSubRecordHeader() {
 	return sizeof(subRecordHeader);
 }
 
-void parseTES3(std::vector<char> &buffer){}
+void parseTES3(std::vector<char> &buffer){
+	std::cout << "Parsing TES3 tag: " << buffer.size() << " bytes" << std::endl;
+
+	//read the sub-records
+	int bytesRead = 0;
+	int tags = 0;
+	int index = 0;
+	while (bytesRead < buffer.size()) {
+		std::string subRecordName = std::string(buffer.data() + index, 4);
+		long int subRecordSize = 0;
+		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
+		std::cout << "Name: " << subRecordName << std::endl;
+		std::cout << "Size: " << subRecordSize << std::endl;
+		bytesRead += 8;
+		index += subRecordSize + 8;
+		bytesRead += subRecordSize;
+		tags++;
+	}
+	std::cout << tags << " tags found" << std::endl;
+}
 void parseGMST(std::vector<char> &buffer){}
 void parseGLOB(std::vector<char> &buffer){}
 void parseCLAS(std::vector<char> &buffer){}

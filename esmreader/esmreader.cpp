@@ -56,6 +56,49 @@ int readSubRecordHeader() {
 	return sizeof(subRecordHeader);
 }
 
+void parseTES3(std::vector<char> &buffer){}
+void parseGMST(std::vector<char> &buffer){}
+void parseGLOB(std::vector<char> &buffer){}
+void parseCLAS(std::vector<char> &buffer){}
+void parseFACT(std::vector<char> &buffer){}
+void parseRACE(std::vector<char> &buffer){}
+void parseSOUN(std::vector<char> &buffer){}
+void parseSKIL(std::vector<char> &buffer){}
+void parseMGEF(std::vector<char> &buffer){}
+void parseSCPT(std::vector<char> &buffer){}
+void parseREGN(std::vector<char> &buffer){}
+void parseBSGN(std::vector<char> &buffer){}
+void parseLTEX(std::vector<char> &buffer){}
+void parseSTAT(std::vector<char> &buffer){}
+void parseDOOR(std::vector<char> &buffer){}
+void parseMISC(std::vector<char> &buffer){}
+void parseWEAP(std::vector<char> &buffer){}
+void parseCONT(std::vector<char> &buffer){}
+void parseSPEL(std::vector<char> &buffer){}
+void parseCREA(std::vector<char> &buffer){}
+void parseBODY(std::vector<char> &buffer){}
+void parseLIGH(std::vector<char> &buffer){}
+void parseENCH(std::vector<char> &buffer){}
+void parseNPC_(std::vector<char> &buffer){}
+void parseARMO(std::vector<char> &buffer){}
+void parseCLOT(std::vector<char> &buffer){}
+void parseREPA(std::vector<char> &buffer){}
+void parseACTI(std::vector<char> &buffer){}
+void parseAPPA(std::vector<char> &buffer){}
+void parseLOCK(std::vector<char> &buffer){}
+void parsePROB(std::vector<char> &buffer){}
+void parseINGR(std::vector<char> &buffer){}
+void parseBOOK(std::vector<char> &buffer){}
+void parseALCH(std::vector<char> &buffer){}
+void parseLEVI(std::vector<char> &buffer){}
+void parseLEVC(std::vector<char> &buffer){}
+void parseCELL(std::vector<char> &buffer){}
+void parseLAND(std::vector<char> &buffer){}
+void parsePGRD(std::vector<char> &buffer){}
+void parseSNDG(std::vector<char> &buffer){}
+void parseDIAL(std::vector<char> &buffer){}
+void parseINFO(std::vector<char> &buffer){}
+
 bool isValid(std::string name) {
 	if (name == "TES3") return true;
 	if (name == "GMST") return true;
@@ -108,7 +151,8 @@ void readESM(const std::string &filename){
 	while (!file.eof()) {
 		//read the record
 		readRecordHeader();
-		if ( !isValid( std::string(recordHeader.name, recordHeader.name + 4) ) )
+		std::string name = std::string(recordHeader.name, recordHeader.name + 4);
+		if ( !isValid( name ) )
 		{
 			std::cout << "Unknown record: " << std::string(recordHeader.name, recordHeader.name + 4) << std::endl;
 			break;
@@ -120,6 +164,54 @@ void readESM(const std::string &filename){
 		if (file.read(buffer.data(), recordHeader.size))
 		{
 			std::cout << "Data loaded: " << buffer.size() << " bytes" << std::endl;
+			
+			if (name == "TES3") parseTES3(buffer);
+			if (name == "GMST") parseGMST(buffer);
+			if (name == "GLOB") parseGLOB(buffer);
+			if (name == "CLAS") parseCLAS(buffer);
+			if (name == "FACT") parseFACT(buffer);
+			if (name == "RACE") parseRACE(buffer);
+			if (name == "SOUN") parseSOUN(buffer);
+			if (name == "SKIL") parseSKIL(buffer);
+			if (name == "MGEF") parseMGEF(buffer);
+			if (name == "SCPT") parseSCPT(buffer);
+			if (name == "REGN") parseREGN(buffer);
+			if (name == "BSGN") parseBSGN(buffer);
+			if (name == "LTEX") parseLTEX(buffer);
+			if (name == "STAT") parseSTAT(buffer);
+			if (name == "DOOR") parseDOOR(buffer);
+			if (name == "MISC") parseMISC(buffer);
+			if (name == "WEAP") parseWEAP(buffer);
+			if (name == "CONT") parseCONT(buffer);
+			if (name == "SPEL") parseSPEL(buffer);
+			if (name == "CREA") parseCREA(buffer);
+			if (name == "BODY") parseBODY(buffer);
+			if (name == "LIGH") parseLIGH(buffer);
+			if (name == "ENCH") parseENCH(buffer);
+			if (name == "NPC_") parseNPC_(buffer);
+			if (name == "ARMO") parseARMO(buffer);
+			if (name == "CLOT") parseCLOT(buffer);
+			if (name == "REPA") parseREPA(buffer);
+			if (name == "ACTI") parseACTI(buffer);
+			if (name == "APPA") parseAPPA(buffer);
+			if (name == "LOCK") parseLOCK(buffer);
+			if (name == "PROB") parsePROB(buffer);
+			if (name == "INGR") parseINGR(buffer);
+			if (name == "BOOK") parseBOOK(buffer);
+			if (name == "ALCH") parseALCH(buffer);
+			if (name == "LEVI") parseLEVI(buffer);
+			if (name == "LEVC") parseLEVC(buffer);
+			if (name == "CELL") parseCELL(buffer);
+			if (name == "LAND") parseLAND(buffer);
+			if (name == "PGRD") parsePGRD(buffer);
+			if (name == "SNDG") parseSNDG(buffer);
+			if (name == "DIAL") parseDIAL(buffer);
+			if (name == "INFO") parseINFO(buffer);
+		}
+		else
+		{
+			std::cout << "Error loading data" << std::endl;
+			break;
 		}
     }
 

@@ -4,6 +4,15 @@
 #include <string>
 #include <map>
 
+//used by TES3 records
+struct Hedr {
+ 	float version;
+ 	long int fileType; //(0=esp, 1=esm, 32=ess)
+ 	char companyName[32];
+ 	char description[256];
+ 	long int numRecords; //48227
+};
+
 //**************** DATA STRUCTS *************************************
 // int readSubRecordData(const std::string &name) {
 // 	int bytesRead = 0;
@@ -13,13 +22,6 @@
 // 	{
 // 		if (name == "HEDR")
 // 		{
-// 			struct Hedr {
-// 				float version;
-// 				long int fileType; //(0=esp, 1=esm, 32=ess)
-// 				char companyName[32];
-// 				char description[256];
-// 				long int numRecords; //48227
-// 			}hedr;
 
 // 			file.read((char*)&hedr, sizeof(hedr));
 // 			std::cout << "  Version: " << hedr.version << std::endl;

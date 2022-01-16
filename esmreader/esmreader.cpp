@@ -57,886 +57,462 @@ int readSubRecordHeader() {
 	return sizeof(subRecordHeader);
 }
 
-void parseTES3(std::vector<char> &buffer){
-	std::cout << "Parsing TES3 tag: " << buffer.size() << " bytes" << std::endl;
+std::vector< std::pair<std::string, std::vector<char>> > getSubRecordData(std::vector<char> &buffer) {
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
 	int tags = 0;
 	int index = 0;
-	while (bytesRead < buffer.size()) {
+	while (index < buffer.size()) {
 		std::string subRecordName = std::string(buffer.data() + index, 4);
 		long int subRecordSize = 0;
 		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
 		std::cout << "Name: " << subRecordName << " ";
 		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
+		index += 8;
+		p.first = subRecordName;
+		std::vector<char> newVec(buffer.begin() + index, buffer.begin() + index + subRecordSize);
+		p.second = newVec;
+		index += subRecordSize;
+		v.push_back(p);
 		tags++;
 	}
-	std::cout << tags << " tags found" << std::endl;
+	return v;
+}
+
+void parseTES3(std::vector<char> &buffer){
+	std::cout << "Parsing TES3 tag: " << buffer.size() << " bytes" << std::endl;
+	//std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string,std::vector<char>> > v;
+
+	//read the sub-records
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse the sub-records in the vector
+	for (int i = 0; i < v.size(); i++) {
+		if (v[i].first == "HEDR")
+		{
+			Hedr hedr;
+			memmove((char*)&hedr, v[i].second.data(), sizeof(hedr));
+			std::cout << "File type: " << hedr.fileType << std::endl;
+			std::cout << "Version: " << hedr.version << std::endl;
+			std::cout << "Company name: " << hedr.companyName << std::endl;
+			std::cout << "Description: " << hedr.description << std::endl;
+			std::cout << "Number of records: " << hedr.numRecords << std::endl;
+		}
+	}
 }
 void parseGMST(std::vector<char> &buffer){
 	
 	std::cout << "Parsing GMST tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseGLOB(std::vector<char> &buffer){
 	
 	std::cout << "Parsing GLOB tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseCLAS(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CLAS tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseFACT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing FACT tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseRACE(std::vector<char> &buffer){
 	
 	std::cout << "Parsing RACE tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseSOUN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SOUN tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseSKIL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SKIL tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseMGEF(std::vector<char> &buffer){
 	
 	std::cout << "Parsing MGEF tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseSCPT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SCPT tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseREGN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing REGN tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseBSGN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BSGN tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseLTEX(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LTEX tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseSTAT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing STAT tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseDOOR(std::vector<char> &buffer){
 	
 	std::cout << "Parsing DOOR tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseMISC(std::vector<char> &buffer){
 	
 	std::cout << "Parsing MISC tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseWEAP(std::vector<char> &buffer){
 	
 	std::cout << "Parsing WEAP tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseCONT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CONT tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseSPEL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SPEL tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseCREA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CREA tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseBODY(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BODY tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseLIGH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LIGH tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseENCH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ENCH tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseNPC_(std::vector<char> &buffer){
 	
 	std::cout << "Parsing NPC_ tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseARMO(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ARMO tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseCLOT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CLOT tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseREPA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing REPA tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseACTI(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ACTI tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseAPPA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing APPA tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseLOCK(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LOCK tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parsePROB(std::vector<char> &buffer){
 	
 	std::cout << "Parsing PROB tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseINGR(std::vector<char> &buffer){
 	
 	std::cout << "Parsing INGR tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseBOOK(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BOOK tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseALCH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ALCH tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseLEVI(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LEVI tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseLEVC(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LEVC tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseCELL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CELL tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseLAND(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LAND tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parsePGRD(std::vector<char> &buffer){
 	
 	std::cout << "Parsing PGRD tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseSNDG(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SNDG tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseDIAL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing DIAL tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 void parseINFO(std::vector<char> &buffer){
 	
 	std::cout << "Parsing INFO tag: " << buffer.size() << " bytes" << std::endl;
+	std::pair<std::string, std::vector<char> > p;
+	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
-	int bytesRead = 0;
-	int tags = 0;
-	int index = 0;
-	while (bytesRead < buffer.size()) {
-		std::string subRecordName = std::string(buffer.data() + index, 4);
-		long int subRecordSize = 0;
-		memmove(&subRecordSize, &buffer[index + 4], sizeof(subRecordSize));
-		std::cout << "Name: " << subRecordName << " ";
-		std::cout << "Size: " << subRecordSize << std::endl;
-		bytesRead += 8;
-		index += subRecordSize + 8;
-		bytesRead += subRecordSize;
-		tags++;
-	}
-	std::cout << tags << " tags found" << std::endl;
+	v = getSubRecordData(buffer);
+	std::cout << "Tags in vector: " << v.size() << std::endl;
 }
 
 bool isValid(std::string name) {

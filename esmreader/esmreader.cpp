@@ -102,17 +102,78 @@ void parseTES3(std::vector<char> &buffer){
 			std::cout << "Description: " << hedr.description << std::endl;
 			std::cout << "Number of records: " << hedr.numRecords << std::endl;
 		}
+
+		//the next two can be repeated for every required master file.
+ 		if (v[i].first == "MAST")
+ 		{
+ 			char temp[300];
+ 			memmove((char*)&temp, v[i].second.data(), v[i].second.size());
+ 			std::cout << "  Required master file: " << std::string(temp, temp + v[i].second.size());
+ 		}
+
+ 		if (v[i].first == "DATA")
+ 		{
+ 			long long int aux = 0;
+ 			memmove((char*)&aux, v[i].second.data(), sizeof(aux));
+ 			std::cout << "  Size of the required master file: " << aux << std::endl;
+ 		}
 	}
 }
+
 void parseGMST(std::vector<char> &buffer){
 	
 	std::cout << "Parsing GMST tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
+	//std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse the sub-records in the vector
+	GMST g;
+	for(auto x : v){
+		if(x.first == "NAME")
+		{
+			char temp[300];
+ 			memmove((char*)&temp, x.second.data(), x.second.size());
+			int i = 0;			 
+			while(temp[i]!=0 && temp[i] < x.second.size()){
+				i++;
+			} 
+ 			std::cout << "  Name: " << std::string(temp, temp + i);
+			g.name = std::string(temp, temp + i);
+		}
+
+		if (x.first == "STRV")
+ 		{
+ 			char temp[300];
+ 			memmove((char*)&temp, x.second.data(), x.second.size());
+			int i = 0;			 
+			while(temp[i]!=0 && temp[i] < x.second.size()){
+				i++;
+			}  
+ 			std::cout << "  String: " << std::string(temp, temp + i);
+			g.stringValue = std::string(temp, temp + i);
+ 		}
+
+		 if (x.first == "INTV")
+ 		{
+ 			long int aux = 0;
+			memmove((char*)&aux, x.second.data(), sizeof(aux));
+ 			std::cout << "  Integer Value: " << aux << std::endl;
+ 			g.intValue = aux;
+ 		}
+
+ 		if (x.first == "FLTV")
+ 		{
+ 			float aux = 0;
+ 			memmove((char*)&aux, x.second.data(), sizeof(aux));
+ 			std::cout << "  Float Value: " << aux << std::endl;
+ 			g.floatValue = aux;
+ 		}
+	}
+	vgmst.push_back(g);
 }
 void parseGLOB(std::vector<char> &buffer){
 	

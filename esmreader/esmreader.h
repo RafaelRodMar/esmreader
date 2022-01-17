@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 
+//**************** DATA STRUCTS *************************************
+
 //used by TES3 records
 struct Hedr {
  	float version;
@@ -13,80 +15,15 @@ struct Hedr {
  	long int numRecords; //48227
 };
 
-//**************** DATA STRUCTS *************************************
-// int readSubRecordData(const std::string &name) {
-// 	int bytesRead = 0;
+//used by GMST records
+struct GMST{
+	std::string name = "";
+	std::string stringValue = "";
+	long int intValue = 0;
+	float floatValue = 0.0;
+};
 
-// 	//main header record
-// 	if (std::string(recordHeader.name, recordHeader.name+4) == "TES3")
-// 	{
-// 		if (name == "HEDR")
-// 		{
-
-// 			file.read((char*)&hedr, sizeof(hedr));
-// 			std::cout << "  Version: " << hedr.version << std::endl;
-// 			std::cout << "  File Type: " << hedr.fileType << std::endl;
-// 			std::cout << "  Company Name: " << std::string(hedr.companyName, hedr.companyName + 32) << std::endl;
-// 			std::cout << "  Description: " << std::string(hedr.description, hedr.description + 256) << std::endl;
-// 			std::cout << "  Number of records: " << hedr.numRecords << std::endl;
-// 			std::cout << "  Sub-Record data bytes read: " << sizeof(hedr) << std::endl;
-// 			bytesRead += sizeof(hedr);
-// 		}
-
-// 		//the next two one can be repeated for every required master file.
-// 		if (name == "MAST")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Required master file: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DATA")
-// 		{
-// 			long long int aux = 0;
-// 			file.read((char*)&aux, sizeof(aux));
-// 			std::cout << "  Size of the required master file: " << aux << std::endl;
-// 			bytesRead += sizeof(aux);
-// 		}
-// 	}
-
-// 	//Game setting record
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "GMST")
-// 	{
-// 		//the type can be infered by the first letter of the name, ie.:sKeyName == string
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "STRV")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  String: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "INTV")
-// 		{
-// 			long int aux = 0;
-// 			file.read((char*)&aux, sizeof(aux));
-// 			std::cout << "  Integer Value: " << aux << std::endl;
-// 			bytesRead += sizeof(aux);
-// 		}
-
-// 		if (name == "FLTV")
-// 		{
-// 			float aux = 0;
-// 			file.read((char*)&aux, sizeof(aux));
-// 			std::cout << "  Float Value: " << aux << std::endl;
-// 			bytesRead += sizeof(aux);
-// 		}
-// 	}
+std::vector<GMST> vgmst; //vector of game settings
 
 // 	//global variable
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "GLOB")

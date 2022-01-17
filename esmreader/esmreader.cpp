@@ -137,11 +137,11 @@ void parseGMST(std::vector<char> &buffer){
 		{
 			char temp[300];
  			memmove((char*)&temp, x.second.data(), x.second.size());
-			int i = 0;			 
-			while(temp[i]!=0 && temp[i] < x.second.size()){
+			int i = 0;
+			while(temp[i]!=0 && i < x.second.size()){
 				i++;
 			} 
- 			std::cout << "  Name: " << std::string(temp, temp + i);
+			std::cout << "  Name: " << std::string(temp, temp + i) << std::endl;
 			g.name = std::string(temp, temp + i);
 		}
 
@@ -150,10 +150,10 @@ void parseGMST(std::vector<char> &buffer){
  			char temp[300];
  			memmove((char*)&temp, x.second.data(), x.second.size());
 			int i = 0;			 
-			while(temp[i]!=0 && temp[i] < x.second.size()){
+			while(temp[i]!=0 && i < x.second.size()){
 				i++;
 			}  
- 			std::cout << "  String: " << std::string(temp, temp + i);
+			std::cout << "  String: " << std::string(temp, temp + i) << std::endl;
 			g.stringValue = std::string(temp, temp + i);
  		}
 
@@ -644,7 +644,7 @@ void readESM(const std::string &filename){
 			
 			if (name == "TES3") parseTES3(buffer);
 			if (name == "GMST") parseGMST(buffer);
-			if (name == "GLOB") parseGLOB(buffer);
+			/*if (name == "GLOB") parseGLOB(buffer);
 			if (name == "CLAS") parseCLAS(buffer);
 			if (name == "FACT") parseFACT(buffer);
 			if (name == "RACE") parseRACE(buffer);
@@ -683,7 +683,7 @@ void readESM(const std::string &filename){
 			if (name == "PGRD") parsePGRD(buffer);
 			if (name == "SNDG") parseSNDG(buffer);
 			if (name == "DIAL") parseDIAL(buffer);
-			if (name == "INFO") parseINFO(buffer);
+			if (name == "INFO") parseINFO(buffer);*/
 		}
 		else
 		{

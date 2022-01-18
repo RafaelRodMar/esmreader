@@ -81,9 +81,29 @@ std::vector< std::pair<std::string, std::vector<char>> > getSubRecordData(std::v
 	return v;
 }
 
+//get string from vector
+std::string getString(std::vector<char> &v){
+	char temp[50000];
+	memmove((char*)&temp, v.data(), v.size());
+	int i = 0;
+	while(temp[i]!=0 && i < v.size()){ i++;	} 
+	return std::string(temp, temp + i);
+}
+
+long int getLongInt(std::vector<char> &v){
+	long int aux = 0;
+	memmove((char*)&aux, v.data(), sizeof(aux));
+	return aux;
+}
+
+float getFloat(std::vector<char> &v){
+	float aux = 0;
+	memmove((char*)&aux, v.data(), sizeof(aux));
+	return aux;
+}
+
 void parseTES3(std::vector<char> &buffer){
 	std::cout << "Parsing TES3 tag: " << buffer.size() << " bytes" << std::endl;
-	//std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string,std::vector<char>> > v;
 
 	//read the sub-records
@@ -106,35 +126,19 @@ void parseTES3(std::vector<char> &buffer){
 		//the next two can be repeated for every required master file.
  		if (v[i].first == "MAST")
  		{
- 			char temp[300];
- 			memmove((char*)&temp, v[i].second.data(), v[i].second.size());
- 			std::cout << "  Required master file: " << std::string(temp, temp + v[i].second.size());
+ 			std::cout << "  Required master file: " << getString(v[i].second) << std::endl;
  		}
 
  		if (v[i].first == "DATA")
  		{
- 			long long int aux = 0;
- 			memmove((char*)&aux, v[i].second.data(), sizeof(aux));
- 			std::cout << "  Size of the required master file: " << aux << std::endl;
+ 			std::cout << "  Size of the required master file: " << getLongInt(v[i].second) << std::endl;
  		}
 	}
-}
-
-//get string from vector
-std::string getString(std::vector<char> &v){
-	char temp[50000];
-	memmove((char*)&temp, v.data(), v.size());
-	int i = 0;
-	while(temp[i]!=0 && i < v.size()){
-		i++;
-	} 
-	return std::string(temp, temp + i);
 }
 
 void parseGMST(std::vector<char> &buffer){
 	
 	std::cout << "Parsing GMST tag: " << buffer.size() << " bytes" << std::endl;
-	//std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -144,50 +148,16 @@ void parseGMST(std::vector<char> &buffer){
 	//parse the sub-records in the vector
 	GMST g;
 	for(auto x : v){
-		if(x.first == "NAME")
-		{
-			g.name = getString(x.second);
-			std::cout << "  Name: " << g.name << std::endl;
-			/* char temp[300];
- 			memmove((char*)&temp, x.second.data(), x.second.size());
-			int i = 0;
-			while(temp[i]!=0 && i < x.second.size()){
-				i++;
-			} 
-			std::cout << "  Name: " << std::string(temp, temp + i) << std::endl;
-			g.name = std::string(temp, temp + i); */
-		}
-
-		if (x.first == "STRV")
- 		{
-			 g.stringValue = getString(x.second);
-			 std::cout << "  String: " << g.stringValue << std::endl;
- 			/* char temp[300];
- 			memmove((char*)&temp, x.second.data(), x.second.size());
-			int i = 0;			 
-			while(temp[i]!=0 && i < x.second.size()){
-				i++;
-			}  
-			std::cout << "  String: " << std::string(temp, temp + i) << std::endl;
-			g.stringValue = std::string(temp, temp + i); */
- 		}
-
-		 if (x.first == "INTV")
- 		{
- 			long int aux = 0;
-			memmove((char*)&aux, x.second.data(), sizeof(aux));
- 			std::cout << "  Integer Value: " << aux << std::endl;
- 			g.intValue = aux;
- 		}
-
- 		if (x.first == "FLTV")
- 		{
- 			float aux = 0;
- 			memmove((char*)&aux, x.second.data(), sizeof(aux));
- 			std::cout << "  Float Value: " << aux << std::endl;
- 			g.floatValue = aux;
- 		}
+		if(x.first == "NAME") g.name = getString(x.second);
+		if(x.first == "STRV") g.stringValue = getString(x.second);
+		if(x.first == "INTV") g.intValue = getLongInt(x.second);
+ 		if(x.first == "FLTV") g.floatValue = getFloat(x.second);
 	}
+
+	std::cout << "  Name: " << g.name << std::endl;
+	std::cout << "  String: " << g.stringValue << std::endl;
+	std::cout << "  Int value: " << g.intValue << std::endl;
+	std::cout << "  Float Value: " << g.floatValue << std::endl;
 	vgmst.push_back(g);
 }
 void parseGLOB(std::vector<char> &buffer){
@@ -199,17 +169,45 @@ void parseGLOB(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse the sub-records in the vector
+	GLOB g;
+	for(auto x : v){
+		if(x.first == "NAME") g.name = getString(x.second);
+		if(x.first == "FNAM") g.type = getString(x.second);
+		if(x.first == "FLTV" && g.type == "s") g.value = (short)getFloat(x.second);
+		if(x.first == "FLTV" && g.type == "l") g.value = (long int)getFloat(x.second);
+		if(x.first == "FLTV" && g.type == "f") g.value = getFloat(x.second);
+	}
+
+	std::cout << "  Name: " << g.name << std::endl;
+	std::cout << "  Type: " << g.type << std::endl;
+	std::cout << "  Value: " << g.value << std::endl;
+	vglob.push_back(g);
 }
+
 void parseCLAS(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CLAS tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse the sub-records in the vector
+	CLAS c;
+	for(auto x : v){
+		if(x.first == "NAME") c.name = getString(x.second);
+		if(x.first == "FNAM") c.fullName = getString(x.second);
+		if(x.first == "CLDT") memmove((char*)&c.cd , x.second.data(), sizeof(c.cd));
+		if(x.first == "DESC") c.description = getString(x.second);
+	}
+
+	std::cout << "  " << c.name << " " << c.fullName << " " << c.description << std::endl;
+	vclas.push_back(c);
 }
+
 void parseFACT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing FACT tag: " << buffer.size() << " bytes" << std::endl;
@@ -659,9 +657,9 @@ void readESM(const std::string &filename){
 			
 			if (name == "TES3") parseTES3(buffer);
 			if (name == "GMST") parseGMST(buffer);
-			/*if (name == "GLOB") parseGLOB(buffer);
+			if (name == "GLOB") parseGLOB(buffer);
 			if (name == "CLAS") parseCLAS(buffer);
-			if (name == "FACT") parseFACT(buffer);
+			/*if (name == "FACT") parseFACT(buffer);
 			if (name == "RACE") parseRACE(buffer);
 			if (name == "SOUN") parseSOUN(buffer);
 			if (name == "SKIL") parseSKIL(buffer);

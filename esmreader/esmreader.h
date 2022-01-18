@@ -15,7 +15,8 @@ struct Hedr {
  	long int numRecords; //48227
 };
 
-//used by GMST records
+//Game settings records. the first letter of "name" tells what
+//type of data it is.
 struct GMST{
 	std::string name = "";
 	std::string stringValue = "";
@@ -25,118 +26,70 @@ struct GMST{
 
 std::vector<GMST> vgmst; //vector of game settings
 
-// 	//global variable
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "GLOB")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Global ID: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//Global values records. type = short,long,float = s,l,f
+struct GLOB{
+	std::string name = "";
+	std::string type = "";
+	float value = 0.0;
+};
 
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Type of global (short(s),long(l),float(f)): " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+std::vector<GLOB> vglob; //vector of global values
 
-// 		//all values are stored as float. They have to be converted to their real types before using them.
-// 		if (name == "FLTV")
-// 		{
-// 			float aux = 0;
-// 			file.read((char*)&aux, sizeof(aux));
-// 			std::cout << "  Float Value: " << aux << std::endl;
-// 			bytesRead += sizeof(aux);
-// 		}
-// 	}
+//used by CLAS records
+struct ClassData {
+	long int attributeID1 = 0;  //can be uint32[2] 
+	long int attributeID2 = 0;
+							/* 0 = strength
+							1 = intelligence
+							2 = willpower
+							3 = agility
+							4 = speed
+							5 = endurance
+							6 = personality
+							7 = luck
+							*/
+	long int specialization; //0 = combat, 1 = magic, 2 = stealth
+	long int minorID1 = 0;  //can be uint32[5][2]
+	long int majorID1 = 0;
+	long int minorID2 = 0;
+	long int majorID2 = 0;
+	long int minorID3 = 0;
+	long int majorID3 = 0;
+	long int minorID4 = 0;
+	long int majorID4= 0;
+	long int minorID5 = 0;
+	long int majorID5 = 0;
+	long int flags = 0; //0x0001 = playable
+	long int autoCalcFlags = 0;
+								/*0x00001 = Weapon
+								0x00002 = Armor
+								0x00004 = Clothing
+								0x00008 = Books
+								0x00010 = Ingrediant
+								0x00020 = Picks
+								0x00040 = Probes
+								0x00080 = Lights
+								0x00100 = Apparatus
+								0x00200 = Repair
+								0x00400 = Misc
+								0x00800 = Spells
+								0x01000 = Magic Items
+								0x02000 = Potions
+								0x04000 = Training
+								0x08000 = Spellmaking
+								0x10000 = Enchanting
+								0x20000 = Repair Item*/
+};
 
-// 	//class definition
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CLAS")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Class ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//class records
+struct CLAS{
+	std::string name = "";
+	std::string fullName = "";
+	ClassData cd;
+	std::string description = "";
+};
 
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Class name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CLDT")
-// 		{
-// 			struct ClassData {
-// 				long int attributeID1 = 0;  //can be uint32[2] 
-// 				long int attributeID2 = 0;
-// 										/* 0 = strength
-// 										1 = intelligence
-// 										2 = willpower
-// 										3 = agility
-// 										4 = speed
-// 										5 = endurance
-// 										6 = personality
-// 										7 = luck
-// 										*/
-// 				long int specialization; //0 = combat, 1 = magic, 2 = stealth
-// 				long int minorID1 = 0;  //can be uint32[5][2]
-// 				long int majorID1 = 0;
-// 				long int minorID2 = 0;
-// 				long int majorID2 = 0;
-// 				long int minorID3 = 0;
-// 				long int majorID3 = 0;
-// 				long int minorID4 = 0;
-// 				long int majorID4= 0;
-// 				long int minorID5 = 0;
-// 				long int majorID5 = 0;
-// 				long int flags = 0; //0x0001 = playable
-// 				long int autoCalcFlags = 0;
-// 											/*0x00001 = Weapon
-// 											0x00002 = Armor
-// 											0x00004 = Clothing
-// 											0x00008 = Books
-// 											0x00010 = Ingrediant
-// 											0x00020 = Picks
-// 											0x00040 = Probes
-// 											0x00080 = Lights
-// 											0x00100 = Apparatus
-// 											0x00200 = Repair
-// 											0x00400 = Misc
-// 											0x00800 = Spells
-// 											0x01000 = Magic Items
-// 											0x02000 = Potions
-// 											0x04000 = Training
-// 											0x08000 = Spellmaking
-// 											0x10000 = Enchanting
-// 											0x20000 = Repair Item*/
-// 			}classData;
-
-// 			file.read((char*)&classData, sizeof(classData));
-
-// 			bytesRead += sizeof(classData);
-// 			std::cout << "  Class Data: " << classData.attributeID1 << " " << classData.attributeID2 << " "
-// 				<< classData.specialization << " " << classData.minorID1 << " " << classData.majorID1 << " " << classData.minorID2 << " " << classData.majorID2
-// 				<< " " << classData.minorID3 << " " << classData.majorID3 << " " << classData.minorID4 << " " << classData.majorID4 << " "
-// 				<< classData.minorID5 << " " << classData.majorID5 << " " << classData.flags << " " << classData.autoCalcFlags << std::endl;
-// 		}
-
-// 		if (name == "DESC")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Class description: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
+std::vector<CLAS> vclas;  //vector of character classes
 
 // 	//faction definition
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "FACT")

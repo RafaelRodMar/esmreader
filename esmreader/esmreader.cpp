@@ -163,7 +163,6 @@ void parseGMST(std::vector<char> &buffer){
 void parseGLOB(std::vector<char> &buffer){
 	
 	std::cout << "Parsing GLOB tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -211,7 +210,6 @@ void parseCLAS(std::vector<char> &buffer){
 void parseFACT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing FACT tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -221,7 +219,6 @@ void parseFACT(std::vector<char> &buffer){
 void parseRACE(std::vector<char> &buffer){
 	
 	std::cout << "Parsing RACE tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -231,7 +228,6 @@ void parseRACE(std::vector<char> &buffer){
 void parseSOUN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SOUN tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -241,7 +237,6 @@ void parseSOUN(std::vector<char> &buffer){
 void parseSKIL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SKIL tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -251,7 +246,6 @@ void parseSKIL(std::vector<char> &buffer){
 void parseMGEF(std::vector<char> &buffer){
 	
 	std::cout << "Parsing MGEF tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -261,7 +255,6 @@ void parseMGEF(std::vector<char> &buffer){
 void parseSCPT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SCPT tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -271,7 +264,6 @@ void parseSCPT(std::vector<char> &buffer){
 void parseREGN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing REGN tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -281,7 +273,6 @@ void parseREGN(std::vector<char> &buffer){
 void parseBSGN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BSGN tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -291,7 +282,6 @@ void parseBSGN(std::vector<char> &buffer){
 void parseLTEX(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LTEX tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -301,7 +291,6 @@ void parseLTEX(std::vector<char> &buffer){
 void parseSTAT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing STAT tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -311,7 +300,6 @@ void parseSTAT(std::vector<char> &buffer){
 void parseDOOR(std::vector<char> &buffer){
 	
 	std::cout << "Parsing DOOR tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -321,7 +309,6 @@ void parseDOOR(std::vector<char> &buffer){
 void parseMISC(std::vector<char> &buffer){
 	
 	std::cout << "Parsing MISC tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -331,7 +318,6 @@ void parseMISC(std::vector<char> &buffer){
 void parseWEAP(std::vector<char> &buffer){
 	
 	std::cout << "Parsing WEAP tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -341,7 +327,6 @@ void parseWEAP(std::vector<char> &buffer){
 void parseCONT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CONT tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -351,7 +336,6 @@ void parseCONT(std::vector<char> &buffer){
 void parseSPEL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SPEL tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -361,7 +345,6 @@ void parseSPEL(std::vector<char> &buffer){
 void parseCREA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CREA tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -371,7 +354,6 @@ void parseCREA(std::vector<char> &buffer){
 void parseBODY(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BODY tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -381,7 +363,6 @@ void parseBODY(std::vector<char> &buffer){
 void parseLIGH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LIGH tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -391,7 +372,6 @@ void parseLIGH(std::vector<char> &buffer){
 void parseENCH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ENCH tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -401,7 +381,6 @@ void parseENCH(std::vector<char> &buffer){
 void parseNPC_(std::vector<char> &buffer){
 	
 	std::cout << "Parsing NPC_ tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -411,7 +390,6 @@ void parseNPC_(std::vector<char> &buffer){
 void parseARMO(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ARMO tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -421,7 +399,6 @@ void parseARMO(std::vector<char> &buffer){
 void parseCLOT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CLOT tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -431,7 +408,6 @@ void parseCLOT(std::vector<char> &buffer){
 void parseREPA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing REPA tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -441,7 +417,6 @@ void parseREPA(std::vector<char> &buffer){
 void parseACTI(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ACTI tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -451,7 +426,6 @@ void parseACTI(std::vector<char> &buffer){
 void parseAPPA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing APPA tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -461,7 +435,6 @@ void parseAPPA(std::vector<char> &buffer){
 void parseLOCK(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LOCK tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -471,7 +444,6 @@ void parseLOCK(std::vector<char> &buffer){
 void parsePROB(std::vector<char> &buffer){
 	
 	std::cout << "Parsing PROB tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -481,7 +453,6 @@ void parsePROB(std::vector<char> &buffer){
 void parseINGR(std::vector<char> &buffer){
 	
 	std::cout << "Parsing INGR tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -491,7 +462,6 @@ void parseINGR(std::vector<char> &buffer){
 void parseBOOK(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BOOK tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -501,7 +471,6 @@ void parseBOOK(std::vector<char> &buffer){
 void parseALCH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ALCH tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -511,7 +480,6 @@ void parseALCH(std::vector<char> &buffer){
 void parseLEVI(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LEVI tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -521,7 +489,6 @@ void parseLEVI(std::vector<char> &buffer){
 void parseLEVC(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LEVC tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -531,7 +498,6 @@ void parseLEVC(std::vector<char> &buffer){
 void parseCELL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CELL tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -541,7 +507,6 @@ void parseCELL(std::vector<char> &buffer){
 void parseLAND(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LAND tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -551,7 +516,6 @@ void parseLAND(std::vector<char> &buffer){
 void parsePGRD(std::vector<char> &buffer){
 	
 	std::cout << "Parsing PGRD tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -561,7 +525,6 @@ void parsePGRD(std::vector<char> &buffer){
 void parseSNDG(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SNDG tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -571,7 +534,6 @@ void parseSNDG(std::vector<char> &buffer){
 void parseDIAL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing DIAL tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records
@@ -581,7 +543,6 @@ void parseDIAL(std::vector<char> &buffer){
 void parseINFO(std::vector<char> &buffer){
 	
 	std::cout << "Parsing INFO tag: " << buffer.size() << " bytes" << std::endl;
-	std::pair<std::string, std::vector<char> > p;
 	std::vector< std::pair<std::string, std::vector<char>> > v;
 
 	//read the sub-records

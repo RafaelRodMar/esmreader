@@ -91,6 +91,33 @@ struct CLAS{
 
 std::vector<CLAS> vclas;  //vector of character classes
 
+//used by FACT records
+struct RankData {
+	long attribute1;
+	long attribute2;
+	long firstSkill;
+	long secondSkill;
+	long faction;
+};
+
+struct FactionData {
+	long int attributeID1 = 0;
+	long int attributeID2 = 0;
+	RankData rd[10];
+	long skillId[6];
+	long unknown1;
+	long flags; //1 = hidden from player
+};
+
+//faction records
+struct FACT {
+	std::string name = "";
+	std::string fullName = "";
+	std::string rankName = "";
+	FactionData fd;
+};
+
+
 // 	//faction definition
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "FACT")
 // 	{

@@ -120,6 +120,17 @@ void parseTES3(std::vector<char> &buffer){
 	}
 }
 
+//get string from vector
+std::string getString(std::vector<char> &v){
+	char temp[50000];
+	memmove((char*)&temp, v.data(), v.size());
+	int i = 0;
+	while(temp[i]!=0 && i < v.size()){
+		i++;
+	} 
+	return std::string(temp, temp + i);
+}
+
 void parseGMST(std::vector<char> &buffer){
 	
 	std::cout << "Parsing GMST tag: " << buffer.size() << " bytes" << std::endl;
@@ -135,26 +146,30 @@ void parseGMST(std::vector<char> &buffer){
 	for(auto x : v){
 		if(x.first == "NAME")
 		{
-			char temp[300];
+			g.name = getString(x.second);
+			std::cout << "  Name: " << g.name << std::endl;
+			/* char temp[300];
  			memmove((char*)&temp, x.second.data(), x.second.size());
 			int i = 0;
 			while(temp[i]!=0 && i < x.second.size()){
 				i++;
 			} 
 			std::cout << "  Name: " << std::string(temp, temp + i) << std::endl;
-			g.name = std::string(temp, temp + i);
+			g.name = std::string(temp, temp + i); */
 		}
 
 		if (x.first == "STRV")
  		{
- 			char temp[300];
+			 g.stringValue = getString(x.second);
+			 std::cout << "  String: " << g.stringValue << std::endl;
+ 			/* char temp[300];
  			memmove((char*)&temp, x.second.data(), x.second.size());
 			int i = 0;			 
 			while(temp[i]!=0 && i < x.second.size()){
 				i++;
 			}  
 			std::cout << "  String: " << std::string(temp, temp + i) << std::endl;
-			g.stringValue = std::string(temp, temp + i);
+			g.stringValue = std::string(temp, temp + i); */
  		}
 
 		 if (x.first == "INTV")

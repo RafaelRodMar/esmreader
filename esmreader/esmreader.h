@@ -113,178 +113,60 @@ struct FactionData {
 struct FACT {
 	std::string name = "";
 	std::string fullName = "";
-	std::string rankName = "";
+	std::vector<std::string> rankName;
 	FactionData fd;
+	std::vector< std::pair<std::string, long int> > factionReaction;
 };
 
+std::vector<FACT> vfact;
 
-// 	//faction definition
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "FACT")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Faction ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//used by RACE records
+struct SkillBonuses {
+	long int sillID;
+	long int bonus;
+};
 
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Faction name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+struct RaceData {
+	SkillBonuses sb[7];
+	long int strength[2]; //male/female
+	long int intelligence[2];
+	long int willpower[2];
+	long int agility[2];
+	long int speed[2];
+	long int endurance[2];
+	long int personality[2];
+	long int luck[2];
+	float height[2];
+	float weight[2];
+	long flags; //1 = playable, 2 = beast race
+};
 
-// 		if (name == "RNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Rank name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//race records
+struct RACE{
+	std::string name = "";
+	std::string fullName = "";
+	RaceData rd;
+	std::vector<std::string> special;  //special power/ability
+	std::string description = "";
+};
 
-// 		if (name == "FADT")
-// 		{
-// 			struct RankData {
-// 				long attribute1;
-// 				long attribute2;
-// 				long firstSkill;
-// 				long secondSkill;
-// 				long faction;
-// 			};
+std::vector<RACE> vrace;
 
-// 			struct FactionData {
-// 				long int attributeID1 = 0;
-// 				long int attributeID2 = 0;
-// 				RankData rd[10];
-// 				long skillId[6];
-// 				long unknown1;
-// 				long flags; //1 = hidden from player
-// 			}factionData;
+//used by SOUN records
+struct SoundData {
+	char volume; //(0 = 0.00, 255 = 1.00)
+	char minRange;
+	char maxRange;
+};
 
-// 			file.read((char*)&factionData, sizeof(factionData));
+//sound records
+struct SOUN{
+	std::string name = "";
+	std::string fullName = "";
+	SoundData sd;
+};
 
-// 			bytesRead += sizeof(factionData);
-// 			std::cout << "  Faction Data: " << factionData.attributeID1 << " " << factionData.attributeID2 << " "
-// 				<< factionData.rd[0].attribute1 << " " << factionData.skillId[0] << " " << factionData.unknown1 << " "
-// 				<< factionData.flags << std::endl;
-// 		}
-
-// 		if (name == "ANAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Faction name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "INTV")
-// 		{
-// 			long int aux = 0;
-// 			file.read((char*)&aux, sizeof(aux));
-// 			std::cout << "  Faction reaction value: " << aux;
-// 			bytesRead += sizeof(aux);
-// 		}
-// 	}
-
-// 	//race definition
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "RACE")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Race ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Race name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "RADT")
-// 		{
-// 			struct SkillBonuses {
-// 				long int sillID;
-// 				long int bonus;
-// 			};
-
-// 			struct RaceData {
-// 				SkillBonuses sb[7];
-// 				long int strength[2]; //male/female
-// 				long int intelligence[2];
-// 				long int willpower[2];
-// 				long int agility[2];
-// 				long int speed[2];
-// 				long int endurance[2];
-// 				long int personality[2];
-// 				long int luck[2];
-// 				float height[2];
-// 				float weight[2];
-// 				long flags; //1 = playable, 2 = beast race
-// 			}raceData;
-
-// 			file.read((char*)&raceData, sizeof(raceData));
-// 			std::cout << "  Race data read " << std::endl;
-// 			bytesRead += sizeof(raceData);
-// 		}
-
-// 		if (name == "NPCS")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Special power/ability: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DESC")
-// 		{
-// 			char buffer[1000];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Race description: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
-
-// 	//sound definition
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SOUN")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound filename relative to Sounds/ : " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DATA")
-// 		{
-// 			struct SoundData {
-// 				char volume; //(0 = 0.00, 255 = 1.00)
-// 				char minRange;
-// 				char maxRange;
-// 			}soundData;
-
-// 			file.read((char*)&soundData, sizeof(soundData));
-// 			std::cout << "  Sound data: " << " vol: " << std::to_string(soundData.volume) << " minRange: " << std::to_string(soundData.minRange) <<
-// 				" maxRange: " << std::to_string(soundData.maxRange) << std::endl;
-// 			bytesRead += sizeof(soundData);
-// 		}
-// 	}
+std::vector<SOUN> vsoun;
 
 // 	//skill
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SKIL")

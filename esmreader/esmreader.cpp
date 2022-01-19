@@ -215,7 +215,29 @@ void parseFACT(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse the sub-records in the vector
+	FACT f;
+	for(int i = 0; i < v.size(); i++){
+		std::pair< std::string, std::vector<char> > x = v[i];
+		if(x.first == "NAME") f.name = getString(x.second);
+		if(x.first == "FNAM") f.fullName = getString(x.second);
+		if(x.first == "RNAM") f.rankName.push_back(getString(x.second));
+		if(x.first == "FADT") memmove((char*)&f.fd, x.second.data(), sizeof(f.fd));
+		if(x.first == "ANAM")
+		{
+			//read this value and the next INTV value
+			f.factionReaction.push_back( std::make_pair(getString(x.second), getLongInt(v[i+1].second)));
+		}
+	}
+
+	std::cout << f.name << " " << f.fullName << std::endl;
+	for(auto s : f.rankName){
+		std::cout << s << std::endl;
+	}
+	vfact.push_back(f);
 }
+
 void parseRACE(std::vector<char> &buffer){
 	
 	std::cout << "Parsing RACE tag: " << buffer.size() << " bytes" << std::endl;
@@ -224,7 +246,25 @@ void parseRACE(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse the sub-records in the vector
+	RACE r;
+	for(auto x : v){
+		if(x.first == "NAME") r.name = getString(x.second);
+		if(x.first == "FNAM") r.fullName = getString(x.second);
+		if(x.first == "RADT") memmove((char*)&r.rd, x.second.data(), sizeof(r.rd));
+		if(x.first == "NPCS") r.special.push_back(getString(x.second));
+		if(x.first == "DESC") r.description = getString(x.second);
+	}
+
+	std::cout << r.fullName << " " << r.description << std::endl;
+	std::cout << "special abilities" << std::endl;
+	for (auto x : r.special) {
+		std::cout << x << std::endl;
+	}
+	vrace.push_back(r);
 }
+
 void parseSOUN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SOUN tag: " << buffer.size() << " bytes" << std::endl;
@@ -233,6 +273,17 @@ void parseSOUN(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	SOUN s;
+	for(auto x : v){
+		if(x.first == "NAME") s.name = getString(x.second);
+		if(x.first == "FNAM") s.fullName = getString(x.second);
+		if(x.first == "DATA") memmove((char*)&s.sd, x.second.data(), sizeof(s.sd));
+	}
+
+	std::cout << s.fullName << std::endl;
+	vsoun.push_back(s);
 }
 void parseSKIL(std::vector<char> &buffer){
 	
@@ -620,10 +671,10 @@ void readESM(const std::string &filename){
 			if (name == "GMST") parseGMST(buffer);
 			if (name == "GLOB") parseGLOB(buffer);
 			if (name == "CLAS") parseCLAS(buffer);
-			/*if (name == "FACT") parseFACT(buffer);
+			if (name == "FACT") parseFACT(buffer);
 			if (name == "RACE") parseRACE(buffer);
 			if (name == "SOUN") parseSOUN(buffer);
-			if (name == "SKIL") parseSKIL(buffer);
+			/*if (name == "SKIL") parseSKIL(buffer);
 			if (name == "MGEF") parseMGEF(buffer);
 			if (name == "SCPT") parseSCPT(buffer);
 			if (name == "REGN") parseREGN(buffer);

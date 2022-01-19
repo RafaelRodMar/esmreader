@@ -285,6 +285,7 @@ void parseSOUN(std::vector<char> &buffer){
 	std::cout << s.fullName << std::endl;
 	vsoun.push_back(s);
 }
+
 void parseSKIL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SKIL tag: " << buffer.size() << " bytes" << std::endl;
@@ -293,7 +294,19 @@ void parseSKIL(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	SKIL s;
+	for (auto x : v) {
+		if(x.first == "INDX") s.index = getLongInt(x.second);
+		if(x.first == "SKDT") memmove((char*)&s.sd, x.second.data(), sizeof(s.sd));
+		if(x.first == "DESC") s.description = getString(x.second);
+	}
+
+	std::cout << s.description << std::endl;
+	vskil.push_back(s);
 }
+
 void parseMGEF(std::vector<char> &buffer){
 	
 	std::cout << "Parsing MGEF tag: " << buffer.size() << " bytes" << std::endl;
@@ -302,6 +315,135 @@ void parseMGEF(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	MGEF m;
+	for (auto x : v) {
+
+	}
+	// 	//magic effect
+	// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "MGEF")
+	// 	{
+	// 		if (name == "INDX")
+	// 		{
+	// 			long int aux; //0 to 137
+	// 			file.read((char*)&aux, sizeof(aux));
+	// 			std::cout << "  Magic effect: " << aux << std::endl;
+	// 			bytesRead += sizeof(aux);
+	// 		}
+
+	// 		if (name == "MEDT")
+	// 		{
+	// 			struct MagicEffectData {
+	// 				long int spellSchool; /*0 = alteration
+	// 								  1 = conjuration
+	// 								  2 = destruction
+	// 								  3 = illosion
+	// 								  4 = mysticism
+	// 								  5 = restoration*/
+	// 				float baseCost;
+	// 				long int flags; //0x0200 = spellmaking, 0x0400 = enchanting, 0x0800 = negative
+	// 				long int red;
+	// 				long int blue;
+	// 				long int green;
+	// 				float speedX;
+	// 				float SizeX;
+	// 				float sizeCap;
+	// 			}magicEffectData;
+
+	// 			file.read((char*)&magicEffectData, sizeof(magicEffectData));
+	// 			std::cout << "  Magic effect data read " << std::endl;
+	// 			bytesRead += sizeof(magicEffectData);
+	// 		}
+
+	// 		if (name == "ITEX")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Effect icon string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "PTEX")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Particle texture string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "CVFX")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Casting visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "BVFX")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Bolt visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "HVFX")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Hit visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "AVFX")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Area visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "DESC")
+	// 		{
+	// 			char buffer[500];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Description text string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "CSND")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Cast Sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "BSND")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Bolt sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "HSND")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Hit sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+
+	// 		if (name == "ASND")
+	// 		{
+	// 			char buffer[300];
+	// 			file.read((char*)&buffer, subRecordHeader.size);
+	// 			std::cout << "  Area sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+	// 			bytesRead += subRecordHeader.size;
+	// 		}
+	// 	}
 }
 void parseSCPT(std::vector<char> &buffer){
 	

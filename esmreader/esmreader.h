@@ -168,162 +168,60 @@ struct SOUN{
 
 std::vector<SOUN> vsoun;
 
-// 	//skill
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SKIL")
-// 	{
-// 		if (name == "INDX")
-// 		{
-// 			long int aux; //0 to 26 hard-coded in the game
-// 			file.read((char*)&aux, sizeof(aux));
-// 			std::cout << "  Skill: " << aux << std::endl;
-// 			bytesRead += sizeof(aux);
-// 		}
+//used by SKIL records
+struct SkillData {
+ 	long int attribute;
+ 	long int specialization; //0 = combat, 1 = magic, 2 = stealth
+ 	float useValue[4]; //the use types for each skill are hard-coded.
+};
 
-// 		if (name == "SKDT")
-// 		{
-// 			struct SkillData {
-// 				long int attribute;
-// 				long int specialization; //0 = combat, 1 = magic, 2 = stealth
-// 				float useValue[4]; //the use types for each skill are hard-coded.
-// 			}skillData;
+//skill records
+struct SKIL {
+	long int index = 0;
+	SkillData sd;
+	std::string description = "";
+};
 
-// 			file.read((char*)&skillData, sizeof(skillData));
-// 			std::cout << "  Skill data read " << std::endl;
-// 			bytesRead += sizeof(skillData);
-// 		}
+std::vector<SKIL> vskil;
 
-// 		if (name == "DESC")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Skill description string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
 
-// 	//magic effect
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "MGEF")
-// 	{
-// 		if (name == "INDX")
-// 		{
-// 			long int aux; //0 to 137
-// 			file.read((char*)&aux, sizeof(aux));
-// 			std::cout << "  Magic effect: " << aux << std::endl;
-// 			bytesRead += sizeof(aux);
-// 		}
+//used by MGEF records
+struct MagicEffectData {
+ 	long int spellSchool; /*0 = alteration
+ 						1 = conjuration
+ 						2 = destruction
+ 						3 = illosion
+ 						4 = mysticism
+ 						5 = restoration*/
+ 	float baseCost;
+ 	long int flags; //0x0200 = spellmaking, 0x0400 = enchanting, 0x0800 = negative
+ 	long int red;
+ 	long int blue;
+ 	long int green;
+ 	float speedX;
+ 	float SizeX;
+ 	float sizeCap;
+};
 
-// 		if (name == "MEDT")
-// 		{
-// 			struct MagicEffectData {
-// 				long int spellSchool; /*0 = alteration
-// 								  1 = conjuration
-// 								  2 = destruction
-// 								  3 = illosion
-// 								  4 = mysticism
-// 								  5 = restoration*/
-// 				float baseCost;
-// 				long int flags; //0x0200 = spellmaking, 0x0400 = enchanting, 0x0800 = negative
-// 				long int red;
-// 				long int blue;
-// 				long int green;
-// 				float speedX;
-// 				float SizeX;
-// 				float sizeCap;
-// 			}magicEffectData;
+//magic effect records
+struct MGEF {
+	long int index = 0;
+	MagicEffectData md;
+	std::string iconTexture = "";
+	std::string particleTexture = "";
+	std::string castingVisual = "";
+	std::string boltVisual = "";
+	std::string hitVisual = "";
+	std::string areaVisual = "";
+	std::string description = "";
+	std::string castSound = "";
+	std::string boltSound = "";
+	std::string hitSound = "";
+	std::string areaSound = "";
+};
 
-// 			file.read((char*)&magicEffectData, sizeof(magicEffectData));
-// 			std::cout << "  Magic effect data read " << std::endl;
-// 			bytesRead += sizeof(magicEffectData);
-// 		}
+std::vector<MGEF> vmgef;
 
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Effect icon string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "PTEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Particle texture string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CVFX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Casting visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "BVFX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Bolt visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "HVFX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Hit visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "AVFX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Area visual string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DESC")
-// 		{
-// 			char buffer[500];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Description text string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CSND")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cast Sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "BSND")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Bolt sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "HSND")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Hit sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ASND")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Area sound string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
 
 // 	//Script
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SCPT")

@@ -222,54 +222,25 @@ struct MGEF {
 
 std::vector<MGEF> vmgef;
 
+//used by SCPT records
+struct ScriptHeader {
+ 	char name[32];
+ 	long int numShorts;
+ 	long int numLongs;
+ 	long int numFloats;
+ 	long int scriptDataSize;
+ 	long int localVarSize;
+};
 
-// 	//Script
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SCPT")
-// 	{
-// 		if (name == "SCHD")
-// 		{
-// 			struct ScriptHeader {
-// 				char name[32];
-// 				long int numShorts;
-// 				long int numLongs;
-// 				long int numFloats;
-// 				long int scriptDataSize;
-// 				long int localVarSize;
-// 			}scriptHeader;
+//script records
+struct SCPT {
+	ScriptHeader sh;
+	std::vector<std::string> localVars;
+	std::vector<char> compiledScpt;
+	std::string textScpt;
+};
 
-// 			file.read((char*)&scriptHeader, sizeof(scriptHeader));
-// 			std::cout << "  Nombre del script: " << std::string(scriptHeader.name, scriptHeader.name + 32) << std::endl;
-// 			std::cout << "  Tama�o script: " << scriptHeader.scriptDataSize << std::endl;
-// 			std::cout << "  Local var size: " << scriptHeader.localVarSize << std::endl;
-// 			bytesRead += sizeof(scriptHeader);
-// 		}
-
-// 		if (name == "SCVR") //todas las variables separadas por '\0'
-// 		{
-// 			char buffer[10000];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  List of all the local variables: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCDT")
-// 		{
-// 			char buffer[10000];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			/*std::streamsize bytes = file.gcount();
-// 			std::cout << "bytes read: " << bytes << std::endl;*/
-// 			std::cout << "  Compiled script data read " << subRecordHeader.size << " bytes" << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCTX")
-// 		{
-// 			char buffer[10000];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script : " << std::endl << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
+std::vector<SCPT> vscpt;
 
 // 	//Region
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "REGN")

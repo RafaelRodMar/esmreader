@@ -242,111 +242,43 @@ struct SCPT {
 
 std::vector<SCPT> vscpt;
 
-// 	//Region
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "REGN")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Region ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//used by REGN registers
+struct WeatherData {
+	uint8_t clear, cloudy, foggy, overcast, rain, thunder, ash, blight;
+	//version 1.3 adds snow and blizzard
+};
 
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Region name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+struct MapColor {
+	char red, green, blue, null;
+};
 
-// 		if (name == "WEAT")
-// 		{
-// 			struct WeatherData {
-// 				char clear, cloudy, foggy, overcast, rain, thunder, ash, blight;
-// 			}weatherData;
+struct SoundRecord {
+	char soundName[32];
+	uint8_t chance;
+};
 
-// 			file.read((char*)&weatherData, sizeof(weatherData));
-// 			std::cout << "  Weather data read " << std::endl;
-// 			bytesRead += sizeof(weatherData);
-// 		}
+//region records
+struct REGN{
+	std::string name = "";
+	std::string fullName = "";
+	WeatherData wd;
+	std::string sleepCreature = "";
+	MapColor mc;
+	std::vector<SoundRecord> sounds;
+};
 
-// 		if (name == "BNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sleep creature string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
+std::vector<REGN> vregn;
 
-// 		if (name == "CNAM")
-// 		{
-// 			struct MapColor {
-// 				char red, green, blue, null;
-// 			}mapColor;
+//birth sign records
+struct BSGN{
+	std::string name = "";
+	std::string fullName = "";
+	std::string textureFileName = "";
+	std::string description = "";
+	std::vector<std::string> spell_ability;
+};
 
-// 			file.read((char*)&mapColor, sizeof(mapColor));
-// 			std::cout << "  map color read " << std::endl;
-// 			bytesRead += sizeof(mapColor);
-// 		}
-
-// 		if (name == "SNAM")
-// 		{
-// 			struct SoundRecord {
-// 				char soundName[32];
-// 				char chance;
-// 			}soundRecord;
-
-// 			file.read((char*)&soundRecord, sizeof(soundRecord));
-// 			std::cout << "  Sound record: " << std::string(soundRecord.soundName, 32) << std::endl;
-// 			bytesRead += sizeof(soundRecord);
-// 		}
-// 	}
-
-// 	//Birth sign
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "BSGN")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sign ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sign name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "TNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Texture filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DESC")
-// 		{
-// 			char buffer[500];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Description string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "NPCS")
-// 		{
-// 			char spell_ability[32];
-// 			file.read((char*)&spell_ability, 32);
-// 			std::cout << "  Spell/ability read" << std::endl;
-// 			bytesRead += 32;
-// 		}
-// 	}
+std::vector<BSGN> vbsgn;
 
 // 	//landscape textures
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LTEX")

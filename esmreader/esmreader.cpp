@@ -393,7 +393,30 @@ void parseREGN(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	REGN r;
+	for(auto x : v){
+		if(x.first == "NAME") r.name = getString(x.second);
+		if(x.first == "FNAM") r.fullName = getString(x.second);
+		if(x.first == "WEAT") memmove((char*)&r.wd, x.second.data(), sizeof(r.wd));
+		if(x.first == "BNAM") r.sleepCreature = getString(x.second);
+		if(x.first == "CNAM") memmove((char*)&r.mc, x.second.data(), sizeof(r.mc));
+		if(x.first == "SNAM")
+		{
+			SoundRecord sr;
+			memmove((char*)&sr, x.second.data(), sizeof(sr));
+			r.sounds.push_back(sr);
+		}
+	}
+
+	std::cout << r.fullName << std::endl;
+	for(int i=0;i<r.sounds.size();i++){
+		std::cout << "snd: " << std::string(r.sounds[i].soundName) << std::endl;
+	}
+	vregn.push_back(r);
 }
+
 void parseBSGN(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BSGN tag: " << buffer.size() << " bytes" << std::endl;
@@ -402,7 +425,24 @@ void parseBSGN(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	BSGN b;
+	for(auto x : v){
+		if(x.first == "NAME") b.name = getString(x.second);
+		if(x.first == "FNAM") b.fullName = getString(x.second);
+		if(x.first == "TNAM") b.textureFileName = getString(x.second);
+		if(x.first == "DESC") b.description = getString(x.second);
+		if(x.first == "NPCS") b.spell_ability.push_back(getString(x.second));
+	}
+
+	std::cout << b.fullName << " : " << b.description << std::endl;
+	for(int i=0;i<b.spell_ability.size();i++){
+		std::cout << "spell/ability: " << b.spell_ability[i] << std::endl;
+	}
+	vbsgn.push_back(b);
 }
+
 void parseLTEX(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LTEX tag: " << buffer.size() << " bytes" << std::endl;
@@ -750,9 +790,9 @@ void readESM(const std::string &filename){
 			if (name == "SKIL") parseSKIL(buffer);
 			if (name == "MGEF") parseMGEF(buffer);
 			if (name == "SCPT") parseSCPT(buffer);
-			/*if (name == "REGN") parseREGN(buffer);
+			if (name == "REGN") parseREGN(buffer);
 			if (name == "BSGN") parseBSGN(buffer);
-			if (name == "LTEX") parseLTEX(buffer);
+			/*if (name == "LTEX") parseLTEX(buffer);
 			if (name == "STAT") parseSTAT(buffer);
 			if (name == "DOOR") parseDOOR(buffer);
 			if (name == "MISC") parseMISC(buffer);

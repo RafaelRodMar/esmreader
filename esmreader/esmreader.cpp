@@ -451,7 +451,19 @@ void parseLTEX(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	LTEX l;
+	for (auto x : v) {
+		if (x.first == "NAME") l.name = getString(x.second);
+		if (x.first == "INTV") l.index = getLongInt(x.second);
+		if (x.first == "DATA") l.filename = getString(x.second);
+	}
+
+	std::cout << l.name << " : " << l.filename << std::endl;
+	vltex.push_back(l);
 }
+
 void parseSTAT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing STAT tag: " << buffer.size() << " bytes" << std::endl;
@@ -460,7 +472,18 @@ void parseSTAT(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	STAT s;
+	for (auto x : v) {
+		if (x.first == "NAME") s.name = getString(x.second);
+		if (x.first == "MODL") s.model = getString(x.second);
+	}
+	
+	std::cout << s.name << " : " << s.model << std::endl;
+	vstat.push_back(s);
 }
+
 void parseDOOR(std::vector<char> &buffer){
 	
 	std::cout << "Parsing DOOR tag: " << buffer.size() << " bytes" << std::endl;
@@ -469,7 +492,22 @@ void parseDOOR(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	DOOR d;
+	for (auto x : v) {
+		if (x.first == "NAME") d.name = getString(x.second);
+		if (x.first == "MODL") d.model = getString(x.second);
+		if (x.first == "FNAM") d.fullName = getString(x.second);
+		if (x.first == "SCRI") d.script = getString(x.second);
+		if (x.first == "SNAM") d.openSound = getString(x.second);
+		if (x.first == "ANAM") d.closeSound = getString(x.second);
+	}
+
+	std::cout << d.fullName << " : " << d.model << std::endl;
+	vdoor.push_back(d);
 }
+
 void parseMISC(std::vector<char> &buffer){
 	
 	std::cout << "Parsing MISC tag: " << buffer.size() << " bytes" << std::endl;
@@ -478,7 +516,23 @@ void parseMISC(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	MISC m;
+	for (auto x : v) {
+		if (x.first == "NAME") m.name = getString(x.second);
+		if (x.first == "MODL") m.model = getString(x.second);
+		if (x.first == "FNAM") m.fullName = getString(x.second);
+		if (x.first == "MCDT") memmove((char*)&m.mid, x.second.data(), sizeof(m.mid));
+		if (x.first == "SCRI") m.script = getString(x.second);
+		if (x.first == "ITEX") m.icon = getString(x.second);
+		if (x.first == "ENAM") m.enchantment = getString(x.second);
+	}
+
+	std::cout << m.fullName << " : " << m.icon << std::endl;
+	vmisc.push_back(m);
 }
+
 void parseWEAP(std::vector<char> &buffer){
 	
 	std::cout << "Parsing WEAP tag: " << buffer.size() << " bytes" << std::endl;
@@ -487,7 +541,23 @@ void parseWEAP(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	WEAP w;
+	for (auto x : v) {
+		if (x.first == "NAME") w.name = getString(x.second);
+		if (x.first == "MODL") w.model = getString(x.second);
+		if (x.first == "FNAM") w.fullName = getString(x.second);
+		if (x.first == "WPDT") memmove((char*)&w.wd, x.second.data(), sizeof(w.wd));
+		if (x.first == "SCRI") w.script = getString(x.second);
+		if (x.first == "ITEX") w.icon = getString(x.second);
+		if (x.first == "ENAM") w.enchantment = getString(x.second);
+	}
+	
+	std::cout << w.fullName << " : " << w.model << std::endl;
+	vweap.push_back(w);
 }
+
 void parseCONT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CONT tag: " << buffer.size() << " bytes" << std::endl;
@@ -496,7 +566,28 @@ void parseCONT(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	CONT c;
+	for (auto x : v) {
+		if (x.first == "NAME") c.name = getString(x.second);
+		if (x.first == "MODL") c.model = getString(x.second);
+		if (x.first == "FNAM") c.fullName = getString(x.second);
+		if (x.first == "CNDT") c.weight = getFloat(x.second);
+		if (x.first == "FLAG") c.flags = getLongInt(x.second);
+		if (x.first == "SCRI") c.script = getString(x.second);
+		if (x.first == "NPCO")
+		{
+			Item i;
+			memmove((char*)&i, x.second.data(), sizeof(i));
+			c.items.push_back(i);
+		}
+	}
+
+	std::cout << c.fullName << " : " << c.model << std::endl;
+	vcont.push_back(c);
 }
+
 void parseSPEL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SPEL tag: " << buffer.size() << " bytes" << std::endl;

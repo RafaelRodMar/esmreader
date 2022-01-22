@@ -280,328 +280,120 @@ struct BSGN{
 
 std::vector<BSGN> vbsgn;
 
-// 	//landscape textures
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LTEX")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//landscape textures records
+struct LTEX {
+	std::string name = "";
+	long int index = 0;
+	std::string filename = "";
+};
 
-// 		if (name == "INTV")
-// 		{
-// 			//uint32 but uint16 are used as indices in LAND records so are restricted to uint16
-// 			long int index;
-// 			file.read((char*)&index, sizeof(index));
-// 			std::cout << "  Index: " << index << std::endl;
-// 			bytesRead += sizeof(index);
-// 		}
+std::vector<LTEX> vltex;
 
-// 		if (name == "DATA")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
+//static records
+struct STAT {
+	std::string name = "";
+	std::string model = "";
+};
 
-// 	//static
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "STAT")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+std::vector<STAT> vstat;
 
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
+//door definition records
+struct DOOR {
+	std::string name = "";
+	std::string model = "";
+	std::string fullName = "";
+	std::string script = "";
+	std::string openSound = "";
+	std::string closeSound = "";
+};
 
-// 	//door definition
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "DOOR")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Door ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+std::vector<DOOR> vdoor;
 
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Door name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//used by MISC records
+struct MiscItemData {
+ 	float weight;
+ 	long int value;
+ 	long int unknown;
+};
 
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//misc items records
+struct MISC {
+	std::string name = "";
+	std::string model = "";
+	std::string fullName = "";
+	MiscItemData mid;
+	std::string script = "";
+	std::string enchantment = "";
+	std::string icon = "";
+};
 
-// 		if (name == "SCIP" || name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+std::vector<MISC> vmisc;
 
-// 		if (name == "SNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound name open: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//used by WEAP records
+struct WeaponData { //0x20 bytes binary
+ 	float weight;
+ 	long int value;
+ 	short type; /*0 = ShortBladeOneHand
+ 				1 = LongBladeOneHand
+ 				2 = LongBladeTwoClose
+ 				3 = BluntOneHand
+ 				4 = BluntTwoClose
+ 				5 = BluntTwoWide
+ 				6 = SpearTwoWide
+ 				7 = AxeOneHand
+ 				8 = AxeTwoHand
+ 				9 = MarksmanBow
+ 				10 = MarksmanCrossbow
+ 				11 = MarksmanThrown
+ 				12 = Arrow
+ 				13 = Bolt*/
+ 	short health;
+ 	float speed;
+ 	float reach;
+ 	short enchantPts;
+ 	char chopMin;
+ 	char chopMax;
+ 	char slashMin;
+ 	char slashMax;
+ 	char thrustMin;
+ 	char thrustMax;
+ 	long flags; //0 = ?
+ 				//1 = ignore normal weapon resistance
+ 				//2 = silver
+};
 
-// 		if (name == "ANAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound name close: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
+//weapon records
+struct WEAP {
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	WeaponData wd;
+	std::string icon = "";
+	std::string enchantment = "";
+	std::string script = "";
+};
 
-// 	//misc items
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "MISC")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Misc item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+std::vector<WEAP> vweap;
 
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Misc item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//used by CONT records
+struct Item {
+ 	long int count;
+ 	char name[32]; //id of the item
+};
 
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//container records
+struct CONT {
+	std::string name = "";
+	std::string model = "";
+	std::string fullName = "";
+	float weight = 0.0;
+	long int flags = 0;
+	std::string script = "";
+	std::vector<Item> items;
+};
 
-// 		if (name == "MCDT")
-// 		{
-// 			struct MiscItemData {
-// 				float weight;
-// 				long int value;
-// 				long int unknown;
-// 			}miscItemData;
+std::vector<CONT> vcont;
 
-// 			file.read((char*)&miscItemData, sizeof(miscItemData));
-// 			std::cout << "  Misc item data read" << std::endl;
-// 			bytesRead += sizeof(miscItemData);
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ENAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Enchantment ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
-
-// 	//Weapons
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "WEAP")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Weapon ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Weapon name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MCDT")
-// 		{
-// 			struct WeaponData { //0x20 bytes binary
-// 				float weight;
-// 				long int value;
-// 				short type; /*0 = ShortBladeOneHand
-// 							1 = LongBladeOneHand
-// 							2 = LongBladeTwoClose
-// 							3 = BluntOneHand
-// 							4 = BluntTwoClose
-// 							5 = BluntTwoWide
-// 							6 = SpearTwoWide
-// 							7 = AxeOneHand
-// 							8 = AxeTwoHand
-// 							9 = MarksmanBow
-// 							10 = MarksmanCrossbow
-// 							11 = MarksmanThrown
-// 							12 = Arrow
-// 							13 = Bolt*/
-// 				short health;
-// 				float speed;
-// 				float reach;
-// 				short enchantPts;
-// 				char chopMin;
-// 				char chopMax;
-// 				char slashMin;
-// 				char slashMax;
-// 				char thrustMin;
-// 				char thrustMax;
-// 				long flags; //0 = ?
-// 							//1 = ignore normal weapon resistance
-// 							//2 = silver
-// 			}weaponData;
-
-// 			file.read((char*)&weaponData, sizeof(weaponData));
-// 			std::cout << "  Weapon data read" << std::endl;
-// 			bytesRead += sizeof(weaponData);
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ENAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Enchantment ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
-
-// 	//Container
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CONT")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Container ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Container name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CNDT")
-// 		{
-// 			float weight;
-// 			file.read((char*)&weight, sizeof(weight));
-// 			std::cout << "  Container weight: " << weight << std::endl;
-// 			bytesRead += sizeof(weight);
-// 		}
-
-// 		if (name == "FLAG")
-// 		{
-// 			long int containerFlags;
-// 			//0x0001 = organic
-// 			//0x0002 = respawns, organic only
-// 			//0x0008 = default, unknown
-// 			file.read((char*)&containerFlags, sizeof(containerFlags));
-// 			std::cout << "  Container flags: " << containerFlags << std::endl;
-// 			bytesRead += sizeof(containerFlags);
-// 		}
-
-// 		if (name == "NPCO")
-// 		{
-// 			struct Item {
-// 				long int count;
-// 				char name[32]; //id of the item
-// 			}item;
-// 			file.read((char*)&item, 32+4);
-// 			std::cout << "  Item: " << std::string(item.name, item.name + 32) << " quantity: " << item.count << std::endl;
-// 			bytesRead += 32+4;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
 
 // 	//Spell
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SPEL")

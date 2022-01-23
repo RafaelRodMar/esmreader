@@ -394,820 +394,339 @@ struct CONT {
 
 std::vector<CONT> vcont;
 
-
-// 	//Spell
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SPEL")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Spell ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Spell name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SPDT")
-// 		{
-// 			struct SpellData {
-// 				long int type; /*0 = Spell
-// 								1 = Ability
-// 								2 = Blight
-// 								3 = Disease
-// 								4 = Curse
-// 								5 = Power*/
-// 				long int spellCost;
-// 				long int flags; /*0x0001 = AutoCalc
-// 								0x0002 = PC Start
-// 								0x0004 = Always Succeeds*/
-// 			}spellData;
-// 			file.read((char*)&spellData, sizeof(spellData));
-// 			std::cout << "  Spell data read" << std::endl;
-// 			bytesRead += sizeof(spellData);
-// 		}
-
-// 		if (name == "ENAM")
-// 		{
-// 			struct EnchantmentsData {
-// 				uint16_t effectIndex;
-// 				int8_t skillAffected; //-1 if not applicable
-// 				int8_t attributeAffected; //-1 if not applicable
-// 				uint32_t range; //0=self, 1=touch, 2=target
-// 				uint32_t area;
-// 				uint32_t duration;
-// 				uint32_t magnitudeMin;
-// 				uint32_t magnitudeMax;
-// 			}enchantmentsData;
-
-// 			file.read((char*)&enchantmentsData, sizeof(enchantmentsData));
-// 			std::cout << "  Enchantments read" << std::endl;
-// 			bytesRead += sizeof(enchantmentsData);
-// 		}
-// 	}
-
-// 	//Creatures
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CREA")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Creature ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Creature name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound Gen name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "NPCS")
-// 		{
-// 			char buffer[300];  //32 bytes
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Spells: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "NPDT")
-// 		{
-// 			struct CreatureData {
-// 				long int type; //creature, daedra, undead, humanoid
-// 				long int level;
-// 				long int strength;
-// 				long int intelligence;
-// 				long int willpower;
-// 				long int agility;
-// 				long int speed;
-// 				long int endurance;
-// 				long int personality;
-// 				long int luck;
-// 				long int health;
-// 				long int spellPts;
-// 				long int fatigue;
-// 				long int soul;
-// 				long int combat;
-// 				long int magic;
-// 				long int stealth;
-// 				long int attackMin1;
-// 				long int attackMax1;
-// 				long int attackMin2;
-// 				long int attackMax2;
-// 				long int attackMin3;
-// 				long int attackMax3;
-// 				long int gold;
-// 			}creatureData;
-// 			file.read((char*)&creatureData, sizeof(creatureData));
-// 			std::cout << "  Creature data read" << std::endl;
-// 			bytesRead += sizeof(creatureData);
-// 		}
-
-// 		if (name == "FLAG")
-// 		{
-// 			long int creatureFlags;
-// 			/*0x0001 = Biped
-// 			0x0002 = Respawn
-// 			0x0004 = Weapon and shield
-// 			0x0008 = None
-// 			0x0010 = Swims
-// 			0x0020 = Flies
-// 			0x0040 = Walks
-// 			0x0048 = Default flags
-// 			0x0080 = Essential
-// 			0x0400 = Skeleton Blood
-// 			0x0800 = Metal Blood*/
-// 			file.read((char*)&creatureFlags, sizeof(creatureFlags));
-// 			std::cout << "  Creature flags read" << std::endl;
-// 			bytesRead += sizeof(creatureFlags);
-// 		}
-
-// 		if(name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "NPCO")
-// 		{
-// 			struct ItemRecord{
-// 				long int count; //quantity of the item
-// 				char name[32]; //the ID of the item
-// 			}itemRecord;
-
-// 			file.read((char*)&itemRecord, sizeof(itemRecord));
-// 			std::cout << "  Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
-// 			bytesRead += 36;
-// 		}
-
-// 		if(name == "AIDT")
-// 		{
-// 			struct AiData{
-// 				uint8_t hello;
-// 				uint8_t unknown1;
-// 				uint8_t fight;
-// 				uint8_t flee;
-// 				uint8_t alarm;
-// 				uint8_t unknown2;
-// 				uint8_t unknown3;
-// 				uint8_t unknown4;
-// 				uint32_t flags;
-// 						/*0x00001 = Weapon
-// 						0x00002 = Armor
-// 						0x00004 = Clothing
-// 						0x00008 = Books
-// 						0x00010 = Ingredient
-// 						0x00020 = Picks
-// 						0x00040 = Probes
-// 						0x00080 = Lights
-// 						0x00100 = Apparatus
-// 						0x00200 = Repair Items
-// 						0x00400 = Misc
-// 						0x00800 = Spells
-// 						0x01000 = Magic Items
-// 						0x02000 = Potions
-// 						0x04000 = Training
-// 						0x08000 = Spellmaking
-// 						0x10000 = Enchanting
-// 						0x20000 = Repair
-// 						Remaining bits appear to be filled with junk data */
-// 			}aiData;
-
-// 			file.read((char*)&aiData, sizeof(aiData));
-// 			std::cout << "  AI data read" << std::endl;
-// 			bytesRead += sizeof(aiData);
-// 		}
-
-// 		if(name == "DODT")
-// 		{
-// 			struct CellTravelDestination{
-// 				float posx,posy,posz;
-// 				float rotx,roty,rotz;
-// 			}cellTravelDestination;
-
-// 			file.read((char*)&cellTravelDestination, sizeof(cellTravelDestination));
-// 			std::cout << "  Cell travel destination read" << std::endl;
-// 			bytesRead += sizeof(cellTravelDestination);
-// 		}
-
-// 		if(name == "DNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "AI_W")
-// 		{
-// 			struct WanderPackage{
-// 				uint16_t distance;
-// 				uint16_t duration;
-// 				uint8_t timeOfDay;
-// 				uint8_t idles[8];
-// 				uint8_t unknown; //always 1
-// 			}wanderPackage;
-
-// 			file.read((char*)&wanderPackage, sizeof(wanderPackage));
-// 			std::cout << "  AI wander package read" << std::endl;
-// 			bytesRead += sizeof(wanderPackage);
-// 		}
-
-// 		/*AI Packages - the following fields can appear in any order, one per AI package, 
-// 		with the order defining the package priority.
-// 		Note: duration parameters in all packages are in hours. 
-// 		Any value greater than 24 should be divided by 100, and set to 24 if 
-// 		still greater than 24. The unknown value for each package seems to be 
-// 		an end-of-data marker; it is always a byte value set to 1 with any remaining 
-// 		data in the structure undefined and ignored.*/
-
-// 		if(name == "AI_T")
-// 		{
-// 			struct TravelPackage{
-// 				float x;
-// 				float y;
-// 				float z;
-// 				uint8_t unknown; //always 1
-// 				uint8_t unused[3];
-// 			}travelPackage;
-
-// 			file.read((char*)&travelPackage, sizeof(travelPackage));
-// 			std::cout << "  AI travel package read" << std::endl;
-// 			bytesRead += sizeof(travelPackage);
-// 		}
-
-// 		if(name == "AI_F")
-// 		{
-// 			struct FollowPackage{
-// 				float x;
-// 				float y;
-// 				float z;
-// 				uint16_t duration;
-// 				char ID[32];
-// 				uint8_t unknown; //always 1
-// 				uint8_t unused;
-// 			}followPackage;
-
-// 			file.read((char*)&followPackage, sizeof(followPackage));
-// 			std::cout << "  AI follow package read" << std::endl;
-// 			bytesRead += sizeof(followPackage);
-// 		}
-
-// 		if(name == "AI_E")
-// 		{
-// 			struct EscortPackage{
-// 				float x;
-// 				float y;
-// 				float z;
-// 				uint16_t duration;
-// 				char ID[32];
-// 				uint8_t unknown; //always 1
-// 				uint8_t unused;
-// 			}escortPackage;
-
-// 			file.read((char*)&escortPackage, sizeof(escortPackage));
-// 			std::cout << "  AI escort package read" << std::endl;
-// 			bytesRead += sizeof(escortPackage);
-// 		}
-
-// 		if(name == "CNDT")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "AI_A")
-// 		{
-// 			struct ActivatePackage{
-// 				char name[32];
-// 				uint8_t unknown; //always 1
-// 			}activatePackage;
-
-// 			file.read((char*)&activatePackage, sizeof(activatePackage));
-// 			std::cout << "  AI activate package read" << std::endl;
-// 			bytesRead += sizeof(activatePackage);
-// 		}
-
-// 		if(name == "XSCL")
-// 		{
-// 			float scale; //1.0 default
-// 			file.read((char*)&scale, sizeof(scale));
-// 			std::cout << "  Scale: " << scale << std::endl;
-// 			bytesRead += sizeof(scale);
-// 		}
-// 	}
-
-// 	//Body parts
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "BODY")
-// 	{
-// 		if(name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Body part ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Race: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "BYDT")
-// 		{
-// 			struct BodyPartData{
-// 				uint8_t part; 			/*0 = Head
-// 										1 = Hair
-// 										2 = Neck
-// 										3 = Chest
-// 										4 = Groin
-// 										5 = Hand
-// 										6 = Wrist
-// 										7 = Forearm
-// 										8 = Upperarm
-// 										9 = Foot
-// 										10 = Ankle
-// 										11 = Knee
-// 										12 = Upperleg
-// 										13 = Clavicle
-// 										14 = Tail*/
-// 				uint8_t vampire;
-// 				uint8_t flags; //1 = female, 2 = playable
-// 				uint8_t partType; //0 = skin, 1 = clothing, 2 = armor
-// 			}bodyPartData;
-
-// 			file.read((char*)&bodyPartData, sizeof(bodyPartData));
-// 			std::cout << "  Body part data read" << std::endl;
-// 			bytesRead += sizeof(bodyPartData);
-// 		}
-// 	}
-
-// 	//lights
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LIGH")
-// 	{
-// 		if(name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Light ID string string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model file name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Light name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "SNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "SCRI" || name == "SCPT")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "LHDT")
-// 		{
-// 			struct LightData{
-// 				float weight;
-// 				uint32_t value;
-// 				uint32_t time;
-// 				uint32_t radius;
-// 				uint8_t red;
-// 				uint8_t green;
-// 				uint8_t blue;
-// 				uint8_t null;
-// 				uint32_t flags;  /*0x0001 = Dynamic
-// 								0x0002 = Can Carry
-// 								0x0004 = Negative
-// 								0x0008 = Flicker
-// 								0x0010 = Fire
-// 								0x0020 = Off Default
-// 								0x0040 = Flicker Slow
-// 								0x0080 = Pulse
-// 								0x0100 = Pulse Slow*/
-// 			}lightData;
-
-// 			file.read((char*)&lightData, sizeof(lightData));
-// 			std::cout << "  Light data read" << std::endl;
-// 			bytesRead += sizeof(lightData);
-// 		}
-// 	}
-
-// 	//Enchanting effects
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "ENCH")
-// 	{
-// 		if(name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Enchant ID string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "ENDT")
-// 		{
-// 			struct EnchantData{
-// 				uint32_t type; //0 = cast once, 1 = cast strikes, 2 = cast when used
-// 								//3 = constant effect
-// 				uint32_t enchantmentCost;
-// 				uint32_t charge;
-// 				uint32_t flags; //0x1 = autocalc
-// 			}enchantData;
-
-// 			file.read((char*)&enchantData, sizeof(enchantData));
-// 			std::cout << "  Enchant data read" << std::endl;
-// 			bytesRead += sizeof(enchantData);
-// 		}
-
-// 		if(name == "ENAM")
-// 		{
-// 			struct Enchantments{
-// 				uint16_t effectIndex;
-// 				int8_t skillAffected; //-1 if not applicable
-// 				int8_t attributeAffected; //-1 if not applicable
-// 				uint32_t range; //0 = self, 1 = touch, 2 = target
-// 				uint32_t area;
-// 				uint32_t duration;
-// 				uint32_t magnitudeMin;
-// 				uint32_t magnitudeMax;
-// 			}enchantments;
-
-// 			file.read((char*)&enchantments, sizeof(enchantments));
-// 			std::cout << "  Enchantments data read" << std::endl;
-// 			bytesRead += sizeof(enchantments);
-// 		}
-// 	}
-
-// 	//NPCs
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "NPC_")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NPC ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NPC name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "RNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Race name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ANAM")
-// 		{
-// 			char buffer[300];  //32 bytes
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Faction name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "BNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Head model: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Class name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "KNAM")
-// 		{
-// 			char buffer[300];  //32 bytes
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Hair model: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FLAG")
-// 		{
-// 			uint32_t npcFlags;
-// 			    /*0x0001 = Female
-// 				0x0002 = Essential
-// 				0x0004 = Respawn
-// 				0x0008 = Unknown (always set)
-// 				0x0010 = Autocalc
-// 				0x0400 = Blood Texture: Skeleton
-// 				0x0800 = Blood Texture: Metal Sparks */
-// 			file.read((char*)&npcFlags, sizeof(npcFlags));
-// 			std::cout << "  NPC flags read" << std::endl;
-// 			bytesRead += sizeof(npcFlags);
-// 		}
-
-// 		if (name == "NPDT")
-// 		{
-// 			if (subRecordHeader.size == 12)
-// 			{
-// 				//12 bytes version , autocalc flag set
-// 				struct NpcData {
-// 					uint16_t level;
-// 					uint8_t disposition;
-// 					uint8_t reputation;
-// 					uint8_t rank;
-// 					uint8_t unknown[3]; //junk data
-// 					uint32_t gold;
-// 				}npcData;
-// 				file.read((char*)&npcData, sizeof(npcData));
-// 				std::cout << "  NPC data read (12 bytes)" << std::endl;
-// 				bytesRead += sizeof(npcData);
-// 			}
-// 			else
-// 			{
-// 				//52 bytes version, autocalc flag clear
-// 				struct NpcData {
-// 					uint16_t level;
-// 					uint8_t attributes[8]; //in order of attribute ID
-// 					uint8_t skills[27]; //in order of skill ID
-// 					uint8_t unknown; //always 0
-// 					uint16_t health;
-// 					uint16_t spellPoints;
-// 					uint16_t fatigue;
-// 					uint8_t disposition;
-// 					uint8_t reputation;
-// 					uint8_t rank;
-// 					uint8_t unknown2; //junk data
-// 					uint32_t gold;
-// 				}npcData;
-// 				file.read((char*)&npcData, sizeof(npcData));
-// 				std::cout << "  NPC data read (52 bytes)" << std::endl;
-// 				bytesRead += sizeof(npcData);
-// 			}
-// 		}
-
-		
-
-// 		if(name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "NPCO")
-// 		{
-// 			struct ItemRecord{
-// 				long int count; //quantity of the item
-// 				char name[32]; //the ID of the item
-// 			}itemRecord;
-
-// 			file.read((char*)&itemRecord, sizeof(itemRecord));
-// 			std::cout << "  Item Record: " << std::string(itemRecord.name, itemRecord.name + 32) << std::endl;
-// 			bytesRead += 36;
-// 		}
-
-// 		if(name == "AIDT")
-// 		{
-// 			struct AiData{
-// 				uint8_t hello;
-// 				uint8_t unknown1;
-// 				uint8_t fight;
-// 				uint8_t flee;
-// 				uint8_t alarm;
-// 				uint8_t unknown2;
-// 				uint8_t unknown3;
-// 				uint8_t unknown4;
-// 				uint32_t flags;
-// 						/*0x00001 = Weapon
-// 						0x00002 = Armor
-// 						0x00004 = Clothing
-// 						0x00008 = Books
-// 						0x00010 = Ingredient
-// 						0x00020 = Picks
-// 						0x00040 = Probes
-// 						0x00080 = Lights
-// 						0x00100 = Apparatus
-// 						0x00200 = Repair Items
-// 						0x00400 = Misc
-// 						0x00800 = Spells
-// 						0x01000 = Magic Items
-// 						0x02000 = Potions
-// 						0x04000 = Training
-// 						0x08000 = Spellmaking
-// 						0x10000 = Enchanting
-// 						0x20000 = Repair
-// 						Remaining bits appear to be filled with junk data */
-// 			}aiData;
-
-// 			file.read((char*)&aiData, sizeof(aiData));
-// 			std::cout << "  AI data read" << std::endl;
-// 			bytesRead += sizeof(aiData);
-// 		}
-
-// 		if(name == "DODT")
-// 		{
-// 			struct CellTravelDestination{
-// 				float posx,posy,posz;
-// 				float rotx,roty,rotz;
-// 			}cellTravelDestination;
-
-// 			file.read((char*)&cellTravelDestination, sizeof(cellTravelDestination));
-// 			std::cout << "  Cell travel destination read" << std::endl;
-// 			bytesRead += sizeof(cellTravelDestination);
-// 		}
-
-// 		if(name == "DNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "AI_W")
-// 		{
-// 			struct WanderPackage{
-// 				uint16_t distance;
-// 				uint16_t duration;
-// 				uint8_t timeOfDay;
-// 				uint8_t idles[8];
-// 				uint8_t unknown; //always 1
-// 			}wanderPackage;
-
-// 			file.read((char*)&wanderPackage, sizeof(wanderPackage));
-// 			std::cout << "  AI wander package read" << std::endl;
-// 			bytesRead += sizeof(wanderPackage);
-// 		}
-
-// 		/*AI Packages - the following fields can appear in any order, one per AI package, 
-// 		with the order defining the package priority.
-// 		Note: duration parameters in all packages are in hours. 
-// 		Any value greater than 24 should be divided by 100, and set to 24 if 
-// 		still greater than 24. The unknown value for each package seems to be 
-// 		an end-of-data marker; it is always a byte value set to 1 with any remaining 
-// 		data in the structure undefined and ignored.*/
-
-// 		if(name == "AI_T")
-// 		{
-// 			struct TravelPackage{
-// 				float x;
-// 				float y;
-// 				float z;
-// 				uint8_t unknown; //always 1
-// 				uint8_t unused[3];
-// 			}travelPackage;
-
-// 			file.read((char*)&travelPackage, sizeof(travelPackage));
-// 			std::cout << "  AI travel package read" << std::endl;
-// 			bytesRead += sizeof(travelPackage);
-// 		}
-
-// 		if(name == "AI_F")
-// 		{
-// 			struct FollowPackage{
-// 				float x;
-// 				float y;
-// 				float z;
-// 				uint16_t duration;
-// 				char ID[32];
-// 				uint8_t unknown; //always 1
-// 				uint8_t unused;
-// 			}followPackage;
-
-// 			file.read((char*)&followPackage, sizeof(followPackage));
-// 			std::cout << "  AI follow package read" << std::endl;
-// 			bytesRead += sizeof(followPackage);
-// 		}
-
-// 		if(name == "AI_E")
-// 		{
-// 			struct EscortPackage{
-// 				float x;
-// 				float y;
-// 				float z;
-// 				uint16_t duration;
-// 				char ID[32];
-// 				uint8_t unknown; //always 1
-// 				uint8_t unused;
-// 			}escortPackage;
-
-// 			file.read((char*)&escortPackage, sizeof(escortPackage));
-// 			std::cout << "  AI escort package read" << std::endl;
-// 			bytesRead += sizeof(escortPackage);
-// 		}
-
-// 		if(name == "CNDT")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell scort/follow string(optional): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if(name == "AI_A")
-// 		{
-// 			struct ActivatePackage{
-// 				char name[32];
-// 				uint8_t unknown; //always 1
-// 			}activatePackage;
-
-// 			file.read((char*)&activatePackage, sizeof(activatePackage));
-// 			std::cout << "  AI activate package read" << std::endl;
-// 			bytesRead += sizeof(activatePackage);
-// 		}
-
-// 		if(name == "XSCL")
-// 		{
-// 			float scale; //1.0 default
-// 			file.read((char*)&scale, sizeof(scale));
-// 			std::cout << "  Scale: " << scale << std::endl;
-// 			bytesRead += sizeof(scale);
-// 		}
-// 	}
+//used by SPEL records
+struct SpellData {
+ 	long int type; /*0 = Spell
+ 					1 = Ability
+ 					2 = Blight
+ 					3 = Disease
+ 					4 = Curse
+ 					5 = Power*/
+ 	long int spellCost;
+ 	long int flags; /*0x0001 = AutoCalc
+ 					0x0002 = PC Start
+ 					0x0004 = Always Succeeds*/
+};
+
+struct EnchantmentsData {
+ 	uint16_t effectIndex;
+ 	int8_t skillAffected; //-1 if not applicable
+ 	int8_t attributeAffected; //-1 if not applicable
+ 	uint32_t range; //0=self, 1=touch, 2=target
+ 	uint32_t area;
+ 	uint32_t duration;
+ 	uint32_t magnitudeMin;
+ 	uint32_t magnitudeMax;
+};
+
+//spell records
+struct SPEL {
+	std::string name = "";
+	std::string fullName = "";
+	SpellData sd;
+	std::vector<EnchantmentsData> ed;
+};
+
+std::vector<SPEL> vspel;
+
+//used by CREA and NPC_ records
+struct CreatureData {
+ 	long int type; //creature, daedra, undead, humanoid
+ 	long int level;
+ 	long int strength;
+ 	long int intelligence;
+ 	long int willpower;
+ 	long int agility;
+ 	long int speed;
+ 	long int endurance;
+ 	long int personality;
+ 	long int luck;
+ 	long int health;
+ 	long int spellPts;
+ 	long int fatigue;
+ 	long int soul;
+ 	long int combat;
+ 	long int magic;
+ 	long int stealth;
+ 	long int attackMin1;
+ 	long int attackMax1;
+ 	long int attackMin2;
+ 	long int attackMax2;
+ 	long int attackMin3;
+ 	long int attackMax3;
+ 	long int gold;
+};
+
+struct ItemRecord{
+ 	long int count; //quantity of the item
+ 	char name[32]; //the ID of the item
+};
+
+struct AiData{
+ 	uint8_t hello;
+ 	uint8_t unknown1;
+ 	uint8_t fight;
+ 	uint8_t flee;
+ 	uint8_t alarm;
+ 	uint8_t unknown2;
+ 	uint8_t unknown3;
+ 	uint8_t unknown4;
+ 	uint32_t flags;
+ 			/*0x00001 = Weapon
+ 			0x00002 = Armor
+ 			0x00004 = Clothing
+ 			0x00008 = Books
+ 			0x00010 = Ingredient
+ 			0x00020 = Picks
+ 			0x00040 = Probes
+ 			0x00080 = Lights
+ 			0x00100 = Apparatus
+ 			0x00200 = Repair Items
+ 			0x00400 = Misc
+ 			0x00800 = Spells
+ 			0x01000 = Magic Items
+ 			0x02000 = Potions
+ 			0x04000 = Training
+ 			0x08000 = Spellmaking
+ 			0x10000 = Enchanting
+ 			0x20000 = Repair
+ 			Remaining bits appear to be filled with junk data */
+};
+
+struct CellTravelDestination{
+ 	float posx,posy,posz;
+ 	float rotx,roty,rotz;
+};
+
+struct WanderPackage{
+ 	uint16_t distance;
+ 	uint16_t duration;
+ 	uint8_t timeOfDay;
+ 	uint8_t idles[8];
+ 	uint8_t unknown; //always 1
+};
+
+struct TravelPackage{
+ 	float x;
+ 	float y;
+ 	float z;
+ 	uint8_t unknown; //always 1
+ 	uint8_t unused[3];
+};
+
+struct FollowPackage{
+ 	float x;
+ 	float y;
+ 	float z;
+ 	uint16_t duration;
+ 	char ID[32];
+ 	uint8_t unknown; //always 1
+ 	uint8_t unused;
+};
+
+struct EscortPackage{
+ 	float x;
+ 	float y;
+ 	float z;
+ 	uint16_t duration;
+ 	char ID[32];
+ 	uint8_t unknown; //always 1
+ 	uint8_t unused;
+};
+
+struct ActivatePackage{
+ 	char name[32];
+ 	uint8_t unknown; //always 1
+};
+
+//creatures records
+struct CREA {
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string sound = "";
+	std::vector<std::string> spells;
+	CreatureData cd;
+	long int flags;
+	std::string script = "";
+	std::vector<ItemRecord> ir;
+	AiData ai;
+	std::vector< std::pair< CellTravelDestination, std::string > > cellTravel;
+		/*AI Packages - the following fields can appear in any order, one per AI package,
+			with the order defining the package priority.
+			Note: duration parameters in all packages are in hours.
+			Any value greater than 24 should be divided by 100, and set to 24 if
+			still greater than 24. The unknown value for each package seems to be
+			an end-of-data marker; it is always a byte value set to 1 with any remaining
+			data in the structure undefined and ignored.*/
+	std::vector< WanderPackage > ai_w;
+	std::vector< TravelPackage > ai_t;
+	std::vector< ActivatePackage > ai_a;
+	std::vector< FollowPackage > ai_f;
+	std::vector< EscortPackage > ai_e;
+	float scale = 0.0;
+};
+
+std::vector<CREA> vcrea;
+
+//used by BODY registers
+struct BodyPartData{
+ 	uint8_t part; 			/*0 = Head
+ 							1 = Hair
+ 							2 = Neck
+ 							3 = Chest
+ 							4 = Groin
+ 							5 = Hand
+ 							6 = Wrist
+ 							7 = Forearm
+ 							8 = Upperarm
+ 							9 = Foot
+ 							10 = Ankle
+ 							11 = Knee
+ 							12 = Upperleg
+ 							13 = Clavicle
+ 							14 = Tail*/
+ 	uint8_t vampire;
+ 	uint8_t flags; //1 = female, 2 = playable
+ 	uint8_t partType; //0 = skin, 1 = clothing, 2 = armor
+};
+
+//body parts registers
+struct BODY {
+	std::string name = "";
+	std::string model = "";
+	std::string fullName = "";
+	BodyPartData bd;
+};
+
+std::vector<BODY> vbody;
+
+//used by LIGH records
+struct LightData{
+ 	float weight;
+ 	uint32_t value;
+ 	uint32_t time;
+ 	uint32_t radius;
+ 	uint8_t red;
+ 	uint8_t green;
+ 	uint8_t blue;
+ 	uint8_t null;
+ 	uint32_t flags;  /*0x0001 = Dynamic
+ 					0x0002 = Can Carry
+ 					0x0004 = Negative
+ 					0x0008 = Flicker
+ 					0x0010 = Fire
+ 					0x0020 = Off Default
+ 					0x0040 = Flicker Slow
+ 					0x0080 = Pulse
+ 					0x0100 = Pulse Slow*/
+};
+
+//lights recods
+struct LIGH {
+	std::string name = "";
+	std::string model = "";
+	std::string fullName = "";
+	std::string icon = "";
+	std::string sound = "";
+	std::string script = "";
+	LightData ld;
+};
+
+std::vector<LIGH> vligh;
+
+//used by ENCH records
+struct EnchantData{
+ 	uint32_t type; //0 = cast once, 1 = cast strikes, 2 = cast when used
+ 					//3 = constant effect
+ 	uint32_t enchantmentCost;
+ 	uint32_t charge;
+ 	uint32_t flags; //0x1 = autocalc
+};
+
+struct Enchantments{
+ 	uint16_t effectIndex;
+ 	int8_t skillAffected; //-1 if not applicable
+ 	int8_t attributeAffected; //-1 if not applicable
+ 	uint32_t range; //0 = self, 1 = touch, 2 = target
+ 	uint32_t area;
+ 	uint32_t duration;
+ 	uint32_t magnitudeMin;
+ 	uint32_t magnitudeMax;
+};
+
+//enchanting effects
+struct ENCH {
+	std::string name = "";
+	EnchantData ed;
+	std::vector< Enchantments > enchantments;
+};
+
+std::vector<ENCH> vench;
+
+//used by NPC_ records
+
+//12 bytes version , autocalc flag set
+struct NpcData12 {
+ 	uint16_t level;
+ 	uint8_t disposition;
+ 	uint8_t reputation;
+ 	uint8_t rank;
+ 	uint8_t unknown[3]; //junk data
+ 	uint32_t gold;
+};
+
+//52 bytes version, autocalc flag clear
+struct NpcData52 {
+ 	uint16_t level;
+ 	uint8_t attributes[8]; //in order of attribute ID
+ 	uint8_t skills[27]; //in order of skill ID
+ 	uint8_t unknown; //always 0
+ 	uint16_t health;
+ 	uint16_t spellPoints;
+ 	uint16_t fatigue;
+ 	uint8_t disposition;
+ 	uint8_t reputation;
+ 	uint8_t rank;
+ 	uint8_t unknown2; //junk data
+ 	uint32_t gold;
+};
+
+//creatures records
+struct NPC_ {
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string race = "";
+	std::string faction = "";
+	std::string headModel = "";
+	std::string hairModel = "";
+	std::string className = "";
+	std::vector<std::string> spells;
+	bool dataSize = false; //false = 12, true = 52
+	NpcData12 cd12;
+	NpcData52 cd52;
+	long int flags;
+	std::string script = "";
+	std::vector<ItemRecord> ir;
+	AiData ai;
+	std::vector< std::pair< CellTravelDestination, std::string > > cellTravel;
+	/*AI Packages - the following fields can appear in any order, one per AI package,
+		with the order defining the package priority.
+		Note: duration parameters in all packages are in hours.
+		Any value greater than 24 should be divided by 100, and set to 24 if
+		still greater than 24. The unknown value for each package seems to be
+		an end-of-data marker; it is always a byte value set to 1 with any remaining
+		data in the structure undefined and ignored.*/
+	std::vector< WanderPackage > ai_w;
+	std::vector< TravelPackage > ai_t;
+	std::vector< ActivatePackage > ai_a;
+	std::vector< FollowPackage > ai_f;
+	std::vector< EscortPackage > ai_e;
+	float scale = 0.0;
+};
+
+std::vector<NPC_> vnpc_;
 
 // 	//armour
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "ARMO")

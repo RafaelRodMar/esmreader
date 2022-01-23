@@ -596,7 +596,25 @@ void parseSPEL(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	SPEL s;
+	for (auto x : v) {
+		if (x.first == "NAME") s.name = getString(x.second);
+		if (x.first == "FNAM") s.fullName = getString(x.second);
+		if (x.first == "SPDT") memmove((char*)&s.sd, x.second.data(), sizeof(s.sd));
+		if (x.first == "ENAM") 
+		{
+			EnchantmentsData ed;
+			memmove((char*)&ed, x.second.data(), sizeof(ed));
+			s.ed.push_back(ed);
+		}
+	}
+
+	std::cout << s.fullName << std::endl;
+	vspel.push_back(s);
 }
+
 void parseCREA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CREA tag: " << buffer.size() << " bytes" << std::endl;
@@ -605,7 +623,71 @@ void parseCREA(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	CREA c;
+	for (auto x : v) {
+		if (x.first == "NAME") c.name = getString(x.second);
+		if (x.first == "FNAM") c.fullName = getString(x.second);
+		if (x.first == "MODL") c.model = getString(x.second);
+		if (x.first == "CNAM") c.sound = getString(x.second);
+		if (x.first == "NPCS") c.spells.push_back(getCompleteString(x.second));
+		if (x.first == "NPDT") memmove((char*)&c.cd, x.second.data(), sizeof(c.cd));
+		if (x.first == "FLAG") c.flags = getLongInt(x.second);
+		if (x.first == "SCRI") c.script = getString(x.second);
+		if (x.first == "NPCO")
+		{
+			ItemRecord i;
+			memmove((char*)&i, x.second.data(), sizeof(i));
+			c.ir.push_back(i);
+		}
+		if (x.first == "AIDT") memmove((char*)&c.ai, x.second.data(), sizeof(c.ai));
+		if (x.first == "DODT")
+		{
+			CellTravelDestination ct;
+			std::string dummy = "";
+			memmove((char*)&ct, x.second.data(), sizeof(ct));
+			c.cellTravel.push_back(std::make_pair(ct, dummy));
+		}
+		//if there is a DODT then there is a DNAM after.
+		if (x.first == "DNAM") c.cellTravel.back().second = getString(x.second);
+		if (x.first == "AI_W")
+		{
+			WanderPackage wp;
+			memmove((char*)&wp, x.second.data(), sizeof(wp));
+			c.ai_w.push_back(wp);
+		}
+		if (x.first == "AI_T")
+		{
+			TravelPackage tp;
+			memmove((char*)&tp, x.second.data(), sizeof(tp));
+			c.ai_t.push_back(tp);
+		}
+		if (x.first == "AI_F")
+		{
+			FollowPackage fp;
+			memmove((char*)&fp, x.second.data(), sizeof(fp));
+			c.ai_f.push_back(fp);
+		}
+		if (x.first == "AI_E")
+		{
+			EscortPackage ep;
+			memmove((char*)&ep, x.second.data(), sizeof(ep));
+			c.ai_e.push_back(ep);
+		}
+		if (x.first == "AI_A")
+		{
+			ActivatePackage ap;
+			memmove((char*)&ap, x.second.data(), sizeof(ap));
+			c.ai_a.push_back(ap);
+		}
+		if (x.first == "XSCL") c.scale = getFloat(x.second);
+	}
+
+	std::cout << c.fullName << " " << c.model << std::endl;
+	vcrea.push_back(c);
 }
+
 void parseBODY(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BODY tag: " << buffer.size() << " bytes" << std::endl;
@@ -614,7 +696,20 @@ void parseBODY(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	BODY b;
+	for (auto x : v) {
+		if (x.first == "NAME") b.name = getString(x.second);
+		if (x.first == "FNAM") b.fullName = getString(x.second);
+		if (x.first == "MODL") b.model = getString(x.second);
+		if (x.first == "BYDT") memmove((char*)&b.bd, x.second.data(), sizeof(b.bd));
+	}
+
+	std::cout << b.fullName << " " << b.model << std::endl;
+	vbody.push_back(b);
 }
+
 void parseLIGH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LIGH tag: " << buffer.size() << " bytes" << std::endl;
@@ -623,7 +718,23 @@ void parseLIGH(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	LIGH l;
+	for (auto x : v) {
+		if (x.first == "NAME") l.name = getString(x.second);
+		if (x.first == "MODL") l.model = getString(x.second);
+		if (x.first == "FNAM") l.fullName = getString(x.second);
+		if (x.first == "ITEX") l.icon = getString(x.second);
+		if (x.first == "SNAM") l.sound = getString(x.second);
+		if (x.first == "SCRI") l.script = getString(x.second);
+		if (x.first == "LHDT") memmove((char*)&l.ld, x.second.data(), sizeof(l.ld));
+	}
+	
+	std::cout << l.fullName << " " << l.model << std::endl;
+	vligh.push_back(l);
 }
+
 void parseENCH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ENCH tag: " << buffer.size() << " bytes" << std::endl;
@@ -632,7 +743,24 @@ void parseENCH(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records of the vector
+	ENCH e;
+	for (auto x : v) {
+		if (x.first == "NAME") e.name = getString(x.second);
+		if (x.first == "ENDT") memmove((char*)&e.ed, x.second.data(), sizeof(e.ed));
+		if (x.first == "ENAM")
+		{
+			Enchantments en;
+			memmove((char*)&en, x.second.data(), sizeof(en));
+			e.enchantments.push_back(en);
+		}
+	}
+	
+	std::cout << e.name << std::endl;
+	vench.push_back(e);
 }
+
 void parseNPC_(std::vector<char> &buffer){
 	
 	std::cout << "Parsing NPC_ tag: " << buffer.size() << " bytes" << std::endl;
@@ -641,6 +769,85 @@ void parseNPC_(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	NPC_ n;
+	for (auto x : v) {
+		if (x.first == "NAME") n.name = getString(x.second);
+		if (x.first == "FNAM") n.fullName = getString(x.second);
+		if (x.first == "MODL") n.model = getString(x.second);
+		if (x.first == "RNAM") n.race = getString(x.second);
+		if (x.first == "CNAM") n.className = getString(x.second);
+		if (x.first == "ANAM") n.faction = getString(x.second);
+		if (x.first == "BNAM") n.headModel = getString(x.second);
+		if (x.first == "KNAM") n.hairModel = getString(x.second);
+		if (x.first == "NPCS") n.spells.push_back(getCompleteString(x.second));
+		if (x.first == "NPDT")
+		{
+			if (x.second.size() == 12)
+			{
+				n.dataSize = false;
+				memmove((char*)&n.cd12, x.second.data(), sizeof(n.cd12));
+			}
+			else
+			{
+				n.dataSize = true;
+				memmove((char*)&n.cd52, x.second.data(), sizeof(n.cd52));
+			}
+		}
+		if (x.first == "FLAG") n.flags = getLongInt(x.second);
+		if (x.first == "SCRI") n.script = getString(x.second);
+		if (x.first == "NPCO")
+		{
+			ItemRecord i;
+			memmove((char*)&i, x.second.data(), sizeof(i));
+			n.ir.push_back(i);
+		}
+		if (x.first == "AIDT") memmove((char*)&n.ai, x.second.data(), sizeof(n.ai));
+		if (x.first == "DODT")
+		{
+			CellTravelDestination ct;
+			std::string dummy = "";
+			memmove((char*)&ct, x.second.data(), sizeof(ct));
+			n.cellTravel.push_back(std::make_pair(ct, dummy));
+		}
+		//if there is a DODT then there is a DNAM after.
+		if (x.first == "DNAM") n.cellTravel.back().second = getString(x.second);
+		if (x.first == "AI_W")
+		{
+			WanderPackage wp;
+			memmove((char*)&wp, x.second.data(), sizeof(wp));
+			n.ai_w.push_back(wp);
+		}
+		if (x.first == "AI_T")
+		{
+			TravelPackage tp;
+			memmove((char*)&tp, x.second.data(), sizeof(tp));
+			n.ai_t.push_back(tp);
+		}
+		if (x.first == "AI_F")
+		{
+			FollowPackage fp;
+			memmove((char*)&fp, x.second.data(), sizeof(fp));
+			n.ai_f.push_back(fp);
+		}
+		if (x.first == "AI_E")
+		{
+			EscortPackage ep;
+			memmove((char*)&ep, x.second.data(), sizeof(ep));
+			n.ai_e.push_back(ep);
+		}
+		if (x.first == "AI_A")
+		{
+			ActivatePackage ap;
+			memmove((char*)&ap, x.second.data(), sizeof(ap));
+			n.ai_a.push_back(ap);
+		}
+		if (x.first == "XSCL") n.scale = getFloat(x.second);
+	}
+
+	std::cout << n.fullName << " " << n.model << std::endl;
+	vnpc_.push_back(n);
 }
 void parseARMO(std::vector<char> &buffer){
 	
@@ -883,7 +1090,7 @@ void readESM(const std::string &filename){
 			if (name == "SCPT") parseSCPT(buffer);
 			if (name == "REGN") parseREGN(buffer);
 			if (name == "BSGN") parseBSGN(buffer);
-			/*if (name == "LTEX") parseLTEX(buffer);
+			if (name == "LTEX") parseLTEX(buffer);
 			if (name == "STAT") parseSTAT(buffer);
 			if (name == "DOOR") parseDOOR(buffer);
 			if (name == "MISC") parseMISC(buffer);
@@ -895,7 +1102,7 @@ void readESM(const std::string &filename){
 			if (name == "LIGH") parseLIGH(buffer);
 			if (name == "ENCH") parseENCH(buffer);
 			if (name == "NPC_") parseNPC_(buffer);
-			if (name == "ARMO") parseARMO(buffer);
+			/*if (name == "ARMO") parseARMO(buffer);
 			if (name == "CLOT") parseCLOT(buffer);
 			if (name == "REPA") parseREPA(buffer);
 			if (name == "ACTI") parseACTI(buffer);

@@ -970,154 +970,59 @@ struct INGR{
 
 std::vector<INGR> vingr;
 
-// 	//Books
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "BOOK")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//used by BOOK records
+struct BookData {
+ 	float weight;
+ 	long int value;
+ 	long int scroll; //0 = not scroll, 1 = scroll
+ 	long int skillID; //-1 = not skill
+ 	long int enchantPts;
+};
 
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//books records
+struct BOOK {
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string script = "";
+	std::string icon = "";
+	std::string text = "";
+	std::string enchantment = "";
+	BookData bd;
+};
 
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+std::vector<BOOK> vbook;
 
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//used by ALCH records
+struct AlchemyData {
+ 	float weight;
+ 	long int value;
+ 	long int flags; //0x1 = autocalc
+};
 
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+struct Enchantments {
+ 	uint16_t effectID;
+ 	int8_t sillAffected; //-1 if not applicable
+ 	int8_t attributeAffected; //-1 if not applicable
+ 	long int range; //0 = self, 1 = touch, 2 = target
+ 	long int area;
+ 	long int duration;
+ 	long int magnitudeMin;
+ 	long int magnitudeMax;
+};
 
-// 		if (name == "TEXT")
-// 		{
-// 			char buffer[50000];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Text of the book: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//potions records
+struct ALCH {
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string script = "";
+	std::string icon = "";
+	AlchemyData ad;
+	std::vector<Enchantments> ed;
+};
 
-// 		if (name == "ENAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Enchantment name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "BKDT")
-// 		{
-// 			struct BookData {
-// 				float weight;
-// 				long int value;
-// 				long int scroll; //0 = not scroll, 1 = scroll
-// 				long int skillID; //-1 = not skill
-// 				long int enchantPts;
-// 			}bookData;
-
-// 			file.read((char*)&bookData, sizeof(bookData));
-// 			std::cout << "  Book data read" << std::endl;
-// 			bytesRead += sizeof(bookData);
-// 		}
-// 	}
-
-// 	//Potions
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "ALCH")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "TEXT")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ALDT")
-// 		{
-// 			struct AlchemyData {
-// 				float weight;
-// 				long int value;
-// 				long int flags; //0x1 = autocalc
-// 			}alchemyData;
-
-// 			file.read((char*)&alchemyData, sizeof(alchemyData));
-// 			std::cout << "  Alchemy data read" << std::endl;
-// 			bytesRead += sizeof(alchemyData);
-// 		}
-
-// 		if (name == "ENAM")
-// 		{
-// 			struct Enchantments {
-// 				uint16_t effectID;
-// 				int8_t sillAffected; //-1 if not applicable
-// 				int8_t attributeAffected; //-1 if not applicable
-// 				long int range; //0 = self, 1 = touch, 2 = target
-// 				long int area;
-// 				long int duration;
-// 				long int magnitudeMin;
-// 				long int magnitudeMax;
-// 			}enchantments;
-// 			file.read((char*)&enchantments, sizeof(enchantments));
-// 			std::cout << "  Enchantment data read" << std::endl;
-// 			bytesRead += sizeof(enchantments);
-// 		}
-// 	}
+std::vector<ALCH> valch;
 
 // 	//Leveled items
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LEVI")

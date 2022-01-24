@@ -1075,7 +1075,24 @@ void parseBOOK(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	BOOK b;
+	for (auto x : v) {
+		if (x.first == "NAME") b.name = getString(x.second);
+		if (x.first == "FNAM") b.fullName = getString(x.second);
+		if (x.first == "MODL") b.model = getString(x.second);
+		if (x.first == "SCRI") b.script = getString(x.second);
+		if (x.first == "TEXT") b.text = getString(x.second);
+		if (x.first == "ITEX") b.icon = getString(x.second);
+		if (x.first == "ENAM") b.enchantment = getString(x.second);
+		if (x.first == "LKDT") memmove((char*)&b.bd, x.second.data(), sizeof(b.bd));
+	}
+
+	std::cout << b.fullName << " " << b.model << std::endl;
+	vbook.push_back(b);
 }
+
 void parseALCH(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ALCH tag: " << buffer.size() << " bytes" << std::endl;
@@ -1084,6 +1101,26 @@ void parseALCH(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	ALCH a;
+	for (auto x : v) {
+		if (x.first == "NAME") a.name = getString(x.second);
+		if (x.first == "FNAM") a.fullName = getString(x.second);
+		if (x.first == "MODL") a.model = getString(x.second);
+		if (x.first == "SCRI") a.script = getString(x.second);
+		if (x.first == "TEXT") a.icon = getString(x.second);
+		if (x.first == "ALDT") memmove((char*)&a.ad, x.second.data(), sizeof(a.ad));
+		if (x.first == "ENAM")
+		{
+			Enchantments en;
+			memmove((char*)&en, x.second.data(), sizeof(en));
+			a.ed.push_back(en);
+		}
+	}
+
+	std::cout << a.fullName << " " << a.model << std::endl;
+	valch.push_back(a);
 }
 void parseLEVI(std::vector<char> &buffer){
 	
@@ -1256,8 +1293,8 @@ void readESM(const std::string &filename){
 			if (name == "LOCK") parseLOCK(buffer);
 			if (name == "PROB") parsePROB(buffer);
 			if (name == "INGR") parseINGR(buffer);
-			/*if (name == "BOOK") parseBOOK(buffer);
-			if (name == "ALCH") parseALCH(buffer);
+			if (name == "BOOK") parseBOOK(buffer);
+			/*if (name == "ALCH") parseALCH(buffer);
 			if (name == "LEVI") parseLEVI(buffer);
 			if (name == "LEVC") parseLEVC(buffer);
 			if (name == "CELL") parseCELL(buffer);

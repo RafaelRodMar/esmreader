@@ -728,593 +728,247 @@ struct NPC_ {
 
 std::vector<NPC_> vnpc_;
 
-// 	//armour
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "ARMO")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Armour ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Armour name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "AODT")
-// 		{
-// 			struct ArmourData {
-// 				long int type; /*0 = Helmet
-// 								1 = Cuirass
-// 								2 = L. Pauldron
-// 								3 = R. Pauldron
-// 								4 = Greaves
-// 								5 = Boots
-// 								6 = L. Gauntlet
-// 								7 = R. Gauntlet
-// 								8 = Shield
-// 								9 = L. Bracer
-// 								10 = R. Bracer*/
-// 				float weight;
-// 				long int value;
-// 				long int health;
-// 				long int enchantPts;
-// 				long int armour;
-// 			}armourData;
-
-// 			file.read((char*)&armourData, sizeof(armourData));
-// 			std::cout << "  Armour data read" << std::endl;
-// 			bytesRead += sizeof(armourData);
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Icon filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "INDX")
-// 		{
-// 			uint8_t bodyPartIndex;
-// 				//0 = Head
-// 				//1 = Hair
-// 				//2 = Neck
-// 				//3 = Cuirass
-// 				//4 = Groin
-// 				//5 = Skirt
-// 				//6 = Right Hand
-// 				//7 = Left Hand
-// 				//8 = Right Wrist
-// 				//9 = Left Wrist
-// 				//10 = Shield
-// 				//11 = Right Forearm
-// 				//12 = Left Forearm
-// 				//13 = Right Upper Arm
-// 				//14 = Left Upper Arm
-// 				//15 = Right Foot
-// 				//16 = Left Foot
-// 				//17 = Right Ankle
-// 				//18 = Left Ankle
-// 				//19 = Right Knee
-// 				//20 = Left Knee
-// 				//21 = Right Upper Leg
-// 				//22 = Left Upper Leg
-// 				//23 = Right Pauldron
-// 				//24 = Left Pauldron
-// 				//25 = Weapon
-// 				//26 = Tail
-
-
-// 			file.read((char*)&bodyPartIndex, sizeof(bodyPartIndex));
-// 			std::cout << "  Body part index: " << bodyPartIndex << std::endl;
-// 			bytesRead += sizeof(bodyPartIndex);
-// 		}
-
-// 		if (name == "BNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Male armor name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Female armor name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ENAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Enchantment name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
-
-// 	//Clothing
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CLOT")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Clothing ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Clothing name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CTDT")
-// 		{
-// 			struct ClothingData {
-// 				long int type; /*0 = Pants
-// 								1 = Shoes
-// 								2 = Shirt
-// 								3 = Belt
-// 								4 = Robe
-// 								5 = Right Glove
-// 								6 = Left Glove
-// 								7 = Skirt
-// 								8 = Ring
-// 								9 = Amulet*/
-// 				float weight;
-// 				uint16_t value;
-// 				uint16_t enchantmentPts;
-// 			}clothingData;
-
-
-// 			file.read((char*)&clothingData, sizeof(clothingData));
-// 			std::cout << "  Clothing data read: " << std::endl;
-// 			bytesRead += sizeof(clothingData);
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "INDX")
-// 		{
-// 			uint8_t bodyPartIndex; /*0 = Head
-// 									1 = Hair
-// 									2 = Neck
-// 									3 = Cuirass
-// 									4 = Groin
-// 									5 = Skirt
-// 									6 = Right Hand
-// 									7 = Left Hand
-// 									8 = Right Wrist
-// 									9 = Left Wrist
-// 									10 = Shield
-// 									11 = Right Forearm
-// 									12 = Left Forearm
-// 									13 = Right Upper Arm
-// 									14 = Left Upper Arm
-// 									15 = Right Foot
-// 									16 = Left Foot
-// 									17 = Right Ankle
-// 									18 = Left Ankle
-// 									19 = Right Knee
-// 									20 = Left Knee
-// 									21 = Right Upper Leg
-// 									22 = Left Upper Leg
-// 									23 = Right Pauldron
-// 									24 = Left Pauldron
-// 									25 = Weapon
-// 									26 = Tail*/
-// 			file.read((char*)&bodyPartIndex, sizeof(bodyPartIndex));
-// 			std::cout << "  Body part index: " << bodyPartIndex << std::endl;
-// 			bytesRead += sizeof(bodyPartIndex);
-// 		}
-
-// 		if (name == "BNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Male body part name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Female body part name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		/*INDX and BNAM/CNAM are grouped together.
-//          INDX first followed by an optional BNAM
-//          (no BNAM indicates a NULL field for that index).*/
-
-// 		if (name == "ENAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Enchantment name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
-
-// 	//Repair items
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "REPA")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "RIDT")
-// 		{
-// 			struct RepairData {
-// 				float weight;
-// 				long int value;
-// 				long int uses;
-// 				float quality;
-// 			}repairData;
-
-// 			file.read((char*)&repairData, sizeof(repairData));
-// 			std::cout << "  Repair data read" << std::endl;
-// 			bytesRead += sizeof(repairData);
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
-
-// 	//Activator
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "ACTI")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
-
-// 	//Alchemy apparatus
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "APPA")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "AADT")
-// 		{
-// 			struct AlchemyData {
-// 				long int type; //0 = mortar and pestle, 1 = alembic, 2 = calcinator, 3 = retort
-// 				float quality;
-// 				float weight;
-// 				long int value;
-// 			}alchemyData;
-
-// 			file.read((char*)&alchemyData, sizeof(alchemyData));
-// 			std::cout << "  Alchemy data read" << std::endl;
-// 			bytesRead += sizeof(alchemyData);
-// 		}
-// 	}
-
-// 	//Lockpicking items
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LOCK")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "LKDT")
-// 		{
-// 			struct LockpickingData {
-// 				float weight;
-// 				long int value;
-// 				float quality;
-// 				long int uses;
-// 			}lockpickingData;
-
-// 			file.read((char*)&lockpickingData, sizeof(lockpickingData));
-// 			std::cout << "  Lockpicking data read" << std::endl;
-// 			bytesRead += sizeof(lockpickingData);
-// 		}
-// 	}
-
-// 	//Probe items
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "PROB")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "PBDT")
-// 		{
-// 			struct ProbeData {
-// 				float weight;
-// 				long int value;
-// 				float quality;
-// 				long int uses;
-// 			}probeData;
-
-// 			file.read((char*)&probeData, sizeof(probeData));
-// 			std::cout << "  Probe data read" << std::endl;
-// 			bytesRead += sizeof(probeData);
-// 		}
-// 	}
-
-// 	//Ingredients
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "INGR")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item ID string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "MODL")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NIF model filename: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCRI")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Script: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ITEX")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Inventory icon: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "IRDT")
-// 		{
-// 			struct IngredientData {
-// 				float weight;
-// 				long int value;
-// 				long int effectID[4]; //0 or -1 means no effect
-// 				long int skillID[4]; //only for skill related effects, 0 or -1 otherwise
-// 				long int attributeID[4]; //only for attribute related effects, 0 or -1 otherwise
-// 			}ingredientData;
-
-// 			file.read((char*)&ingredientData, sizeof(ingredientData));
-// 			std::cout << "  Ingredient data read" << std::endl;
-// 			bytesRead += sizeof(ingredientData);
-// 		}
-// 	}
+//used by ARMO records
+struct ArmourData {
+	long int type; /*0 = Helmet
+					1 = Cuirass
+					2 = L. Pauldron
+					3 = R. Pauldron
+					4 = Greaves
+					5 = Boots
+					6 = L. Gauntlet
+					7 = R. Gauntlet
+					8 = Shield
+					9 = L. Bracer
+					10 = R. Bracer*/
+	float weight;
+	long int value;
+	long int health;
+	long int enchantPts;
+	long int armour;
+};
+
+struct BodyPart{
+	uint8_t bodyPartIndex = -1;
+	std::string maleArmorName = "";
+	std::string femaleArmorName = "";
+				//0 = Head
+				//1 = Hair
+				//2 = Neck
+				//3 = Cuirass
+				//4 = Groin
+				//5 = Skirt
+				//6 = Right Hand
+				//7 = Left Hand
+				//8 = Right Wrist
+				//9 = Left Wrist
+				//10 = Shield
+				//11 = Right Forearm
+				//12 = Left Forearm
+				//13 = Right Upper Arm
+				//14 = Left Upper Arm
+				//15 = Right Foot
+				//16 = Left Foot
+				//17 = Right Ankle
+				//18 = Left Ankle
+				//19 = Right Knee
+				//20 = Left Knee
+				//21 = Right Upper Leg
+				//22 = Left Upper Leg
+				//23 = Right Pauldron
+				//24 = Left Pauldron
+				//25 = Weapon
+				//26 = Tail	
+};
+
+//armour records
+struct ARMO{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	ArmourData ad;
+	std::string icon = "";
+	std::vector<BodyPart> bp;
+	std::string enchantment = "";
+	std::string script = "";
+};
+
+std::vector<ARMO> varmo;
+
+//used by CLOT records
+struct ClothingData {
+	long int type; /*0 = Pants
+					1 = Shoes
+					2 = Shirt
+					3 = Belt
+					4 = Robe
+					5 = Right Glove
+					6 = Left Glove
+					7 = Skirt
+					8 = Ring
+					9 = Amulet*/
+	float weight;
+	uint16_t value;
+	uint16_t enchantmentPts;
+};
+
+struct BodyPartClothing{
+	uint8_t bodyPartIndex = -1;
+	std::string maleBodyPartName = "";
+	std::string femaleBodyPartName = "";
+				//0 = Head
+				//1 = Hair
+				//2 = Neck
+				//3 = Cuirass
+				//4 = Groin
+				//5 = Skirt
+				//6 = Right Hand
+				//7 = Left Hand
+				//8 = Right Wrist
+				//9 = Left Wrist
+				//10 = Shield
+				//11 = Right Forearm
+				//12 = Left Forearm
+				//13 = Right Upper Arm
+				//14 = Left Upper Arm
+				//15 = Right Foot
+				//16 = Left Foot
+				//17 = Right Ankle
+				//18 = Left Ankle
+				//19 = Right Knee
+				//20 = Left Knee
+				//21 = Right Upper Leg
+				//22 = Left Upper Leg
+				//23 = Right Pauldron
+				//24 = Left Pauldron
+				//25 = Weapon
+				//26 = Tail	
+};
+
+//clothing records
+struct CLOT{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	ClothingData cd;
+	std::string icon = "";
+	std::vector<BodyPartClothing> bp;
+	std::string enchantment = "";
+	std::string script = "";
+};
+
+std::vector<CLOT> vclot;
+
+//used by REPA records
+struct RepairData {
+	float weight;
+	long int value;
+	long int uses;
+	float quality;
+};
+
+//repair items records
+struct REPA{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	RepairData rd;
+	std::string icon = "";
+	std::string script = "";
+};
+
+std::vector<REPA> vrepa;
+
+//activator records
+struct ACTI{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string script = "";
+};
+
+std::vector<ACTI> vacti;
+
+//used by APPA records
+struct AlchemyData {
+	long int type; //0 = mortar and pestle, 1 = alembic, 2 = calcinator, 3 = retort
+	float quality;
+	float weight;
+	long int value;
+};
+
+//alchemy apparatus records
+struct APPA{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string script = "";
+	std::string icon = "";
+	AlchemyData ad;
+};
+
+std::vector<APPA> vappa;
+
+//used by LOCK records
+struct LockpickingData {
+	float weight;
+	long int value;
+	float quality;
+	long int uses;
+};
+
+//lockpicking items records
+struct LOCK{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string script = "";
+	std::string icon = "";
+	LockpickingData ld;
+};
+
+std::vector<LOCK> vlock;
+
+//used by PROB records
+struct ProbeData {
+	float weight;
+	long int value;
+	float quality;
+	long int uses;
+};
+
+//probe items records
+struct PROB{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string script = "";
+	std::string icon = "";
+	ProbeData pd;
+};
+
+std::vector<PROB> vprob;
+
+//used by INGR records
+struct IngredientData {
+	float weight;
+	long int value;
+	long int effectID[4]; //0 or -1 means no effect
+	long int skillID[4]; //only for skill related effects, 0 or -1 otherwise
+	long int attributeID[4]; //only for attribute related effects, 0 or -1 otherwise
+};
+
+//ingredients records
+struct INGR{
+	std::string name = "";
+	std::string fullName = "";
+	std::string model = "";
+	std::string script = "";
+	std::string icon = "";
+	IngredientData id;
+};
+
+std::vector<INGR> vingr;
 
 // 	//Books
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "BOOK")

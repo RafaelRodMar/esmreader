@@ -108,6 +108,12 @@ float getFloat(std::vector<char> &v){
 	return aux;
 }
 
+uint8_t getuint8_tInt(std::vector<char> &v){
+	uint8_t aux = 0;
+	memmove((char*)&aux, v.data(), sizeof(aux));
+	return aux;
+}
+
 void parseTES3(std::vector<char> &buffer){
 	std::cout << "Parsing TES3 tag: " << buffer.size() << " bytes" << std::endl;
 	std::vector< std::pair<std::string,std::vector<char>> > v;
@@ -857,7 +863,33 @@ void parseARMO(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	ARMO a;
+	for(auto x : v){
+		if(x.first == "NAME") a.name = getString(x.second);
+		if(x.first == "FNAM") a.fullName = getString(x.second);
+		if(x.first == "MODL") a.model = getString(x.second);
+		if(x.first == "AODT") memmove((char*)&a.ad, x.second.data(), sizeof(a.ad));
+		if(x.first == "ITEX") a.icon = getString(x.second);
+		if(x.first == "INDX")
+		{
+			BodyPart bp;
+			bp.bodyPartIndex = getuint8_tInt(x.second);
+			a.bp.push_back(bp);
+		}
+		//if there is a INDX record then may be a BNAM or CNAM record after it.
+		//So every BNAM / CNAM records belong to the las INDX record.
+		if(x.first == "BNAM") a.bp.back().maleArmorName = getString(x.second);
+		if(x.first == "CNAM") a.bp.back().femaleArmorName = getString(x.second);
+		if(x.first == "ENAM") a.enchantment = getString(x.second);
+		if(x.first == "SCRI") a.script = getString(x.second);
+	}
+
+	std::cout << a.fullName << " " << a.model << std::endl;
+	varmo.push_back(a);
 }
+
 void parseCLOT(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CLOT tag: " << buffer.size() << " bytes" << std::endl;
@@ -866,7 +898,33 @@ void parseCLOT(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	CLOT c;
+	for(auto x : v){
+		if(x.first == "NAME") c.name = getString(x.second);
+		if(x.first == "FNAM") c.fullName = getString(x.second);
+		if(x.first == "MODL") c.model = getString(x.second);
+		if(x.first == "CTDT") memmove((char*)&c.cd, x.second.data(), sizeof(c.cd));
+		if(x.first == "ITEX") c.icon = getString(x.second);
+		if(x.first == "INDX")
+		{
+			BodyPartClothing bp;
+			bp.bodyPartIndex = getuint8_tInt(x.second);
+			c.bp.push_back(bp);
+		}
+		//if there is a INDX record then may be a BNAM or CNAM record after it.
+		//So every BNAM / CNAM records belong to the las INDX record.
+		if(x.first == "BNAM") c.bp.back().maleBodyPartName = getString(x.second);
+		if(x.first == "CNAM") c.bp.back().femaleBodyPartName = getString(x.second);
+		if(x.first == "ENAM") c.enchantment = getString(x.second);
+		if(x.first == "SCRI") c.script = getString(x.second);
+	}
+
+	std::cout << c.fullName << " " << c.model << std::endl;
+	vclot.push_back(c);
 }
+
 void parseREPA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing REPA tag: " << buffer.size() << " bytes" << std::endl;
@@ -875,7 +933,22 @@ void parseREPA(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	REPA r;
+	for(auto x : v){
+		if(x.first == "NAME") r.name = getString(x.second);
+		if(x.first == "FNAM") r.fullName = getString(x.second);
+		if(x.first == "MODL") r.model = getString(x.second);
+		if(x.first == "RIDT") memmove((char*)&r.rd, x.second.data(), sizeof(r.rd));
+		if(x.first == "ITEX") r.icon = getString(x.second);
+		if(x.first == "SCRI") r.script = getString(x.second);
+	}
+
+	std::cout << r.fullName << " " << r.model << std::endl;
+	vrepa.push_back(r);
 }
+
 void parseACTI(std::vector<char> &buffer){
 	
 	std::cout << "Parsing ACTI tag: " << buffer.size() << " bytes" << std::endl;
@@ -884,7 +957,20 @@ void parseACTI(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	ACTI a;
+	for(auto x : v){
+		if(x.first == "NAME") a.name = getString(x.second);
+		if(x.first == "FNAM") a.fullName = getString(x.second);
+		if(x.first == "MODL") a.model = getString(x.second);
+		if(x.first == "SCRI") a.script = getString(x.second);
+	}
+
+	std::cout << a.fullName << " " << a.model << std::endl;
+	vacti.push_back(a);
 }
+
 void parseAPPA(std::vector<char> &buffer){
 	
 	std::cout << "Parsing APPA tag: " << buffer.size() << " bytes" << std::endl;
@@ -893,7 +979,22 @@ void parseAPPA(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	APPA a;
+	for(auto x : v){
+		if(x.first == "NAME") a.name = getString(x.second);
+		if(x.first == "FNAM") a.fullName = getString(x.second);
+		if(x.first == "MODL") a.model = getString(x.second);
+		if(x.first == "SCRI") a.script = getString(x.second);
+		if(x.first == "ITEX") a.icon = getString(x.second);
+		if(x.first == "AADT") memmove((char*)&a.ad, x.second.data(), sizeof(a.ad));
+	}
+
+	std::cout << a.fullName << " " << a.model << std::endl;
+	vappa.push_back(a);
 }
+
 void parseLOCK(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LOCK tag: " << buffer.size() << " bytes" << std::endl;
@@ -902,7 +1003,22 @@ void parseLOCK(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	LOCK l;
+	for(auto x : v){
+		if(x.first == "NAME") l.name = getString(x.second);
+		if(x.first == "FNAM") l.fullName = getString(x.second);
+		if(x.first == "MODL") l.model = getString(x.second);
+		if(x.first == "SCRI") l.script = getString(x.second);
+		if(x.first == "ITEX") l.icon = getString(x.second);
+		if(x.first == "LKDT") memmove((char*)&l.ld, x.second.data(), sizeof(l.ld));
+	}
+
+	std::cout << l.fullName << " " << l.model << std::endl;
+	vlock.push_back(l);
 }
+
 void parsePROB(std::vector<char> &buffer){
 	
 	std::cout << "Parsing PROB tag: " << buffer.size() << " bytes" << std::endl;
@@ -911,7 +1027,22 @@ void parsePROB(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	PROB p;
+	for(auto x : v){
+		if(x.first == "NAME") p.name = getString(x.second);
+		if(x.first == "FNAM") p.fullName = getString(x.second);
+		if(x.first == "MODL") p.model = getString(x.second);
+		if(x.first == "SCRI") p.script = getString(x.second);
+		if(x.first == "ITEX") p.icon = getString(x.second);
+		if(x.first == "LKDT") memmove((char*)&p.pd, x.second.data(), sizeof(p.pd));
+	}
+
+	std::cout << p.fullName << " " << p.model << std::endl;
+	vprob.push_back(p);
 }
+
 void parseINGR(std::vector<char> &buffer){
 	
 	std::cout << "Parsing INGR tag: " << buffer.size() << " bytes" << std::endl;
@@ -920,7 +1051,22 @@ void parseINGR(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	INGR i;
+	for(auto x : v){
+		if(x.first == "NAME") i.name = getString(x.second);
+		if(x.first == "FNAM") i.fullName = getString(x.second);
+		if(x.first == "MODL") i.model = getString(x.second);
+		if(x.first == "SCRI") i.script = getString(x.second);
+		if(x.first == "ITEX") i.icon = getString(x.second);
+		if(x.first == "LKDT") memmove((char*)&i.id, x.second.data(), sizeof(i.id));
+	}
+
+	std::cout << i.fullName << " " << i.model << std::endl;
+	vingr.push_back(i);
 }
+
 void parseBOOK(std::vector<char> &buffer){
 	
 	std::cout << "Parsing BOOK tag: " << buffer.size() << " bytes" << std::endl;
@@ -1102,7 +1248,7 @@ void readESM(const std::string &filename){
 			if (name == "LIGH") parseLIGH(buffer);
 			if (name == "ENCH") parseENCH(buffer);
 			if (name == "NPC_") parseNPC_(buffer);
-			/*if (name == "ARMO") parseARMO(buffer);
+			if (name == "ARMO") parseARMO(buffer);
 			if (name == "CLOT") parseCLOT(buffer);
 			if (name == "REPA") parseREPA(buffer);
 			if (name == "ACTI") parseACTI(buffer);
@@ -1110,7 +1256,7 @@ void readESM(const std::string &filename){
 			if (name == "LOCK") parseLOCK(buffer);
 			if (name == "PROB") parsePROB(buffer);
 			if (name == "INGR") parseINGR(buffer);
-			if (name == "BOOK") parseBOOK(buffer);
+			/*if (name == "BOOK") parseBOOK(buffer);
 			if (name == "ALCH") parseALCH(buffer);
 			if (name == "LEVI") parseLEVI(buffer);
 			if (name == "LEVC") parseLEVC(buffer);

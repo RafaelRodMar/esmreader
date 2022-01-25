@@ -1024,121 +1024,54 @@ struct ALCH {
 
 std::vector<ALCH> valch;
 
-// 	//Leveled items
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LEVI")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Leveled list ID: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
+//leveld items records
+struct LEVI{
+	std::string name = "";
+	long int listData = 0;
+	uint8_t chanceNone = 0;
+	long int count = 0;
+	std::vector< std::pair<std::string, uint16_t> > item;
+};
 
-// 		if (name == "DATA")
-// 		{
-// 			long int listData; //0x1 = calculate from all levels <= pc's level
-// 								//0x2 = calculate for each item in count
+std::vector<LEVI> vlevi;
 
-// 			file.read((char*)&listData, sizeof(listData));
-// 			std::cout << "  Leveled item data read" << std::endl;
-// 			bytesRead += sizeof(listData);
-// 		}
+//leveld creatures records
+struct LEVC{
+	std::string name = "";
+	long int listData = 0;
+	uint8_t chanceNone = 0;
+	long int count = 0;
+	std::vector< std::pair<std::string, uint16_t> > item;
+};
 
-// 		if (name == "NNAM")
-// 		{
-// 			uint8_t chanceNone;
+std::vector<LEVC> vlevc;
 
-// 			file.read((char*)&chanceNone, sizeof(chanceNone));
-// 			std::cout << "  Chance none : " << chanceNone << std::endl;
-// 			bytesRead += sizeof(chanceNone);
-// 		}
+//used by CELL records
+struct CellData{
+	long int flags; /*0x01 = interior?
+					0x02 = has water
+					0x04 = illegal to sleep here
+					0x80 = behave like exterior (Tribunal)*/
+	long int gridX;
+	long int gridY;
+};
 
-// 		if (name == "INDX")
-// 		{
-// 			long int count; //count of following items
+struct AmbientLightLevel{
+	long int ambientColor;
+	long int sunlightColor;
+	long int fogColor;
+	float fogDensity;
+};
 
-// 			file.read((char*)&count, sizeof(count));
-// 			std::cout << "  Count : " << count << std::endl;
-// 			bytesRead += sizeof(count);
-// 		}
+struct CellTravelDestination {
+	float posx, posy, posz;
+	float rotx, roty, rotz; //in radians
+};
 
-// 		if (name == "INAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Item name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "INTV")
-// 		{
-// 			uint16_t pcLevel; //pc level for previous CNAM
-
-// 			file.read((char*)&pcLevel, sizeof(pcLevel));
-// 			std::cout << "  PC level: " << pcLevel << std::endl;
-// 			bytesRead += sizeof(pcLevel);
-// 		}
-// 		//The INAM/INTV can occur many times in pairs
-// 	}
-
-// 	//Leveled creatures
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LEVC")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Leveled list ID: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DATA")
-// 		{
-// 			long int listData; //0x1 = calculate from all levels <= pc's level
-// 								//0x2 = calculate for each item in count
-
-// 			file.read((char*)&listData, sizeof(listData));
-// 			std::cout << "  Leveled creature data read" << std::endl;
-// 			bytesRead += sizeof(listData);
-// 		}
-
-// 		if (name == "NNAM")
-// 		{
-// 			uint8_t chanceNone;
-
-// 			file.read((char*)&chanceNone, sizeof(chanceNone));
-// 			std::cout << "  Chance none : " << chanceNone << std::endl;
-// 			bytesRead += sizeof(chanceNone);
-// 		}
-
-// 		if (name == "INDX")
-// 		{
-// 			long int count; //count of following items
-
-// 			file.read((char*)&count, sizeof(count));
-// 			std::cout << "  Count : " << count << std::endl;
-// 			bytesRead += sizeof(count);
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Creature name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "INTV")
-// 		{
-// 			uint16_t pcLevel; //pc level for previous CNAM
-
-// 			file.read((char*)&pcLevel, sizeof(pcLevel));
-// 			std::cout << "  PC level: " << pcLevel << std::endl;
-// 			bytesRead += sizeof(pcLevel);
-// 		}
-// 		//The CNAM/INTV can occur many times in pairs
-// 	}
+struct ReferencePosition {
+	float posx, posy, posz;
+	float rotx, roty, rotz; //in radians
+};
 
 // 	//Cell definitions
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CELL")

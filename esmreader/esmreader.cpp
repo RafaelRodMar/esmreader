@@ -114,6 +114,12 @@ uint8_t getuint8_tInt(std::vector<char> &v){
 	return aux;
 }
 
+uint16_t getuint16_tInt(std::vector<char> &v){
+	uint16_t aux = 0;
+	memmove((char*)&aux, v.data(), sizeof(aux));
+	return aux;
+}
+
 void parseTES3(std::vector<char> &buffer){
 	std::cout << "Parsing TES3 tag: " << buffer.size() << " bytes" << std::endl;
 	std::vector< std::pair<std::string,std::vector<char>> > v;
@@ -1130,7 +1136,22 @@ void parseLEVI(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	LEVI l;
+	for(auto x : v){
+		if(x.first == "NAME") l.name = getString(x.second);
+		if(x.first == "DATA") l.listData = getLongInt(x.second);
+		if(x.first == "NNAM") l.chanceNone = getuint8_tInt(x.second);
+		if(x.first == "INDX") l.count = getLongInt(x.second);
+		if(x.first == "INAM") l.item.push_back( std::make_pair(getString(x.second), 0));
+		//every INTV record belongs to the previous INAM record.
+		if(x.first == "INTV") l.item.back().second = getuint16_tInt(x.second);
+	}
+	std::cout << l.name << " " << l.count << std::endl;
+	vlevi.push_back(l);
 }
+
 void parseLEVC(std::vector<char> &buffer){
 	
 	std::cout << "Parsing LEVC tag: " << buffer.size() << " bytes" << std::endl;
@@ -1139,7 +1160,22 @@ void parseLEVC(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	//parse sub-records in the vector
+	LEVC c;
+	for(auto x : v){
+		if(x.first == "NAME") c.name = getString(x.second);
+		if(x.first == "DATA") c.listData = getLongInt(x.second);
+		if(x.first == "NNAM") c.chanceNone = getuint8_tInt(x.second);
+		if(x.first == "INDX") c.count = getLongInt(x.second);
+		if(x.first == "CNAM") c.item.push_back( std::make_pair(getString(x.second), 0));
+		//every INTV record belongs to the previous INAM record.
+		if(x.first == "INTV") c.item.back().second = getuint16_tInt(x.second);
+	}
+	std::cout << c.name << " " << c.count << std::endl;
+	vlevc.push_back(c);
 }
+
 void parseCELL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing CELL tag: " << buffer.size() << " bytes" << std::endl;
@@ -1148,6 +1184,281 @@ void parseCELL(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	// 	//Cell definitions
+// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CELL")
+// 	{
+// 		if (name == "NAME")
+// 		{
+// 			char buffer[300];
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Cell list ID: " << std::string(buffer, buffer + subRecordHeader.size);
+// 			bytesRead += subRecordHeader.size;
+// 			//Can be an empty string for exterior cells in which case the region name is used instead.
+// 		}
+
+// 		if (name == "DATA" && subRecordHeader.size == 12)
+// 		{
+// 			struct CellData{
+// 				long int flags; /*0x01 = interior?
+// 								0x02 = has water
+// 								0x04 = illegal to sleep here
+// 								0x80 = behave like exterior (Tribunal)*/
+// 				long int gridX;
+// 				long int gridY;
+// 			}cellData;
+
+// 			file.read((char*)&cellData, sizeof(cellData));
+// 			std::cout << "  Cell data read" << std::endl;
+// 			bytesRead += sizeof(cellData);
+// 		}
+
+// 		if (name == "RGNN")
+// 		{
+// 			char buffer[300];
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Region name string: " << std::string(buffer, buffer + subRecordHeader.size);
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "NAM0")
+// 		{
+// 			long int numnberOfObjectsInTheCell;
+
+// 			file.read((char*)&numnberOfObjectsInTheCell, sizeof(numnberOfObjectsInTheCell));
+// 			std::cout << "  Number of objects in the cell: " << numnberOfObjectsInTheCell << std::endl;
+// 			bytesRead += sizeof(numnberOfObjectsInTheCell);
+// 		}
+
+// 		//exterior cell sub-records (NAM5)
+// 		if(name == "NAM5")
+// 		{
+// 			long int mapColor;
+
+// 			file.read((char*)&mapColor, sizeof(mapColor));
+// 			std::cout << "  Map color: " << mapColor << std::endl;
+// 			bytesRead += sizeof(mapColor);
+// 		}
+
+// 		//interior cell sub-records (WHGT and AMBI)
+// 		if(name == "WHGT")
+// 		{
+// 			float waterHeight;
+
+// 			file.read((char*)&waterHeight, sizeof(waterHeight));
+// 			std::cout << "  Water height: " << waterHeight << std::endl;
+// 			bytesRead += sizeof(waterHeight);
+// 		}
+
+// 		if(name == "AMBI")
+// 		{
+// 			struct AmbientLightLevel{
+// 				long int ambientColor;
+// 				long int sunlightColor;
+// 				long int fogColor;
+// 				float fogDensity;
+// 			}ambientLightLevel;
+
+// 			file.read((char*)&ambientLightLevel, sizeof(ambientLightLevel));
+// 			std::cout << "  Ambient light level read" << std::endl;
+// 			bytesRead += sizeof(ambientLightLevel);
+// 		}
+
+// 		//Referenced object data grouping (until end)
+// 		if(name == "FRMR")
+// 		{
+// 			long int objectIndex; /*(starts at 1) (4 bytes, long)
+// 			This is used to uniquely identify objects in the cell.
+// 			For new files the index starts at 1 and is incremented
+// 			for each new object added.  For modified objects the
+// 			index is kept the same.*/
+
+// 			file.read((char*)&objectIndex, sizeof(objectIndex));
+// 			std::cout << "  Object Index : " << objectIndex << std::endl;
+// 			bytesRead += sizeof(objectIndex);
+// 		}
+
+// 		//repeated tag into CELL record, but this one belongs to FRMR
+// 		/*if (name == "NAME")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}*/
+
+// 		if (name == "UNAM")
+// 		{
+// 			uint8_t referenceBlocked; //always 0, present if Blocked is set in the reference's record header,
+// 										//otherwise absent.
+
+// 			file.read((char*)&referenceBlocked, sizeof(referenceBlocked));
+// 			std::cout << "  Reference blocked: " << referenceBlocked << std::endl;
+// 			bytesRead += sizeof(referenceBlocked);
+// 		}
+
+// 		if (name == "XSCL")
+// 		{
+// 			float referenceScale; //if applicable.
+
+// 			file.read((char*)&referenceScale, sizeof(referenceScale));
+// 			std::cout << "  Reference Scale: " << referenceScale << std::endl;
+// 			bytesRead += sizeof(referenceScale);
+// 		}
+
+// 		if (name == "ANAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  NPC ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "BNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Global variable name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "CNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Faction ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "INDX")
+// 		{
+// 			long int factionRank;
+
+// 			file.read((char*)&factionRank, sizeof(factionRank));
+// 			std::cout << "  Faction rank: " << factionRank << std::endl;
+// 			bytesRead += sizeof(factionRank);
+// 		}
+
+// 		if (name == "XSOL")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Soul gem ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "XCHG")
+// 		{
+// 			float enchantmentCharge;
+
+// 			file.read((char*)&enchantmentCharge, sizeof(enchantmentCharge));
+// 			std::cout << "  Enchantment charge: " << enchantmentCharge << std::endl;
+// 			bytesRead += sizeof(enchantmentCharge);
+// 		}
+
+// 		if (name == "INTV")
+// 		{
+// 			//it can be long int or float depending of type of object
+// 			long int remainingUsage; //health(weapons and armor)
+// 									//uses(locks, probes, repair items)
+// 			float remUs;			//time remaining(lights)
+
+// 			file.read((char*)&remUs, sizeof(remUs));
+// 			std::cout << "  Remaining usage: " << remUs << std::endl;
+// 			bytesRead += sizeof(remUs);
+// 		}
+
+// 		if (name == "NAM9")
+// 		{
+// 			long int value;
+
+// 			file.read((char*)&value, sizeof(value));
+// 			std::cout << "  Value: " << value << std::endl;
+// 			bytesRead += sizeof(value);
+// 		}
+
+// 		if (name == "DODT")
+// 		{
+// 			struct CellTravelDestination {
+// 				float posx, posy, posz;
+// 				float rotx, roty, rotz; //in radians
+// 			}cellTD;
+
+// 			file.read((char*)&cellTD, sizeof(cellTD));
+// 			std::cout << "  Cell travel destination read" << std::endl;
+// 			bytesRead += sizeof(cellTD);
+// 		}
+
+// 		if (name == "DNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "FLTV")
+// 		{
+// 			long int lockDifficulty;
+
+// 			file.read((char*)&lockDifficulty, sizeof(lockDifficulty));
+// 			std::cout << "  Lock difficulty: " << lockDifficulty << std::endl;
+// 			bytesRead += sizeof(lockDifficulty);
+// 		}
+
+// 		if (name == "KNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Key name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "TNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Trap name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "ZNAM")
+// 		{
+// 			uint8_t referenceDisabled; /*Reference is disabled (always 0). Like UNAM, this will be emitted 
+// 									   if the relevant flag is set in the reference's record header. This 
+// 									   may only be possible via scripting. Also, even if present in the 
+// 									   file, the field appears to be ignored on loading.*/
+
+// 			file.read((char*)&referenceDisabled, sizeof(referenceDisabled));
+// 			std::cout << "  Ref disabled: " << referenceDisabled << std::endl;
+// 			bytesRead += sizeof(referenceDisabled);
+// 		}
+
+// 		if (name == "DATA" && subRecordHeader.size == 24)
+// 		{
+// 			struct ReferencePosition {
+// 				float posx, posy, posz;
+// 				float rotx, roty, rotz; //in radians
+// 			}refPos;
+
+// 			file.read((char*)&refPos, sizeof(refPos));
+// 			std::cout << "  Reference position read" << std::endl;
+// 			bytesRead += sizeof(refPos);
+// 		}
+
+// 		if (bytesRead == 0)
+// 		{
+// 			std::cout << "<<<<<<<<<<<<<<<  UNKNOWN TAG >>>>>>>>>>>>>>>>>  " << name << std::endl;
+// 		}
+// 	}
 }
 void parseLAND(std::vector<char> &buffer){
 	
@@ -1294,10 +1605,10 @@ void readESM(const std::string &filename){
 			if (name == "PROB") parsePROB(buffer);
 			if (name == "INGR") parseINGR(buffer);
 			if (name == "BOOK") parseBOOK(buffer);
-			/*if (name == "ALCH") parseALCH(buffer);
+			if (name == "ALCH") parseALCH(buffer);
 			if (name == "LEVI") parseLEVI(buffer);
 			if (name == "LEVC") parseLEVC(buffer);
-			if (name == "CELL") parseCELL(buffer);
+			/*if (name == "CELL") parseCELL(buffer);
 			if (name == "LAND") parseLAND(buffer);
 			if (name == "PGRD") parsePGRD(buffer);
 			if (name == "SNDG") parseSNDG(buffer);

@@ -495,7 +495,7 @@ struct AiData{
 
 struct CellTravelDestination{
  	float posx,posy,posz;
- 	float rotx,roty,rotz;
+ 	float rotx,roty,rotz;  //in radians  
 };
 
 struct WanderPackage{
@@ -890,7 +890,7 @@ struct ACTI{
 std::vector<ACTI> vacti;
 
 //used by APPA records
-struct AlchemyData {
+struct ApparatusData {
 	long int type; //0 = mortar and pestle, 1 = alembic, 2 = calcinator, 3 = retort
 	float quality;
 	float weight;
@@ -904,7 +904,7 @@ struct APPA{
 	std::string model = "";
 	std::string script = "";
 	std::string icon = "";
-	AlchemyData ad;
+	ApparatusData ad;
 };
 
 std::vector<APPA> vappa;
@@ -1000,7 +1000,7 @@ struct AlchemyData {
  	long int flags; //0x1 = autocalc
 };
 
-struct Enchantments {
+struct AlchemyEnchantments {
  	uint16_t effectID;
  	int8_t sillAffected; //-1 if not applicable
  	int8_t attributeAffected; //-1 if not applicable
@@ -1019,7 +1019,7 @@ struct ALCH {
 	std::string script = "";
 	std::string icon = "";
 	AlchemyData ad;
-	std::vector<Enchantments> ed;
+	std::vector<AlchemyEnchantments> ed;
 };
 
 std::vector<ALCH> valch;
@@ -1061,11 +1061,6 @@ struct AmbientLightLevel{
 	long int sunlightColor;
 	long int fogColor;
 	float fogDensity;
-};
-
-struct CellTravelDestination {
-	float posx, posy, posz;
-	float rotx, roty, rotz; //in radians
 };
 
 struct ReferencePosition {

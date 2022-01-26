@@ -1119,7 +1119,7 @@ void parseALCH(std::vector<char> &buffer){
 		if (x.first == "ALDT") memmove((char*)&a.ad, x.second.data(), sizeof(a.ad));
 		if (x.first == "ENAM")
 		{
-			Enchantments en;
+			AlchemyEnchantments en;
 			memmove((char*)&en, x.second.data(), sizeof(en));
 			a.ed.push_back(en);
 		}
@@ -1189,290 +1189,148 @@ void parseCELL(std::vector<char> &buffer){
 	CELL c;
 	bool inReference = false; //while false it's reading the cell data,
 								//otherwise it's reading a reference's data.
+	bool inMovedRef = false;
+	bool inPersistentRef = false;
+	bool inTemporaryRef = false;
 	for(int i=0;i<v.size();i++){
 		if( !inReference )
 		{
 			//reading the cell data
+			if(v[i].first == "NAME") c.name = getString(v[i].second);
+			if(v[i].first == "DATA") memmove((char*)&c.cd, v[i].second.data(), sizeof(c.cd));
+			if(v[i].first == "RGNN") c.regionName = getString(v[i].second);
+			if(v[i].first == "NAM5") c.mapColor = getLongInt(v[i].second);
+			if(v[i].first == "WHGT") c.waterHeight = getFloat(v[i].second);
+			if(v[i].first == "AMBI") memmove((char*)&c.al, v[i].second.data(), sizeof(c.al));
+			if(v[i].first == "NAM0") c.temporaryRefsCount = getLongInt(v[i].second);
+			if(v[i].first == "MVRF")
+			{
+				MovedReference mr;
+				mr.reference = getLongInt(v[i].second);
+				c.movedRefs.push_back(mr);
+				inReference = true;
+				inMovedRef = true;
+			}
+			if(v[i].first == "FRMR")
+			{
+				FormReference fr;
+				fr.referenceID = getLongInt(v[i].second);
+				c.persistentRefs.push_back(fr);
+				inReference = true;
+				inPersistentRef = true;
+			}
 		}
 		else
 		{
 			//reading a reference data
+			if( inMovedRef )
+			{
+				//moved references
+				if(v[i].first == "CNAM")
+				{
+					c.movedRefs.back().name = getString(v[i].second);
+				}
+				else if(v[i].first == "CNDT")
+				{
+					struct coords{
+						long int x,y;
+					}crd;
+					memmove((char*)&crd, v[i].second.data(), sizeof(crd));
+					c.movedRefs.back().GridX = crd.x;
+					c.movedRefs.back().GridY = crd.y;
+				} else if(v[i].first == "")
+				{
+					c.movedRefs.back().formReference = getLongInt(v[i].second);
+				} else
+				{
+					//is not a moved reference tag
+					inReference = false;
+					inMovedRef = false;
+					if(i < v.size() - 1) i--;
+				}
+			}
+
+			if( inPersistentRef )
+			{
+				//persistent references
+				if(v[i].first == "NAME")
+				{
+					c.persistentRefs.back().name = getString(v[i].second);
+					std::cout << std::endl << "object: " << c.persistentRefs.back().name << std::endl;
+				} else if(v[i].first == "UNAM")
+				{
+					c.persistentRefs.back().referenceBocked = getuint8_tInt(v[i].second);
+				} else if(v[i].first == "XSCL")
+				{
+					c.persistentRefs.back().scale = getFloat(v[i].second);
+				} else if(v[i].first == "ANAM")
+				{
+					c.persistentRefs.back().npcID = getString(v[i].second);
+				} else if(v[i].first == "BNAM")
+				{
+					c.persistentRefs.back().globalVariableName = getString(v[i].second);
+				} else if(v[i].first == "CNAM")
+				{
+					c.persistentRefs.back().factionID = getString(v[i].second);
+				} else if(v[i].first == "INDX")
+				{
+					c.persistentRefs.back().factionRank = getLongInt(v[i].second);
+				} else if(v[i].first == "XSOL")
+				{
+					c.persistentRefs.back().soulID = getString(v[i].second);
+				} else if(v[i].first == "XCHG")
+				{
+					c.persistentRefs.back().charge = getFloat(v[i].second);
+				} else if(v[i].first == "INTV")
+				{
+					//depends of object type
+					//Health(weapons and armor), uses(locks, probes, repair items)
+					c.persistentRefs.back().usesRemaining = getLongInt(v[i].second);
+
+					//time remaining(lights)
+					//c.persistentRefs.back().timeRemaining = getFloat(v[i].second);
+				} else if(v[i].first == "NAM9")
+				{
+					c.persistentRefs.back().value = getLongInt(v[i].second);
+				} else if(v[i].first == "DODT")
+				{
+					memmove((char*)&c.persistentRefs.back().ctd, v[i].second.data(), sizeof(c.persistentRefs.back().ctd));
+				} else if(v[i].first == "DNAM")
+				{
+					c.persistentRefs.back().destinationCellName = getString(v[i].second);
+				} else if(v[i].first == "FLTV")
+				{
+					c.persistentRefs.back().lockDifficulty = getLongInt(v[i].second);
+				} else if(v[i].first == "KNAM")
+				{
+					c.persistentRefs.back().keyName = getString(v[i].second);
+				} else if(v[i].first == "TNAM")
+				{
+					c.persistentRefs.back().trapName = getString(v[i].second);
+				} else if(v[i].first == "ZNAM")
+				{
+					c.persistentRefs.back().disabled = getuint8_tInt(v[i].second);
+				} else if(v[i].first == "DATA")
+				{
+					memmove((char*)&c.persistentRefs.back().rpos, v[i].second.data(), sizeof(c.persistentRefs.back().rpos));
+				} else
+				{
+					//is not a persistent reference tag
+					inReference = false;
+					inPersistentRef = false;
+					if(i < v.size() - 1) i--;
+				}
+			}
+
+			if( inTemporaryRef )
+			{
+				//Temporary references
+			}
 		}
 	}
-	// 	//Cell definitions
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CELL")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell list ID: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 			//Can be an empty string for exterior cells in which case the region name is used instead.
-// 		}
 
-// 		if (name == "DATA" && subRecordHeader.size == 12)
-// 		{
-// 			struct CellData{
-// 				long int flags; /*0x01 = interior?
-// 								0x02 = has water
-// 								0x04 = illegal to sleep here
-// 								0x80 = behave like exterior (Tribunal)*/
-// 				long int gridX;
-// 				long int gridY;
-// 			}cellData;
-
-// 			file.read((char*)&cellData, sizeof(cellData));
-// 			std::cout << "  Cell data read" << std::endl;
-// 			bytesRead += sizeof(cellData);
-// 		}
-
-// 		if (name == "RGNN")
-// 		{
-// 			char buffer[300];
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Region name string: " << std::string(buffer, buffer + subRecordHeader.size);
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "NAM0")
-// 		{
-// 			long int numnberOfObjectsInTheCell;
-
-// 			file.read((char*)&numnberOfObjectsInTheCell, sizeof(numnberOfObjectsInTheCell));
-// 			std::cout << "  Number of objects in the cell: " << numnberOfObjectsInTheCell << std::endl;
-// 			bytesRead += sizeof(numnberOfObjectsInTheCell);
-// 		}
-
-// 		//exterior cell sub-records (NAM5)
-// 		if(name == "NAM5")
-// 		{
-// 			long int mapColor;
-
-// 			file.read((char*)&mapColor, sizeof(mapColor));
-// 			std::cout << "  Map color: " << mapColor << std::endl;
-// 			bytesRead += sizeof(mapColor);
-// 		}
-
-// 		//interior cell sub-records (WHGT and AMBI)
-// 		if(name == "WHGT")
-// 		{
-// 			float waterHeight;
-
-// 			file.read((char*)&waterHeight, sizeof(waterHeight));
-// 			std::cout << "  Water height: " << waterHeight << std::endl;
-// 			bytesRead += sizeof(waterHeight);
-// 		}
-
-// 		if(name == "AMBI")
-// 		{
-// 			struct AmbientLightLevel{
-// 				long int ambientColor;
-// 				long int sunlightColor;
-// 				long int fogColor;
-// 				float fogDensity;
-// 			}ambientLightLevel;
-
-// 			file.read((char*)&ambientLightLevel, sizeof(ambientLightLevel));
-// 			std::cout << "  Ambient light level read" << std::endl;
-// 			bytesRead += sizeof(ambientLightLevel);
-// 		}
-
-// 		//Referenced object data grouping (until end)
-// 		if(name == "FRMR")
-// 		{
-// 			long int objectIndex; /*(starts at 1) (4 bytes, long)
-// 			This is used to uniquely identify objects in the cell.
-// 			For new files the index starts at 1 and is incremented
-// 			for each new object added.  For modified objects the
-// 			index is kept the same.*/
-
-// 			file.read((char*)&objectIndex, sizeof(objectIndex));
-// 			std::cout << "  Object Index : " << objectIndex << std::endl;
-// 			bytesRead += sizeof(objectIndex);
-// 		}
-
-// 		//repeated tag into CELL record, but this one belongs to FRMR
-// 		/*if (name == "NAME")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}*/
-
-// 		if (name == "UNAM")
-// 		{
-// 			uint8_t referenceBlocked; //always 0, present if Blocked is set in the reference's record header,
-// 										//otherwise absent.
-
-// 			file.read((char*)&referenceBlocked, sizeof(referenceBlocked));
-// 			std::cout << "  Reference blocked: " << referenceBlocked << std::endl;
-// 			bytesRead += sizeof(referenceBlocked);
-// 		}
-
-// 		if (name == "XSCL")
-// 		{
-// 			float referenceScale; //if applicable.
-
-// 			file.read((char*)&referenceScale, sizeof(referenceScale));
-// 			std::cout << "  Reference Scale: " << referenceScale << std::endl;
-// 			bytesRead += sizeof(referenceScale);
-// 		}
-
-// 		if (name == "ANAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  NPC ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "BNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Global variable name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Faction ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "INDX")
-// 		{
-// 			long int factionRank;
-
-// 			file.read((char*)&factionRank, sizeof(factionRank));
-// 			std::cout << "  Faction rank: " << factionRank << std::endl;
-// 			bytesRead += sizeof(factionRank);
-// 		}
-
-// 		if (name == "XSOL")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Soul gem ID: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "XCHG")
-// 		{
-// 			float enchantmentCharge;
-
-// 			file.read((char*)&enchantmentCharge, sizeof(enchantmentCharge));
-// 			std::cout << "  Enchantment charge: " << enchantmentCharge << std::endl;
-// 			bytesRead += sizeof(enchantmentCharge);
-// 		}
-
-// 		if (name == "INTV")
-// 		{
-// 			//it can be long int or float depending of type of object
-// 			long int remainingUsage; //health(weapons and armor)
-// 									//uses(locks, probes, repair items)
-// 			float remUs;			//time remaining(lights)
-
-// 			file.read((char*)&remUs, sizeof(remUs));
-// 			std::cout << "  Remaining usage: " << remUs << std::endl;
-// 			bytesRead += sizeof(remUs);
-// 		}
-
-// 		if (name == "NAM9")
-// 		{
-// 			long int value;
-
-// 			file.read((char*)&value, sizeof(value));
-// 			std::cout << "  Value: " << value << std::endl;
-// 			bytesRead += sizeof(value);
-// 		}
-
-// 		if (name == "DODT")
-// 		{
-// 			struct CellTravelDestination {
-// 				float posx, posy, posz;
-// 				float rotx, roty, rotz; //in radians
-// 			}cellTD;
-
-// 			file.read((char*)&cellTD, sizeof(cellTD));
-// 			std::cout << "  Cell travel destination read" << std::endl;
-// 			bytesRead += sizeof(cellTD);
-// 		}
-
-// 		if (name == "DNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell name for previous DODT, if interior: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FLTV")
-// 		{
-// 			long int lockDifficulty;
-
-// 			file.read((char*)&lockDifficulty, sizeof(lockDifficulty));
-// 			std::cout << "  Lock difficulty: " << lockDifficulty << std::endl;
-// 			bytesRead += sizeof(lockDifficulty);
-// 		}
-
-// 		if (name == "KNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Key name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "TNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Trap name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ZNAM")
-// 		{
-// 			uint8_t referenceDisabled; /*Reference is disabled (always 0). Like UNAM, this will be emitted 
-// 									   if the relevant flag is set in the reference's record header. This 
-// 									   may only be possible via scripting. Also, even if present in the 
-// 									   file, the field appears to be ignored on loading.*/
-
-// 			file.read((char*)&referenceDisabled, sizeof(referenceDisabled));
-// 			std::cout << "  Ref disabled: " << referenceDisabled << std::endl;
-// 			bytesRead += sizeof(referenceDisabled);
-// 		}
-
-// 		if (name == "DATA" && subRecordHeader.size == 24)
-// 		{
-// 			struct ReferencePosition {
-// 				float posx, posy, posz;
-// 				float rotx, roty, rotz; //in radians
-// 			}refPos;
-
-// 			file.read((char*)&refPos, sizeof(refPos));
-// 			std::cout << "  Reference position read" << std::endl;
-// 			bytesRead += sizeof(refPos);
-// 		}
-
-// 		if (bytesRead == 0)
-// 		{
-// 			std::cout << "<<<<<<<<<<<<<<<  UNKNOWN TAG >>>>>>>>>>>>>>>>>  " << name << std::endl;
-// 		}
-// 	}
+	std::cout << c.name << " " << c.regionName << std::endl;
+	vcell.push_back(c);
 }
 void parseLAND(std::vector<char> &buffer){
 	
@@ -1622,8 +1480,8 @@ void readESM(const std::string &filename){
 			if (name == "ALCH") parseALCH(buffer);
 			if (name == "LEVI") parseLEVI(buffer);
 			if (name == "LEVC") parseLEVC(buffer);
-			/*if (name == "CELL") parseCELL(buffer);
-			if (name == "LAND") parseLAND(buffer);
+			if (name == "CELL") parseCELL(buffer);
+			/*if (name == "LAND") parseLAND(buffer);
 			if (name == "PGRD") parsePGRD(buffer);
 			if (name == "SNDG") parseSNDG(buffer);
 			if (name == "DIAL") parseDIAL(buffer);

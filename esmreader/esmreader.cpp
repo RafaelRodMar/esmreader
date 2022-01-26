@@ -1185,6 +1185,20 @@ void parseCELL(std::vector<char> &buffer){
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
 
+	//parse sub-records in the vector
+	CELL c;
+	bool inReference = false; //while false it's reading the cell data,
+								//otherwise it's reading a reference's data.
+	for(int i=0;i<v.size();i++){
+		if( !inReference )
+		{
+			//reading the cell data
+		}
+		else
+		{
+			//reading a reference data
+		}
+	}
 	// 	//Cell definitions
 // 	if (std::string(recordHeader.name, recordHeader.name + 4) == "CELL")
 // 	{

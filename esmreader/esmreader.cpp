@@ -1340,6 +1340,93 @@ void parseLAND(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	// 	//landscape
+// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LAND")
+// 	{
+// 		if (name == "INTV")
+// 		{
+// 			struct Coord {
+// 				long int x, y;
+// 			}coord;
+
+// 			file.read((char*)&coord, sizeof(coord));
+// 			std::cout << "  Coords: " << coord.x << "," << coord.y << std::endl;
+// 			bytesRead += sizeof(coord);
+// 		}
+
+// 		if (name == "DATA")
+// 		{
+// 			long int data; //data types included. If the relevant bit isn't set, the related fields
+// 							//will not be loaded, even if present.
+// 							//0x01 = includes VNML, VHGT and WNAM
+// 							//0x02 = includes VCLR
+// 							//0x03 = includes VTEX
+
+// 			file.read((char*)&data, sizeof(data));
+// 			std::cout << "  Data: " << data << std::endl;
+// 			bytesRead += sizeof(data);
+// 		}
+
+// 		if (name == "VNML")
+// 		{
+// 			struct Point {
+// 				int8_t x, y, z; //y direction of the data is from the bottom up.
+// 			};
+
+// 			Point vertexNormals[65][65];
+
+// 			file.read((char*)&vertexNormals, sizeof(vertexNormals));
+// 			std::cout << "  Vertex Normals array loaded. Size: " << sizeof(vertexNormals) << std::endl;
+// 			bytesRead += sizeof(vertexNormals);
+// 		}
+
+// 		if (name == "VHGT")
+// 		{
+// 			struct HeightData {
+// 				float heightOffset; //Decreasing this value will shift the entire cell land down (by 8 units).
+// 				int8_t hData[65][65]; //Contains the height data for the cell in the form of a 65×65 pixel array.
+// 									//The height data is not absolute values but uses differences between 
+// 									//adjacent pixels. Thus a pixel value of 0 means it has the same height 
+// 									//as the last pixel. Note that the Y-direction of the data is from the bottom up.
+// 				uint8_t junkData[3]; //ignored.
+// 			}heightData;
+
+// 			file.read((char*)&heightData, sizeof(heightData));
+// 			std::cout << "  Height data read" << std::endl;
+// 			bytesRead += sizeof(heightData);
+// 		}
+
+// 		if (name == "WNAM")
+// 		{
+// 			uint8_t heights[9][9]; //heights for world map. Derived from VHGT data.
+
+// 			file.read((char*)&heights, sizeof(heights));
+// 			std::cout << "  Read heights for world map" << std::endl;
+// 			bytesRead += sizeof(heights);
+// 		}
+
+// 		if (name == "VCLR")
+// 		{
+// 			struct RGB {
+// 				int8_t r, g, b; //Vertex Colors.RGB triples repeated for each vertex(1 byte per color per vertex, or 3 bytes per vertex).
+// 			};
+
+// 			RGB vertexColors[65][65];
+// 			file.read((char*)&vertexColors, sizeof(vertexColors));
+// 			std::cout << "  Array of vertex colors loaded. Size: " << sizeof(vertexColors) << std::endl;
+// 			bytesRead += sizeof(vertexColors);
+// 		}
+
+// 		if (name == "VTEX")
+// 		{
+// 			uint16_t textureIndices[16][16]; //each value corresponds to the index INTV value from a LTEX record.
+
+// 			file.read((char*)&textureIndices, sizeof(textureIndices));
+// 			std::cout << "  Texture Indices read. Size: " << sizeof(textureIndices) << std::endl;
+// 			bytesRead += sizeof(textureIndices);
+// 		}
+// 	}
 }
 void parsePGRD(std::vector<char> &buffer){
 	
@@ -1349,6 +1436,77 @@ void parsePGRD(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	// 	//Path grids
+// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "PGRD")
+// 	{
+// 		if (name == "DATA")
+// 		{
+// 			struct PathData {
+// 				long int gridx; //exterior only
+// 				long int gridy; //exterior only
+// 				uint16_t flags; /*The values below are the only ones accessible via the TESCS; other values exist 
+// 								between the range of 0x1 and 0x4000 (with the exception of 0x4) but appear to be deprecated outside of cell [0, 0].
+// 									0x80 = 128 granularity
+// 									0x100 = 256 granularity
+// 									0x200 = 512 granularity
+// 									0x400 = 1024 granularity (Appears to be the default)
+// 									0x800 = 2048 granularity
+// 									0x1000 = 4096 granularity*/
+// 				uint16_t pathPointCount; //see PGRP
+// 			}pathData;
+// 			/*Note: the Construction Set allows for a 44-byte version of the structure where NAME 
+// 			is a 32-byte null-terminated string immediately after Grid Y, rather than a field of 
+// 			its own. Only the 12-byte version is currently in use; the 44-byte version appears to 
+// 			be an older version.*/
+
+// 			file.read((char*)&pathData, sizeof(pathData));
+// 			std::cout << "  Path data read" << std::endl;
+// 			bytesRead += sizeof(pathData);
+// 		}
+
+// 		if (name == "NAME")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Cell name the path grid belongs to: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "PGRP")
+// 		{
+// 			struct PathPoint {
+// 				long int x, y, z;
+// 				uint8_t flags; //0x01 = autogenerated
+// 				uint8_t connectionCount; //number of entries in PGRC
+// 				uint16_t unknown;
+// 			};
+
+// 			PathPoint pathPoint[10000]; //there are around 650 entries max
+
+// 			file.read((char*)&pathPoint, subRecordHeader.size);
+// 			std::cout << "  Path points read" << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "PGRC")
+// 		{
+// 			long int connectionList[10000];
+// 			/*Connection list(also known as edges), where TotalConnCount is the sum of all Connection 
+// 			count values in the PGRP node. For each path point listed in PGRP, there are Connection 
+// 			count edges in this list, each an index into PGRP.Using Azura's Coast (12, 20) as an 
+// 			example, the first entry in the PGRP (index 0) the Connection count value is 1, so you would 
+// 			read one uint32 from this list. That has a value of 1, so index 0 connects to index 1. For 
+// 			the second entry (index = 1), Connection count is 4, so you would read the next four uint32
+// 			values: 0, 6, 3, and 2, meaning that the point at index 1 connects to the points at 
+// 			indices 0, 6, 3, and 2.*/
+
+// 			file.read((char*)&connectionList, subRecordHeader.size);
+// 			std::cout << "  Connection List read" << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+// 	}
 }
 void parseSNDG(std::vector<char> &buffer){
 	
@@ -1358,6 +1516,57 @@ void parseSNDG(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	// 	//Sound generator
+// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SNDG")
+// 	{
+// 		if (name == "NAME")
+// 		{
+// 			char buffer[300]; /*ID - this appears to be generated from the creature name 
+// 							  (or DEFAULT) combined with the type formatted as a four-digit 
+// 							  number with leading zeroes (e.g., the ID for an alit scream is alit0006).
+// 								Note: there is one record in Bloodmoon which has an empty string here 
+// 								(BM_horker, Left Foot).*/
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "DATA")
+// 		{
+// 			long int soundTypeData; /*0 = Left Foot
+// 									1 = Right Foot
+// 									2 = Swim Left
+// 									3 = Swim Right
+// 									4 = Moan
+// 									5 = Roar
+// 									6 = Scream
+// 									7 = Land*/
+
+// 			file.read((char*)&soundTypeData, sizeof(soundTypeData));
+// 			std::cout << "  Sound type: " << soundTypeData << std::endl;
+// 			bytesRead += sizeof(soundTypeData);
+// 		}
+
+// 		if (name == "CNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Creture name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "SNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Sound ID string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+// 	}
 }
 void parseDIAL(std::vector<char> &buffer){
 	
@@ -1367,6 +1576,35 @@ void parseDIAL(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	// 	//Dialogue topic (including journals)
+// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "DIAL")
+// 	{
+// 		/*DIAL records contain information on dialogue. Dialogue records are followed immediately by the 
+// 		INFO records (topics) that belong to it. Unlike later games, there is no concept of parent-child 
+// 		groups, so readers should simply read subsequent INFO records until they come to something that
+// 		isn't an INFO record.*/
+// 		if (name == "NAME")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Dialogue id: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "DATA")
+// 		{
+// 			uint8_t dialogueType; /*0 = Regular Topic
+// 									1 = Voice
+// 									2 = Greeting
+// 									3 = Persuasion
+// 									4 = Journal*/
+// 			file.read((char*)&dialogueType, sizeof(dialogueType));
+// 			std::cout << "  Dialogue type: " << dialogueType << std::endl;
+// 			bytesRead += sizeof(dialogueType);
+// 		}
+// 	}
 }
 void parseINFO(std::vector<char> &buffer){
 	
@@ -1376,6 +1614,234 @@ void parseINFO(std::vector<char> &buffer){
 	//read the sub-records
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
+
+	// 	//Dialogue response record that belongs to previous DIAL record.
+// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "INFO")
+// 	{
+// 		/*The three IDs form a linked list of INFOs for the DIAL. 
+// 		The first INFO has an empty PNAM; the last has an empty NNAM. 
+// 		Note: for override records, next/prev topic IDs can refer to 
+// 		topics in the base record or the current one.*/
+
+// 		if (name == "INAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Info name string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "PNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Previous info id: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "NNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Next info id: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "DATA")
+// 		{
+// 			struct InfoData {
+// 				uint8_t dialogueType;
+// 				uint8_t unused[3];
+// 				long int dispositionOrJournalIndex;
+// 				uint8_t rank;
+// 				int8_t gender; //-1 = none, 0 = male, 1 = female
+// 				uint8_t pcrank;
+// 				uint8_t unusedData;
+// 			}infoData;
+
+// 			file.read((char*)&infoData, sizeof(infoData));
+// 			std::cout << "  Info data read" << std::endl;
+// 			bytesRead += sizeof(infoData);
+// 		}
+
+// 		if (name == "ONAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Actor: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "RNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Race: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "CNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Class: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "FNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Faction('FFFF' = no faction): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "ANAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Cell: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "DNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  PC faction: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "SNAM")
+// 		{
+// 			char buffer[300];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Sound: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "NAME")
+// 		{
+// 			char buffer[1000];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Response text: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		if (name == "SCVR")
+// 		{
+// 			char buffer[1000];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Strings for the Function-Variable list: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 			/*Strings for the Function/Variable list
+// 				char - Index ('0' to '5')
+// 				char - Type ('1' to 'C', hex digit)
+// 				'1' = Function
+// 				'2' = Global
+// 				'3' = Local
+// 				'4' = Journal
+// 				'5' = Item
+// 				'6' = Dead
+// 				'7' = Not ID
+// 				'8' = Not Faction
+// 				'9' = Not Class
+// 				'A' = Not Race
+// 				'B' = Not Cell
+// 				'C' = Not Local
+// 				char[2] - Details
+// 				'00' to '72' = Function: function index
+// 				'fX' = Global/Local/Not Local: Value is a float in FLTV
+// 				'lX' = Global/Local/Not Local: Value is a long in INTV
+// 				'sX' = Global/Local/Not Local: Value is a short in INTV (serves only as a value range - INTV is always a uint32)
+// 				'JX' = Journal
+// 				'IX' = Item
+// 				'DX' = Dead
+// 				'XX' = Not ID
+// 				'FX' = Not Faction
+// 				'CX' = Not Class
+// 				'RX' = Not Race
+// 				'LX' = Not Cell
+// 				char - Operator
+// 				'0' = '='
+// 				'1' = '!='
+// 				'2' = '>'
+// 				'3' = '>='
+// 				'4' = '<'
+// 				'5' = '<='
+// 				char[] - Name: Except for functions (which require no further information), everything after the fifth character is the ID for the global, local, journal, etc.*/
+// 		}
+
+// 		if (name == "INTV")
+// 		{
+// 			long int scvrComparison; //integer value for SCVR comparison
+
+// 			file.read((char*)&scvrComparison, sizeof(scvrComparison));
+// 			std::cout << "  scvr comparison integer: " << scvrComparison << std::endl;
+// 			bytesRead += sizeof(scvrComparison);
+// 		}
+
+// 		if (name == "FLTV")
+// 		{
+// 			float scvrComparison; //float value for SCVR comparison
+
+// 			file.read((char*)&scvrComparison, sizeof(scvrComparison));
+// 			std::cout << "  scvr comparison float: " << scvrComparison << std::endl;
+// 			bytesRead += sizeof(scvrComparison);
+// 		}
+
+// 		if (name == "BNAM")
+// 		{
+// 			char buffer[1000];
+
+// 			file.read((char*)&buffer, subRecordHeader.size);
+// 			std::cout << "  Result text: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
+// 			bytesRead += subRecordHeader.size;
+// 		}
+
+// 		//the next three are only for journal entries.
+// 		if (name == "QSTN")
+// 		{
+// 			uint8_t	questName;
+
+// 			file.read((char*)&questName, sizeof(questName));
+// 			std::cout << "  Quest name: " << questName << std::endl;
+// 			bytesRead += sizeof(questName);
+// 		}
+
+// 		if (name == "QSTF")
+// 		{
+// 			uint8_t	questFinished;
+
+// 			file.read((char*)&questFinished, sizeof(questFinished));
+// 			std::cout << "  Quest finished: " << questFinished << std::endl;
+// 			bytesRead += sizeof(questFinished);
+// 		}
+
+// 		if (name == "QSTR")
+// 		{
+// 			uint8_t	questRestart;
+
+// 			file.read((char*)&questRestart, sizeof(questRestart));
+// 			std::cout << "  Quest restart: " << questRestart << std::endl;
+// 			bytesRead += sizeof(questRestart);
+// 		}
+// 	}
+
+// 	return bytesRead;
+// }
 }
 
 bool isValid(std::string name) {

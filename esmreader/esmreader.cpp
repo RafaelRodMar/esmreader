@@ -1341,93 +1341,20 @@ void parseLAND(std::vector<char> &buffer){
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
 
-	// 	//landscape
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "LAND")
-// 	{
-// 		if (name == "INTV")
-// 		{
-// 			struct Coord {
-// 				long int x, y;
-// 			}coord;
-
-// 			file.read((char*)&coord, sizeof(coord));
-// 			std::cout << "  Coords: " << coord.x << "," << coord.y << std::endl;
-// 			bytesRead += sizeof(coord);
-// 		}
-
-// 		if (name == "DATA")
-// 		{
-// 			long int data; //data types included. If the relevant bit isn't set, the related fields
-// 							//will not be loaded, even if present.
-// 							//0x01 = includes VNML, VHGT and WNAM
-// 							//0x02 = includes VCLR
-// 							//0x03 = includes VTEX
-
-// 			file.read((char*)&data, sizeof(data));
-// 			std::cout << "  Data: " << data << std::endl;
-// 			bytesRead += sizeof(data);
-// 		}
-
-// 		if (name == "VNML")
-// 		{
-// 			struct Point {
-// 				int8_t x, y, z; //y direction of the data is from the bottom up.
-// 			};
-
-// 			Point vertexNormals[65][65];
-
-// 			file.read((char*)&vertexNormals, sizeof(vertexNormals));
-// 			std::cout << "  Vertex Normals array loaded. Size: " << sizeof(vertexNormals) << std::endl;
-// 			bytesRead += sizeof(vertexNormals);
-// 		}
-
-// 		if (name == "VHGT")
-// 		{
-// 			struct HeightData {
-// 				float heightOffset; //Decreasing this value will shift the entire cell land down (by 8 units).
-// 				int8_t hData[65][65]; //Contains the height data for the cell in the form of a 65×65 pixel array.
-// 									//The height data is not absolute values but uses differences between 
-// 									//adjacent pixels. Thus a pixel value of 0 means it has the same height 
-// 									//as the last pixel. Note that the Y-direction of the data is from the bottom up.
-// 				uint8_t junkData[3]; //ignored.
-// 			}heightData;
-
-// 			file.read((char*)&heightData, sizeof(heightData));
-// 			std::cout << "  Height data read" << std::endl;
-// 			bytesRead += sizeof(heightData);
-// 		}
-
-// 		if (name == "WNAM")
-// 		{
-// 			uint8_t heights[9][9]; //heights for world map. Derived from VHGT data.
-
-// 			file.read((char*)&heights, sizeof(heights));
-// 			std::cout << "  Read heights for world map" << std::endl;
-// 			bytesRead += sizeof(heights);
-// 		}
-
-// 		if (name == "VCLR")
-// 		{
-// 			struct RGB {
-// 				int8_t r, g, b; //Vertex Colors.RGB triples repeated for each vertex(1 byte per color per vertex, or 3 bytes per vertex).
-// 			};
-
-// 			RGB vertexColors[65][65];
-// 			file.read((char*)&vertexColors, sizeof(vertexColors));
-// 			std::cout << "  Array of vertex colors loaded. Size: " << sizeof(vertexColors) << std::endl;
-// 			bytesRead += sizeof(vertexColors);
-// 		}
-
-// 		if (name == "VTEX")
-// 		{
-// 			uint16_t textureIndices[16][16]; //each value corresponds to the index INTV value from a LTEX record.
-
-// 			file.read((char*)&textureIndices, sizeof(textureIndices));
-// 			std::cout << "  Texture Indices read. Size: " << sizeof(textureIndices) << std::endl;
-// 			bytesRead += sizeof(textureIndices);
-// 		}
-// 	}
+	//parse sub-records in the vector
+	LAND l;
+	for(auto x : v){
+		if(x.first == "INTV") memmove((char*)&l.coord, x.second.data(), sizeof(l.coord));
+		if(x.first == "DATA") l.data = getLongInt(x.second);
+		if(x.first == "VNML") memmove((char*)&l.vertexNormals, x.second.data(), sizeof(l.vertexNormals));
+		if(x.first == "VHGT") memmove((char*)&l.heightData, x.second.data(), sizeof(l.heightData));
+		if(x.first == "WNAM") memmove((char*)&l.heights, x.second.data(), sizeof(l.heights));
+		if(x.first == "VCLR") memmove((char*)&l.vertexColors, x.second.data(), sizeof(l.vertexColors));
+		if(x.first == "VTEX") memmove((char*)&l.textureIndices, x.second.data(), sizeof(l.textureIndices));
+	}
+	vland.push_back(l);
 }
+
 void parsePGRD(std::vector<char> &buffer){
 	
 	std::cout << "Parsing PGRD tag: " << buffer.size() << " bytes" << std::endl;
@@ -1437,77 +1364,18 @@ void parsePGRD(std::vector<char> &buffer){
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
 
-	// 	//Path grids
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "PGRD")
-// 	{
-// 		if (name == "DATA")
-// 		{
-// 			struct PathData {
-// 				long int gridx; //exterior only
-// 				long int gridy; //exterior only
-// 				uint16_t flags; /*The values below are the only ones accessible via the TESCS; other values exist 
-// 								between the range of 0x1 and 0x4000 (with the exception of 0x4) but appear to be deprecated outside of cell [0, 0].
-// 									0x80 = 128 granularity
-// 									0x100 = 256 granularity
-// 									0x200 = 512 granularity
-// 									0x400 = 1024 granularity (Appears to be the default)
-// 									0x800 = 2048 granularity
-// 									0x1000 = 4096 granularity*/
-// 				uint16_t pathPointCount; //see PGRP
-// 			}pathData;
-// 			/*Note: the Construction Set allows for a 44-byte version of the structure where NAME 
-// 			is a 32-byte null-terminated string immediately after Grid Y, rather than a field of 
-// 			its own. Only the 12-byte version is currently in use; the 44-byte version appears to 
-// 			be an older version.*/
-
-// 			file.read((char*)&pathData, sizeof(pathData));
-// 			std::cout << "  Path data read" << std::endl;
-// 			bytesRead += sizeof(pathData);
-// 		}
-
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell name the path grid belongs to: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "PGRP")
-// 		{
-// 			struct PathPoint {
-// 				long int x, y, z;
-// 				uint8_t flags; //0x01 = autogenerated
-// 				uint8_t connectionCount; //number of entries in PGRC
-// 				uint16_t unknown;
-// 			};
-
-// 			PathPoint pathPoint[10000]; //there are around 650 entries max
-
-// 			file.read((char*)&pathPoint, subRecordHeader.size);
-// 			std::cout << "  Path points read" << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "PGRC")
-// 		{
-// 			long int connectionList[10000];
-// 			/*Connection list(also known as edges), where TotalConnCount is the sum of all Connection 
-// 			count values in the PGRP node. For each path point listed in PGRP, there are Connection 
-// 			count edges in this list, each an index into PGRP.Using Azura's Coast (12, 20) as an 
-// 			example, the first entry in the PGRP (index 0) the Connection count value is 1, so you would 
-// 			read one uint32 from this list. That has a value of 1, so index 0 connects to index 1. For 
-// 			the second entry (index = 1), Connection count is 4, so you would read the next four uint32
-// 			values: 0, 6, 3, and 2, meaning that the point at index 1 connects to the points at 
-// 			indices 0, 6, 3, and 2.*/
-
-// 			file.read((char*)&connectionList, subRecordHeader.size);
-// 			std::cout << "  Connection List read" << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
+	//parse sub-records in the vector
+	PGRD p;
+	for(auto x : v){
+		if(x.first == "DATA") memmove((char*)&p.pathData, x.second.data(), sizeof(p.pathData));
+		if(x.first == "NAME") p.name = getString(x.second);
+		if(x.first == "PGRP") memmove((char*)&p.pathPoints, x.second.data(), sizeof(p.pathPoints));
+		if(x.first == "PGRC") memmove((char*)&p.connectionList, x.second.data(), sizeof(p.connectionList));
+	}
+	std::cout << "BEWARE : probably losing some connection points" << std::endl;
+	vpgrd.push_back(p);
 }
+
 void parseSNDG(std::vector<char> &buffer){
 	
 	std::cout << "Parsing SNDG tag: " << buffer.size() << " bytes" << std::endl;
@@ -1517,57 +1385,19 @@ void parseSNDG(std::vector<char> &buffer){
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
 
-	// 	//Sound generator
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "SNDG")
-// 	{
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300]; /*ID - this appears to be generated from the creature name 
-// 							  (or DEFAULT) combined with the type formatted as a four-digit 
-// 							  number with leading zeroes (e.g., the ID for an alit scream is alit0006).
-// 								Note: there is one record in Bloodmoon which has an empty string here 
-// 								(BM_horker, Left Foot).*/
+	//parse sub-records in the vector
+	SNDG s;
+	for(auto x : v){
+		if(x.first == "NAME") s.name = getString(x.second);
+		if(x.first == "DATA") memmove((char*)&s.soundTypeData, x.second.data(), sizeof(s.soundTypeData));
+		if(x.first == "CNAM") s.creatureName = getString(x.second);
+		if(x.first == "SNAM") s.soundID = getString(x.second);
+	}
 
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DATA")
-// 		{
-// 			long int soundTypeData; /*0 = Left Foot
-// 									1 = Right Foot
-// 									2 = Swim Left
-// 									3 = Swim Right
-// 									4 = Moan
-// 									5 = Roar
-// 									6 = Scream
-// 									7 = Land*/
-
-// 			file.read((char*)&soundTypeData, sizeof(soundTypeData));
-// 			std::cout << "  Sound type: " << soundTypeData << std::endl;
-// 			bytesRead += sizeof(soundTypeData);
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Creture name: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound ID string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-// 	}
+	std::cout << s.soundID << " " << s.name << " " << s.creatureName << std::endl;
+	vsndg.push_back(s);
 }
+
 void parseDIAL(std::vector<char> &buffer){
 	
 	std::cout << "Parsing DIAL tag: " << buffer.size() << " bytes" << std::endl;
@@ -1577,35 +1407,16 @@ void parseDIAL(std::vector<char> &buffer){
 	v = getSubRecordData(buffer);
 	std::cout << "Tags in vector: " << v.size() << std::endl;
 
-	// 	//Dialogue topic (including journals)
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "DIAL")
-// 	{
-// 		/*DIAL records contain information on dialogue. Dialogue records are followed immediately by the 
-// 		INFO records (topics) that belong to it. Unlike later games, there is no concept of parent-child 
-// 		groups, so readers should simply read subsequent INFO records until they come to something that
-// 		isn't an INFO record.*/
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Dialogue id: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DATA")
-// 		{
-// 			uint8_t dialogueType; /*0 = Regular Topic
-// 									1 = Voice
-// 									2 = Greeting
-// 									3 = Persuasion
-// 									4 = Journal*/
-// 			file.read((char*)&dialogueType, sizeof(dialogueType));
-// 			std::cout << "  Dialogue type: " << dialogueType << std::endl;
-// 			bytesRead += sizeof(dialogueType);
-// 		}
-// 	}
+	//parse sub-records in the vector
+	DIAL d;
+	for(auto x : v){
+		if(x.first == "NAME") d.name = getString(x.second);
+		if(x.first == "DATA") d.dialogueType = getuint8_tInt(x.second);
+	}
+	std::cout << d.name << " " << d.dialogueType << std::endl;
+	vdial.push_back(d);
 }
+
 void parseINFO(std::vector<char> &buffer){
 	
 	std::cout << "Parsing INFO tag: " << buffer.size() << " bytes" << std::endl;
@@ -1947,11 +1758,11 @@ void readESM(const std::string &filename){
 			if (name == "LEVI") parseLEVI(buffer);
 			if (name == "LEVC") parseLEVC(buffer);
 			if (name == "CELL") parseCELL(buffer);
-			/*if (name == "LAND") parseLAND(buffer);
+			if (name == "LAND") parseLAND(buffer);
 			if (name == "PGRD") parsePGRD(buffer);
 			if (name == "SNDG") parseSNDG(buffer);
 			if (name == "DIAL") parseDIAL(buffer);
-			if (name == "INFO") parseINFO(buffer);*/
+			/*if (name == "INFO") parseINFO(buffer);*/
 		}
 		else
 		{

@@ -1367,10 +1367,11 @@ void parsePGRD(std::vector<char> &buffer){
 	//parse sub-records in the vector
 	PGRD p;
 	for(auto x : v){
+		std::cout << "TAG:" << x.first << " SIZE:" << x.second.size() << std::endl;
 		if(x.first == "DATA") memmove((char*)&p.pathData, x.second.data(), sizeof(p.pathData));
 		if(x.first == "NAME") p.name = getString(x.second);
-		if(x.first == "PGRP") memmove((char*)&p.pathPoints, x.second.data(), sizeof(p.pathPoints));
-		if(x.first == "PGRC") memmove((char*)&p.connectionList, x.second.data(), sizeof(p.connectionList));
+		if(x.first == "PGRP") memmove((char*)&p.pathPoints, x.second.data(), subRecordHeader.size);
+		if(x.first == "PGRC") memmove((char*)&p.connectionList, x.second.data(), subRecordHeader.size);
 	}
 	std::cout << "BEWARE : probably losing some connection points" << std::endl;
 	vpgrd.push_back(p);

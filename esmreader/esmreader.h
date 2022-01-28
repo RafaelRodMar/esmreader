@@ -1223,6 +1223,81 @@ struct SNDG{
 
 std::vector<SNDG> vsndg;
 
+//used by INFO records
+struct InfoData {
+	uint8_t dialogueType;
+	uint8_t unused[3];
+	long int dispositionOrJournalIndex;
+	uint8_t rank;
+	int8_t gender; //-1 = none, 0 = male, 1 = female
+	uint8_t pcrank;
+	uint8_t unusedData;
+};
+
+//Dialogue response record that belongs to previous DIAL record.
+struct INFO{
+	/*The three IDs form a linked list of INFOs for the DIAL. 
+	The first INFO has an empty PNAM; the last has an empty NNAM. 
+	Note: for override records, next/prev topic IDs can refer to 
+	topics in the base record or the current one.*/
+	std::string name = "";
+	std::string previousName = "";
+	std::string nextName = "";
+	InfoData infoData;
+	std::string actor = "";
+	std::string race = "";
+	std::string actorClass = "";
+	std::string faction = ""; //FFFF = no faction
+	std::string cell = "";
+	std::string pcFaction = "";
+	std::string sound = "";
+	std::string responseText = "";
+	std::vector<std::string> funcVarlist;
+				/*Strings for the Function/Variable list
+				char - Index ('0' to '5')
+				char - Type ('1' to 'C', hex digit)
+				'1' = Function
+				'2' = Global
+				'3' = Local
+				'4' = Journal
+				'5' = Item
+				'6' = Dead
+				'7' = Not ID
+				'8' = Not Faction
+				'9' = Not Class
+				'A' = Not Race
+				'B' = Not Cell
+				'C' = Not Local
+				char[2] - Details
+				'00' to '72' = Function: function index
+				'fX' = Global/Local/Not Local: Value is a float in FLTV
+				'lX' = Global/Local/Not Local: Value is a long in INTV
+				'sX' = Global/Local/Not Local: Value is a short in INTV (serves only as a value range - INTV is always a uint32)
+				'JX' = Journal
+				'IX' = Item
+				'DX' = Dead
+				'XX' = Not ID
+				'FX' = Not Faction
+				'CX' = Not Class
+				'RX' = Not Race
+				'LX' = Not Cell
+				char - Operator
+				'0' = '='
+				'1' = '!='
+				'2' = '>'
+				'3' = '>='
+				'4' = '<'
+				'5' = '<='
+				char[] - Name: Except for functions (which require no further information), everything after the fifth character is the ID for the global, local, journal, etc.*/
+	long int iscvrComparison = 0; //integer value for SCVR comparison
+	float fscvrComparison = 0.0; //float value for SCVR comparison
+	std::string resultText = "";
+	//the next three are only for journal entries
+	uint8_t questName = 0;
+	uint8_t questFinished = 0;
+	uint8_t questRestart = 0;
+};
+
 //Dialogue topic (including journals) records
 struct DIAL{
 	/*DIAL records contain information on dialogue. Dialogue records are followed immediately by the 
@@ -1235,234 +1310,7 @@ struct DIAL{
 							2 = Greeting
 							3 = Persuasion
 							4 = Journal*/
+	std::vector<INFO> vinfo;
 };
 
 std::vector<DIAL> vdial;
-
-// 	//Dialogue response record that belongs to previous DIAL record.
-// 	if (std::string(recordHeader.name, recordHeader.name + 4) == "INFO")
-// 	{
-// 		/*The three IDs form a linked list of INFOs for the DIAL. 
-// 		The first INFO has an empty PNAM; the last has an empty NNAM. 
-// 		Note: for override records, next/prev topic IDs can refer to 
-// 		topics in the base record or the current one.*/
-
-// 		if (name == "INAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Info name string: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "PNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Previous info id: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "NNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Next info id: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DATA")
-// 		{
-// 			struct InfoData {
-// 				uint8_t dialogueType;
-// 				uint8_t unused[3];
-// 				long int dispositionOrJournalIndex;
-// 				uint8_t rank;
-// 				int8_t gender; //-1 = none, 0 = male, 1 = female
-// 				uint8_t pcrank;
-// 				uint8_t unusedData;
-// 			}infoData;
-
-// 			file.read((char*)&infoData, sizeof(infoData));
-// 			std::cout << "  Info data read" << std::endl;
-// 			bytesRead += sizeof(infoData);
-// 		}
-
-// 		if (name == "ONAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Actor: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "RNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Race: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "CNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Class: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "FNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Faction('FFFF' = no faction): " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "ANAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Cell: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "DNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  PC faction: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SNAM")
-// 		{
-// 			char buffer[300];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Sound: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "NAME")
-// 		{
-// 			char buffer[1000];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Response text: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		if (name == "SCVR")
-// 		{
-// 			char buffer[1000];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Strings for the Function-Variable list: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 			/*Strings for the Function/Variable list
-// 				char - Index ('0' to '5')
-// 				char - Type ('1' to 'C', hex digit)
-// 				'1' = Function
-// 				'2' = Global
-// 				'3' = Local
-// 				'4' = Journal
-// 				'5' = Item
-// 				'6' = Dead
-// 				'7' = Not ID
-// 				'8' = Not Faction
-// 				'9' = Not Class
-// 				'A' = Not Race
-// 				'B' = Not Cell
-// 				'C' = Not Local
-// 				char[2] - Details
-// 				'00' to '72' = Function: function index
-// 				'fX' = Global/Local/Not Local: Value is a float in FLTV
-// 				'lX' = Global/Local/Not Local: Value is a long in INTV
-// 				'sX' = Global/Local/Not Local: Value is a short in INTV (serves only as a value range - INTV is always a uint32)
-// 				'JX' = Journal
-// 				'IX' = Item
-// 				'DX' = Dead
-// 				'XX' = Not ID
-// 				'FX' = Not Faction
-// 				'CX' = Not Class
-// 				'RX' = Not Race
-// 				'LX' = Not Cell
-// 				char - Operator
-// 				'0' = '='
-// 				'1' = '!='
-// 				'2' = '>'
-// 				'3' = '>='
-// 				'4' = '<'
-// 				'5' = '<='
-// 				char[] - Name: Except for functions (which require no further information), everything after the fifth character is the ID for the global, local, journal, etc.*/
-// 		}
-
-// 		if (name == "INTV")
-// 		{
-// 			long int scvrComparison; //integer value for SCVR comparison
-
-// 			file.read((char*)&scvrComparison, sizeof(scvrComparison));
-// 			std::cout << "  scvr comparison integer: " << scvrComparison << std::endl;
-// 			bytesRead += sizeof(scvrComparison);
-// 		}
-
-// 		if (name == "FLTV")
-// 		{
-// 			float scvrComparison; //float value for SCVR comparison
-
-// 			file.read((char*)&scvrComparison, sizeof(scvrComparison));
-// 			std::cout << "  scvr comparison float: " << scvrComparison << std::endl;
-// 			bytesRead += sizeof(scvrComparison);
-// 		}
-
-// 		if (name == "BNAM")
-// 		{
-// 			char buffer[1000];
-
-// 			file.read((char*)&buffer, subRecordHeader.size);
-// 			std::cout << "  Result text: " << std::string(buffer, buffer + subRecordHeader.size) << std::endl;
-// 			bytesRead += subRecordHeader.size;
-// 		}
-
-// 		//the next three are only for journal entries.
-// 		if (name == "QSTN")
-// 		{
-// 			uint8_t	questName;
-
-// 			file.read((char*)&questName, sizeof(questName));
-// 			std::cout << "  Quest name: " << questName << std::endl;
-// 			bytesRead += sizeof(questName);
-// 		}
-
-// 		if (name == "QSTF")
-// 		{
-// 			uint8_t	questFinished;
-
-// 			file.read((char*)&questFinished, sizeof(questFinished));
-// 			std::cout << "  Quest finished: " << questFinished << std::endl;
-// 			bytesRead += sizeof(questFinished);
-// 		}
-
-// 		if (name == "QSTR")
-// 		{
-// 			uint8_t	questRestart;
-
-// 			file.read((char*)&questRestart, sizeof(questRestart));
-// 			std::cout << "  Quest restart: " << questRestart << std::endl;
-// 			bytesRead += sizeof(questRestart);
-// 		}
-// 	}
-
-// 	return bytesRead;
-// }
